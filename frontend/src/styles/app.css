@@ -12,11 +12,11 @@
   z-index: 100;
   padding: 0.8rem 1.5rem;
   transition: all 0.3s ease;
-  background: rgba(3, 11, 20, 0.88);
+  background: rgba(5, 36, 56, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-ocean-subtle);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(128, 255, 213, 0.22);
+  box-shadow: 0 10px 30px rgba(2, 20, 34, 0.6);
 }
 
 .navbar-container {
@@ -38,13 +38,13 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--pirate-gold) 0%, var(--pirate-wood) 100%);
+  background: linear-gradient(135deg, var(--beach-turquoise) 0%, var(--beach-lagoon-teal) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1a0800;
-  border: 1px solid var(--pirate-gold-light);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+  color: #042438;
+  border: 1px solid var(--beach-seafoam);
+  box-shadow: 0 0 15px rgba(128, 255, 213, 0.45);
 }
 
 .brand-text {
@@ -64,7 +64,7 @@
 .brand-subtitle {
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  color: var(--sea-cyan);
+  color: var(--beach-seafoam);
   letter-spacing: 0.15em;
 }
 
@@ -90,14 +90,14 @@
 }
 
 .nav-link-btn:hover {
-  color: var(--sea-cyan);
-  background: rgba(34, 211, 238, 0.08);
+  color: var(--beach-seafoam);
+  background: rgba(128, 255, 213, 0.12);
 }
 
 .nav-link-btn.active {
   color: #ffffff;
-  background: rgba(34, 211, 238, 0.15);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(128, 255, 213, 0.18);
+  border: 1px solid rgba(128, 255, 213, 0.38);
 }
 
 .nav-actions {
@@ -206,7 +206,7 @@ html.lenis, html.lenis body {
 .faq-chamber-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 12, 0.88);
+  background: rgba(4, 28, 45, 0.86);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   z-index: 150;
@@ -227,10 +227,10 @@ html.lenis, html.lenis body {
   max-width: 1240px;
   height: 88vh;
   max-height: 88vh;
-  background: #040e1b;
-  border: 1px solid var(--border-gold-subtle);
+  background: #062b44;
+  border: 1px solid rgba(128, 255, 213, 0.3);
   border-radius: var(--radius-lg);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
+  box-shadow: 0 30px 90px rgba(2, 18, 30, 0.9);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -249,8 +249,8 @@ html.lenis, html.lenis body {
   align-items: center;
   justify-content: space-between;
   padding: 1.1rem 1.8rem;
-  background: rgba(7, 24, 41, 0.95);
-  border-bottom: 1px solid var(--border-ocean-subtle);
+  background: rgba(8, 48, 75, 0.95);
+  border-bottom: 1px solid rgba(128, 255, 213, 0.2);
   flex-shrink: 0;
 }
 
@@ -265,7 +265,7 @@ html.lenis, html.lenis body {
 }
 
 .modal-compass {
-  color: var(--sea-cyan);
+  color: var(--beach-seafoam);
 }
 
 .faq-modal-close-btn {
@@ -285,9 +285,9 @@ html.lenis, html.lenis body {
 }
 
 .faq-modal-close-btn:hover {
-  background: var(--sea-cyan);
-  color: #02070e;
-  border-color: var(--sea-cyan);
+  background: var(--beach-seafoam);
+  color: #042438;
+  border-color: var(--beach-seafoam);
 }
 
 .faq-chamber-scroll-body {
@@ -308,18 +308,18 @@ html.lenis, html.lenis body {
 }
 
 .faq-chamber-scroll-body::-webkit-scrollbar-track {
-  background: rgba(3, 11, 20, 0.9);
-  border-left: 1px solid var(--border-ocean-subtle);
+  background: #052438;
+  border-left: 1px solid rgba(128, 255, 213, 0.15);
 }
 
 .faq-chamber-scroll-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--pirate-gold) 0%, var(--sea-cyan) 100%);
+  background: linear-gradient(180deg, var(--pirate-gold) 0%, var(--beach-seafoam) 100%);
   border-radius: var(--radius-pill);
-  border: 2px solid rgba(3, 11, 20, 0.9);
+  border: 2px solid #052438;
 }
 
 .faq-chamber-scroll-body::-webkit-scrollbar-thumb:hover {
-  background: var(--sea-cyan);
+  background: var(--beach-seafoam);
 }
 
 @media (max-width: 900px) {

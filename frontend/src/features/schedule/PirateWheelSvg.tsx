@@ -36,9 +36,6 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
 
   return (
     <div className="pirate-helm-wrapper">
-      {/* Ambient Seafoam Backlight */}
-      <div className="helm-ambient-backlight" />
-
       {/* Main Vector Ship's Wheel SVG with comfortable padding (viewBox -240 to +240) */}
       <svg
         viewBox="-240 -240 480 480"
@@ -47,34 +44,35 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
       >
         <defs>
           <radialGradient id="timberRimGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#451a03" />
-            <stop offset="65%" stopColor="#78350f" />
-            <stop offset="85%" stopColor="#92400e" />
-            <stop offset="100%" stopColor="#290e02" />
+            <stop offset="0%" stopColor="#5c2807" />
+            <stop offset="55%" stopColor="#854d0e" />
+            <stop offset="85%" stopColor="#a16207" />
+            <stop offset="100%" stopColor="#3b1401" />
           </radialGradient>
 
           <linearGradient id="spokeWoodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#351402" />
-            <stop offset="30%" stopColor="#854d0e" />
-            <stop offset="50%" stopColor="#b45309" />
-            <stop offset="70%" stopColor="#854d0e" />
-            <stop offset="100%" stopColor="#290e02" />
+            <stop offset="0%" stopColor="#451a03" />
+            <stop offset="30%" stopColor="#a16207" />
+            <stop offset="50%" stopColor="#ca8a04" />
+            <stop offset="70%" stopColor="#a16207" />
+            <stop offset="100%" stopColor="#3b1401" />
           </linearGradient>
 
           <linearGradient id="brassGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="25%" stopColor="#eab308" />
-            <stop offset="55%" stopColor="#b45309" />
-            <stop offset="80%" stopColor="#d4af37" />
-            <stop offset="100%" stopColor="#78350f" />
+            <stop offset="0%" stopColor="#fef9c3" />
+            <stop offset="25%" stopColor="#fde047" />
+            <stop offset="55%" stopColor="#fbbf24" />
+            <stop offset="80%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#92400e" />
           </linearGradient>
 
-          <radialGradient id="sapphireCoreGrad" cx="40%" cy="35%" r="60%">
-            <stop offset="0%" stopColor="#e0f2fe" />
-            <stop offset="25%" stopColor="#38bdf8" />
-            <stop offset="65%" stopColor="#0284c7" />
-            <stop offset="90%" stopColor="#082f49" />
-            <stop offset="100%" stopColor="#031525" />
+          {/* Tropical Turquoise Lagoon Gem for Center Core */}
+          <radialGradient id="sapphireCoreGrad" cx="38%" cy="32%" r="65%">
+            <stop offset="0%" stopColor="#e0fdf4" />
+            <stop offset="25%" stopColor="#80ffd5" />
+            <stop offset="60%" stopColor="#22d3ee" />
+            <stop offset="85%" stopColor="#089191" />
+            <stop offset="100%" stopColor="#052438" />
           </radialGradient>
 
           <filter id="cyanGlow" x="-30%" y="-30%" width="160%" height="160%">
@@ -89,8 +87,8 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
         </defs>
 
         {/* Outer Compass Tick Rings (Static reference) */}
-        <circle cx="0" cy="0" r="224" fill="none" stroke="rgba(56, 189, 248, 0.15)" strokeWidth="1" strokeDasharray="3 5" />
-        <circle cx="0" cy="0" r="228" fill="none" stroke="rgba(212, 175, 55, 0.25)" strokeWidth="1.2" />
+        <circle cx="0" cy="0" r="224" fill="none" stroke="rgba(128, 255, 213, 0.25)" strokeWidth="1" strokeDasharray="3 5" />
+        <circle cx="0" cy="0" r="228" fill="none" stroke="rgba(251, 191, 36, 0.35)" strokeWidth="1.2" />
 
         {/* ROTATING GROUP: Rotates smoothly by rotationDeg */}
         <g transform={`rotate(${rotationDeg})`}>
@@ -210,18 +208,18 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                         cy="0"
                         r="20"
                         fill="none"
-                        stroke="#38bdf8"
+                        stroke="#80ffd5"
                         strokeWidth="1.2"
                         strokeDasharray="2 3"
-                        opacity="0.8"
+                        opacity="0.85"
                       />
                       <circle
                         cx="0"
                         cy="0"
                         r="18"
                         fill="none"
-                        stroke="#22d3ee"
-                        strokeWidth="2"
+                        stroke="#2dd4bf"
+                        strokeWidth="2.2"
                         filter="url(#cyanGlow)"
                         className="active-pulse-aura"
                       />
@@ -233,9 +231,9 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                     cx="0"
                     cy="0"
                     r="15"
-                    fill={isActive ? '#0284c7' : '#5c2406'}
-                    stroke={isActive ? '#38bdf8' : '#d4af37'}
-                    strokeWidth={isActive ? '2.2' : '1.2'}
+                    fill={isActive ? '#089191' : '#78350f'}
+                    stroke={isActive ? '#80ffd5' : '#fde047'}
+                    strokeWidth={isActive ? '2.4' : '1.2'}
                   />
 
                   {/* Counter-Rotate Text: -angleDeg cancels spoke angle, -rotationDeg cancels wheel angle!
@@ -246,7 +244,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                       y="-1"
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill={isActive ? '#ffffff' : '#fef08a'}
+                      fill={isActive ? '#ffffff' : '#fef9c3'}
                       fontFamily="var(--font-serif)"
                       fontSize="9.5"
                       fontWeight="800"
@@ -259,7 +257,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                       y="7.5"
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill={isActive ? '#e0f2fe' : 'rgba(254, 240, 138, 0.75)'}
+                      fill={isActive ? '#99ffee' : 'rgba(254, 249, 195, 0.85)'}
                       fontFamily="var(--font-mono)"
                       fontSize="5.5"
                       fontWeight="600"
