@@ -65,13 +65,13 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   // Initialize Lenis smooth scroll engine synchronized with GSAP Ticker
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.7,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.6,
+      wheelMultiplier: 1.35,
+      touchMultiplier: 2.0,
     });
     lenisRef.current = lenis;
 
@@ -109,7 +109,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
           gsap.fromTo(
             activeCard,
             { scale: 0.97 },
-            { scale: 1, duration: 0.45, ease: 'power2.out' }
+            { scale: 1, duration: 0.28, ease: 'power2.out' }
           );
         }
       }
@@ -132,11 +132,11 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
           const nearestIdx = Math.max(0, Math.min(Math.round(lenis.progress * (totalCards - 1)), totalCards - 1));
           const snapScroll = (nearestIdx / (totalCards - 1)) * limit;
           lenis.scrollTo(snapScroll, {
-            duration: 0.85,
+            duration: 0.5,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
           });
         }
-      }, 180);
+      }, 120);
     });
 
     return () => {
@@ -164,7 +164,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     if (lenisRef.current && lenisRef.current.limit > 0) {
       const snapScroll = (nearestIdx / (totalCards - 1)) * lenisRef.current.limit;
       lenisRef.current.scrollTo(snapScroll, {
-        duration: 0.85,
+        duration: 0.5,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
       });
     } else {
@@ -185,7 +185,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     if (lenisRef.current && lenisRef.current.limit > 0) {
       const targetScroll = (targetIdx / (totalCards - 1)) * lenisRef.current.limit;
       lenisRef.current.scrollTo(targetScroll, {
-        duration: 0.9,
+        duration: 0.55,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
       });
     } else {
@@ -307,11 +307,11 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
       lastPointerAngleRef.current = currentAngle;
 
-      // If user pauses dragging in between for >300ms, snap smoothly
+      // If user pauses dragging in between for >200ms, snap smoothly
       if (dragSnapTimerRef.current) clearTimeout(dragSnapTimerRef.current);
       dragSnapTimerRef.current = window.setTimeout(() => {
         snapToNearestEvent();
-      }, 300);
+      }, 200);
     };
 
     const onPointerUp = () => {

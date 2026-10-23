@@ -641,7 +641,7 @@
   background: linear-gradient(90deg, var(--pirate-gold) 0%, var(--sea-cyan) 100%);
   border-radius: var(--radius-pill);
   box-shadow: 0 0 10px rgba(34, 211, 238, 0.75);
-  transition: width 0.12s linear;
+  transition: width 0.05s linear;
   pointer-events: none;
 }
 
