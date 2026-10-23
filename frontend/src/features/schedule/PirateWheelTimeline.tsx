@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { PIRATE_WHEEL_MILESTONES } from './timelineData';
 import { PirateWheelSvg } from './PirateWheelSvg';
+import { OceanicTimelineBackdrop } from './components/OceanicTimelineBackdrop';
 import { soundEngine } from '../../utils/soundEngine';
 import { TimelineMilestone, PirateWheelTimelineProps } from '../../types/timeline';
 
@@ -385,7 +386,14 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       className={`z-axis-interactive-viewport ${className}`}
       aria-label="Interactive 3D Z-Axis Timeline Traversal"
     >
-      {/* 1. Background Oceanic Atmosphere & Tunnel Concentric Rings with Parallax Depth */}
+      {/* 1. Living Oceanic Voyage Backdrop: Animated creatures, swaying kelp, corals, shipwreck, and parallax seabed */}
+      <OceanicTimelineBackdrop
+        currentZ={currentZ}
+        maxCameraZ={maxCameraZ}
+        activeIdx={activeIdx}
+      />
+
+      {/* Subtle 3D Navigational Rings */}
       <div className="z-ocean-starfield" aria-hidden="true">
         <div className="z-tunnel-ring ring-1" style={{ transform: `translateZ(${-(currentZ * 0.4) % 1800}px)` }} />
         <div className="z-tunnel-ring ring-2" style={{ transform: `translateZ(${-(currentZ * 0.7) % 2400}px)` }} />

@@ -1,0 +1,707 @@
+/* ==========================================================================
+   OCEANIC TIMELINE BACKDROP STYLES
+   Bottom-of-the-sea odyssey with animated marine creatures, kelp forests,
+   coral reefs, sunken pirate shipwreck, and scroll-linked 3D parallax
+   Exact color palette matching feat/underwater-homepage
+   ========================================================================== */
+
+.oceanic-timeline-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  contain: layout size paint;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* ==========================================================================
+   1. WATER COLUMN DEPTH GRADIENT & CAUSTIC SUNBEAMS
+   ========================================================================== */
+.oceanic-depth-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% calc(30% + var(--sea-progress, 0) * 40%),
+    rgba(8, 40, 69, calc(0.95 - var(--sea-progress, 0) * 0.45)) 0%,
+    rgba(5, 22, 42, 0.95) 45%,
+    rgba(2, 11, 24, 0.98) 75%,
+    #010610 100%
+  );
+  will-change: opacity, background;
+  transition: background 0.2s ease-out;
+}
+
+/* Volumetric shimmer caustics filtering down from surface */
+.oceanic-caustic-sunbeams {
+  position: absolute;
+  inset: -10%;
+  background: repeating-linear-gradient(
+    115deg,
+    transparent 0px,
+    transparent 45px,
+    rgba(56, 189, 248, 0.04) 55px,
+    rgba(165, 243, 252, 0.08) 75px,
+    transparent 90px
+  );
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  will-change: transform, opacity;
+  animation: causticDrift 14s ease-in-out infinite alternate;
+}
+
+@keyframes causticDrift {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(12px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(-1.5deg);
+  }
+}
+
+.abyssal-depth-bloom {
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+  height: 55%;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(14, 165, 233, 0.2) 0%,
+    rgba(8, 40, 69, 0.35) 45%,
+    transparent 75%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   2. SEABED RIDGE LAYERS (Multi-Plane Parallax Dunes)
+   ========================================================================== */
+.seabed-ridge-layer {
+  position: absolute;
+  bottom: 0;
+  left: -20%;
+  width: 140%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.seabed-ridge-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ridge-distant {
+  height: 28vh;
+  z-index: 2;
+  filter: blur(2.5px);
+}
+
+.ridge-midground {
+  height: 24vh;
+  z-index: 5;
+  filter: blur(1px);
+}
+
+.ridge-foreground {
+  height: 18vh;
+  z-index: 8;
+  filter: drop-shadow(0 -4px 20px rgba(0, 0, 0, 0.8));
+}
+
+/* ==========================================================================
+   3. DISTANT SUNKEN PIRATE SHIPWRECK ON SEABED
+   ========================================================================== */
+.timeline-shipwreck-zone {
+  position: absolute;
+  bottom: 12vh;
+  right: 6%;
+  width: 440px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 3;
+  will-change: transform, opacity;
+  filter: blur(1.5px) drop-shadow(0 0 35px rgba(14, 165, 233, 0.15));
+  transition: opacity 0.4s ease-out;
+}
+
+.timeline-shipwreck-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   4. SWIMMING CREATURES (Organically Animated & Parallax-Linked)
+   ========================================================================== */
+/* A. WHALE POD (Adult & Calf) */
+.timeline-whale-pod {
+  position: absolute;
+  top: 14vh;
+  left: 0;
+  width: 480px;
+  height: 180px;
+  pointer-events: none;
+  z-index: 4;
+  will-change: transform;
+  animation: whaleGentleCruise 18s ease-in-out infinite alternate;
+}
+
+@keyframes whaleGentleCruise {
+  0% {
+    margin-top: 0;
+    transform: rotate(0.5deg);
+  }
+  50% {
+    margin-top: -18px;
+    transform: rotate(-1deg);
+  }
+  100% {
+    margin-top: 12px;
+    transform: rotate(0.8deg);
+  }
+}
+
+.whale-adult-entity {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.whale-adult-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.3));
+}
+
+.whale-pec-fin {
+  transform-origin: 160px 104px;
+  animation: whaleFinFlap 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes whaleFinFlap {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(6deg) scale(0.95);
+  }
+}
+
+.whale-tail-animated {
+  transform-origin: 385px 88px;
+  animation: whaleFlukeWag 4.8s ease-in-out infinite alternate;
+}
+
+@keyframes whaleFlukeWag {
+  0% {
+    transform: rotate(-4deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
+}
+
+.whale-calf-entity {
+  position: absolute;
+  top: 45px;
+  left: 140px;
+  width: 220px;
+  height: 90px;
+  opacity: 0.85;
+}
+
+.whale-calf-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* B. FISH SCHOOL */
+.timeline-fish-school {
+  position: absolute;
+  top: 22vh;
+  left: 0;
+  pointer-events: none;
+  z-index: 6;
+  will-change: transform;
+}
+
+.schooling-fish {
+  position: absolute;
+  will-change: transform;
+}
+
+.school-tail-wag {
+  transform-origin: 4px 8px;
+  animation: fishTailWagFast 0.32s ease-in-out infinite alternate;
+}
+
+@keyframes fishTailWagFast {
+  0% {
+    transform: rotate(-18deg);
+  }
+  100% {
+    transform: rotate(18deg);
+  }
+}
+
+/* C. BIOLUMINESCENT JELLYFISH */
+.timeline-jellyfish-cluster {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.jelly-entity {
+  position: absolute;
+  will-change: transform;
+}
+
+.jelly-alpha {
+  top: 35vh;
+  right: 18%;
+  animation: jellyDriftRiseA 10s ease-in-out infinite alternate;
+}
+
+.jelly-beta {
+  top: 48vh;
+  left: 22%;
+  animation: jellyDriftRiseB 12s ease-in-out infinite alternate;
+}
+
+@keyframes jellyDriftRiseA {
+  0% {
+    margin-top: 0;
+    transform: rotate(-2deg);
+  }
+  50% {
+    margin-top: -30px;
+    transform: rotate(3deg);
+  }
+  100% {
+    margin-top: -10px;
+    transform: rotate(-1deg);
+  }
+}
+
+@keyframes jellyDriftRiseB {
+  0% {
+    margin-top: 0;
+    transform: rotate(3deg);
+  }
+  50% {
+    margin-top: -24px;
+    transform: rotate(-2deg);
+  }
+  100% {
+    margin-top: -8px;
+    transform: rotate(1deg);
+  }
+}
+
+.jelly-bell-pulse {
+  animation: jellyBellPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes jellyBellPulse {
+  0%, 100% {
+    transform: scale(1, 1);
+  }
+  45% {
+    transform: scale(0.92, 1.15);
+  }
+}
+
+.jelly-tentacle {
+  animation: tentacleWave 3.6s ease-in-out infinite alternate;
+}
+
+.jelly-tentacle.t1 {
+  animation-delay: -0.4s;
+}
+
+.jelly-tentacle.t2 {
+  animation-delay: -1.2s;
+}
+
+.jelly-tentacle.t3 {
+  animation-delay: -0.8s;
+}
+
+.jelly-tentacle.t4 {
+  animation-delay: -1.8s;
+}
+
+@keyframes tentacleWave {
+  0% {
+    stroke-width: 1.2;
+    transform: skewX(-2deg);
+  }
+  100% {
+    stroke-width: 1.6;
+    transform: skewX(3deg);
+  }
+}
+
+.jelly-core-glow {
+  animation: jellyCoreBreathe 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes jellyCoreBreathe {
+  0% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 4px #38bdf8);
+  }
+  100% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 14px #7dd3fc);
+  }
+}
+
+/* D. DEEP SEA LANTERNFISH */
+.timeline-lanternfish {
+  position: absolute;
+  bottom: 24vh;
+  left: 12%;
+  width: 240px;
+  height: 180px;
+  pointer-events: none;
+  z-index: 7;
+  will-change: transform, opacity;
+  transition: opacity 0.4s ease;
+  animation: lanternHover 6.5s ease-in-out infinite alternate;
+}
+
+@keyframes lanternHover {
+  0% {
+    margin-top: 0;
+    transform: rotate(-1deg);
+  }
+  50% {
+    margin-top: -16px;
+    transform: rotate(2deg);
+  }
+  100% {
+    margin-top: 8px;
+    transform: rotate(-0.5deg);
+  }
+}
+
+.lanternfish-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.4));
+}
+
+.esca-light-halo {
+  position: absolute;
+  top: 30px;
+  left: 2px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(165, 243, 252, 0.5) 0%, rgba(56, 189, 248, 0.2) 40%, transparent 75%);
+  filter: blur(12px);
+  animation: escaHaloPulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes escaHaloPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+.esca-bulb-glow {
+  animation: escaBulbFlicker 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes escaBulbFlicker {
+  0% {
+    filter: drop-shadow(0 0 4px #a5f3fc);
+  }
+  100% {
+    filter: drop-shadow(0 0 16px #38bdf8);
+  }
+}
+
+.angler-tail-wag {
+  transform-origin: 188px 102px;
+  animation: anglerTailWag 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes anglerTailWag {
+  0% {
+    transform: rotate(-6deg);
+  }
+  100% {
+    transform: rotate(8deg);
+  }
+}
+
+/* E. MANTA RAY CRUISER */
+.timeline-manta-cruiser {
+  position: absolute;
+  bottom: 18vh;
+  right: 14%;
+  pointer-events: none;
+  z-index: 5;
+  will-change: transform;
+}
+
+.manta-wings-undulate {
+  transform-origin: 70px 50px;
+  animation: mantaFlap 4.2s ease-in-out infinite alternate;
+}
+
+@keyframes mantaFlap {
+  0% {
+    transform: scaleY(0.88) skewX(-2deg);
+  }
+  100% {
+    transform: scaleY(1.08) skewX(2deg);
+  }
+}
+
+/* ==========================================================================
+   5. SEABED FLORA & CORAL FORESTS (Continuous Swaying Plants)
+   ========================================================================= */
+.seabed-flora-flank {
+  position: absolute;
+  bottom: 0;
+  width: 440px;
+  max-width: 38vw;
+  height: 60vh;
+  pointer-events: none;
+  z-index: 7;
+}
+
+.flank-left {
+  left: 0;
+}
+
+.flank-right {
+  right: 0;
+}
+
+.flora-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Kelp Fronds Swaying in Ocean Currents */
+.kelp-stalk {
+  transform-origin: bottom center;
+}
+
+.kelp-sway-slow {
+  animation: kelpSway 7.2s ease-in-out infinite alternate;
+}
+
+.kelp-sway-mid {
+  animation: kelpSway 5.5s ease-in-out infinite alternate;
+  animation-delay: -1.8s;
+}
+
+.kelp-sway-fast {
+  animation: kelpSway 4.2s ease-in-out infinite alternate;
+  animation-delay: -3.2s;
+}
+
+@keyframes kelpSway {
+  0% {
+    transform: rotate(-3.5deg) skewX(-2deg);
+  }
+  50% {
+    transform: rotate(1deg) skewX(0.5deg);
+  }
+  100% {
+    transform: rotate(4deg) skewX(2.5deg);
+  }
+}
+
+/* Coral formations gentle breathing */
+.coral-formation-group {
+  transform-origin: bottom center;
+  animation: coralBreathing 6s ease-in-out infinite alternate;
+}
+
+@keyframes coralBreathing {
+  0% {
+    transform: scaleY(0.98);
+  }
+  100% {
+    transform: scaleY(1.02);
+  }
+}
+
+/* Glowing Bioluminescent Tips / Polyps on Coral */
+.bio-glow-node {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.pulse-a {
+  animation: bioPulse 3.2s ease-in-out infinite alternate;
+}
+
+.pulse-b {
+  animation: bioPulse 4.4s ease-in-out infinite alternate;
+  animation-delay: -1.5s;
+}
+
+.pulse-c {
+  animation: bioPulse 5.2s ease-in-out infinite alternate;
+  animation-delay: -2.8s;
+}
+
+@keyframes bioPulse {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.85);
+    filter: drop-shadow(0 0 2px #38bdf8);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.3);
+    filter: drop-shadow(0 0 10px #7dd3fc);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+    filter: drop-shadow(0 0 4px #22d3ee);
+  }
+}
+
+/* ==========================================================================
+   6. SUSPENDED BIOLUMINESCENT MARINE SNOW & RISING BUBBLES
+   ========================================================================= */
+.marine-snow-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  overflow: hidden;
+}
+
+.marine-snow-mote {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #a5f3fc;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: moteDrift ease-in-out infinite alternate;
+}
+
+@keyframes moteDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate3d(8px, -14px, 0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(-6px, -26px, 0);
+    opacity: 0.3;
+  }
+}
+
+/* Seabed Hydrothermal Vent Micro-Bubbles */
+.seabed-thermal-bubbles {
+  position: absolute;
+  bottom: 0;
+  inset-x: 0;
+  height: 80%;
+  pointer-events: none;
+  z-index: 6;
+  overflow: hidden;
+}
+
+.bubble-vent {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 80%);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  opacity: 0;
+}
+
+.vent-left {
+  left: 24%;
+  animation: ventBubbleUp 6.2s linear infinite;
+}
+
+.vent-center {
+  left: 52%;
+  animation: ventBubbleUp 5.4s linear infinite;
+  animation-delay: -2.3s;
+}
+
+.vent-right {
+  left: 78%;
+  animation: ventBubbleUp 7.1s linear infinite;
+  animation-delay: -4.1s;
+}
+
+@keyframes ventBubbleUp {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.75;
+    transform: translate3d(4px, -15vh, 0) scale(0.85);
+  }
+  60% {
+    opacity: 0.65;
+    transform: translate3d(-6px, -50vh, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(8px, -90vh, 0) scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .seabed-flora-flank {
+    width: 280px;
+    height: 42vh;
+  }
+
+  .timeline-whale-pod {
+    width: 320px;
+    height: 120px;
+    top: 10vh;
+  }
+
+  .timeline-shipwreck-zone {
+    width: 280px;
+    height: 200px;
+    bottom: 8vh;
+    right: 2%;
+  }
+
+  .timeline-lanternfish {
+    width: 180px;
+    height: 130px;
+    left: 4%;
+  }
+}

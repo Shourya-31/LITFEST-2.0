@@ -23,7 +23,7 @@
   perspective-origin: 50% 50%;
   pointer-events: none;
   overflow: hidden;
-  z-index: 1;
+  z-index: 2;
 }
 
 .z-tunnel-ring {
@@ -74,7 +74,7 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
 }
 
 .z-world-camera {
