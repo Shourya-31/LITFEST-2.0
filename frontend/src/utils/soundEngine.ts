@@ -321,6 +321,10 @@ class NauticalSoundEngine {
     this.playWaterTransition(spokeIndex);
   }
 
+  public playWaterBell(eventIndex: number = 0) {
+    this.playWaterDrop(eventIndex);
+  }
+
   public playSeaBell(pitchIndex: number = 0) {
     this.playWaterDrop(pitchIndex);
   }

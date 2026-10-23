@@ -1,91 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Lenis from 'lenis';
-import { gsap } from 'gsap';
+import React, { useState, useRef } from 'react';
+import type Lenis from 'lenis';
 import { Navbar } from '../components/navigation/Navbar';
 import { LitfestUnderwaterHome } from '../features/home/LitfestUnderwaterHome';
 import { BubblesTransition } from '../features/home/components/BubblesTransition';
 import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
-import { X, Compass, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Compass, CheckCircle2 } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export const App: React.FC = () => {
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [faqOpen, setFaqOpen] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<'register' | 'arenas' | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+  const [currentNavSection, setCurrentNavSection] = useState<'home' | 'timeline'>('home');
 
-  const lenisRef = useRef<Lenis | null>(null);
-  const DIVE_THRESHOLD = 0.14; // Scroll progress boundary between Underwater Home and 3D Timeline
+  const lenisInstanceRef = useRef<Lenis | null>(null);
+  const HOME_ZONE = 0.12;
 
-  // Initialize global Lenis smooth scrolling engine synchronized with GSAP ticker
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.75,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.25,
-      touchMultiplier: 1.8,
-    });
-    lenisRef.current = lenis;
+  const toggleFaq = (open: boolean) => {
+    soundEngine.playDroplet();
+    setFaqOpen(open);
+  };
 
-    const tickerUpdate = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0);
-
-    lenis.on('scroll', (e: { progress: number }) => {
-      setScrollProgress(e.progress);
-    });
-
-    return () => {
-      gsap.ticker.remove(tickerUpdate);
-      lenis.destroy();
-      lenisRef.current = null;
-    };
-  }, []);
-
-  // Pause / resume Lenis when any modal (FAQ, Registration, Arenas) is open
-  useEffect(() => {
-    if (!lenisRef.current) return;
-    const isAnyModalOpen = faqOpen || activeModal !== null;
-    if (isAnyModalOpen) {
-      lenisRef.current.stop();
-    } else {
-      lenisRef.current.start();
-    }
-  }, [faqOpen, activeModal]);
-
-  // Compute stage progress variables
-  // 1. Homepage zoom: 0 -> 1 during scroll [0, DIVE_THRESHOLD]
-  const homeZoomProgress = Math.min(1, Math.max(0, scrollProgress / DIVE_THRESHOLD));
-
-  // 2. Bubbles transition veil: surges when diving through DIVE_THRESHOLD
-  let bubbleProgress = 0;
-  if (scrollProgress >= 0.02 && scrollProgress <= 0.22) {
-    if (scrollProgress < DIVE_THRESHOLD) {
-      bubbleProgress = (scrollProgress - 0.02) / (DIVE_THRESHOLD - 0.02);
-    } else {
-      bubbleProgress = 1 - (scrollProgress - DIVE_THRESHOLD) / (0.22 - DIVE_THRESHOLD);
-    }
-  }
-
-  // 3. Timeline progress: 0 -> 1 during scroll [DIVE_THRESHOLD, 1.0]
-  const timelineProgress = Math.min(
-    1,
-    Math.max(0, (scrollProgress - DIVE_THRESHOLD) / (1 - DIVE_THRESHOLD))
-  );
-
-  const isTimelineVisible = scrollProgress >= DIVE_THRESHOLD * 0.45;
-  const isTimelineActive = scrollProgress >= DIVE_THRESHOLD * 0.95;
-
-  // Navigation Handlers
   const handleNavigateHome = () => {
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(0, {
+    if (lenisInstanceRef.current) {
+      lenisInstanceRef.current.scrollTo(0, {
         duration: 0.85,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
@@ -93,12 +32,10 @@ export const App: React.FC = () => {
     setFaqOpen(false);
   };
 
-  const handleNavigateTimeline = (targetMilestoneIdx: number = 0) => {
-    if (lenisRef.current && lenisRef.current.limit > 0) {
-      const targetTimelinePct = targetMilestoneIdx / 13;
-      const targetGlobalPct = DIVE_THRESHOLD + targetTimelinePct * (1 - DIVE_THRESHOLD);
-      const targetScroll = targetGlobalPct * lenisRef.current.limit;
-      lenisRef.current.scrollTo(targetScroll, {
+  const handleNavigateTimeline = () => {
+    if (lenisInstanceRef.current && lenisInstanceRef.current.limit > 0) {
+      const targetScroll = HOME_ZONE * lenisInstanceRef.current.limit;
+      lenisInstanceRef.current.scrollTo(targetScroll, {
         duration: 0.8,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
@@ -106,27 +43,18 @@ export const App: React.FC = () => {
     setFaqOpen(false);
   };
 
-  const handleSnapToIndex = (idx: number) => {
-    handleNavigateTimeline(idx);
-  };
-
   const toggleAudio = () => {
     const active = soundEngine.toggleOceanAmbience();
     setIsAudioPlaying(active);
-  };
-
-  const toggleFaq = (open: boolean) => {
-    soundEngine.playDroplet();
-    setFaqOpen(open);
   };
 
   return (
     <div className="litfest-app-root">
       {/* 1. Global Floating Navbar */}
       <Navbar
-        currentSection={scrollProgress < DIVE_THRESHOLD ? 'home' : 'timeline'}
+        currentSection={currentNavSection}
         onNavigateHome={handleNavigateHome}
-        onNavigateTimeline={() => handleNavigateTimeline(0)}
+        onNavigateTimeline={handleNavigateTimeline}
         onOpenFaq={() => toggleFaq(true)}
         onOpenArenas={() => setActiveModal('arenas')}
         onOpenRegister={() => setActiveModal('register')}
@@ -135,40 +63,36 @@ export const App: React.FC = () => {
         onToggleAudio={toggleAudio}
       />
 
-      {/* 2. Virtual Scroll Spacer for buttery smooth Lenis pacing */}
-      <div className="lenis-scroll-spacer" style={{ height: '1600vh' }} aria-hidden="true" />
+      {/* 2. Lenis Virtual Scroll Spacer (1400vh for natural, buttery smooth travel) */}
+      <div className="lenis-scroll-spacer" style={{ height: '1400vh' }} aria-hidden="true" />
 
-      {/* 3. Surface & Abyssal Underwater Homepage (Zooms into screen on scroll) */}
+      {/* 3. Surface & Abyssal Underwater Homepage (Controlled directly in Lenis RAF for 120fps) */}
       <LitfestUnderwaterHome
-        zoomProgress={homeZoomProgress}
-        onExploreClick={() => handleNavigateTimeline(0)}
+        onExploreClick={handleNavigateTimeline}
         onRegisterClick={() => setActiveModal('register')}
         isAudioPlaying={isAudioPlaying}
         onToggleAudio={toggleAudio}
       />
 
       {/* 4. Cinematic Oceanic Bubbles Transition Layer */}
-      <BubblesTransition progress={bubbleProgress} />
+      <div id="underwater-bubbles-stage" style={{ opacity: 0, display: 'none' }}>
+        <BubblesTransition progress={1} />
+      </div>
 
-      {/* 5. 3D Z-Axis Voyage Timeline & Steering Helm in Deep Abyss */}
-      <main
-        className="main-3d-z-viewport"
-        style={{
-          opacity: isTimelineVisible ? Math.min(1, (scrollProgress - DIVE_THRESHOLD * 0.45) / (DIVE_THRESHOLD * 0.45)) : 0,
-          pointerEvents: isTimelineActive ? 'auto' : 'none',
-          visibility: isTimelineVisible ? 'visible' : 'hidden',
-        }}
-      >
+      {/* 5. PRIMARY COMPONENT: 3D Z-Axis Voyage Timeline */}
+      <main className="main-3d-z-viewport">
         <PirateWheelTimeline
           isFaqOpen={faqOpen}
-          timelineProgress={timelineProgress}
-          isTimelineActive={isTimelineActive}
-          onNavigateToIndex={handleNavigateTimeline}
-          onSnapToIndex={handleSnapToIndex}
+          onRegisterLenis={(lenis) => {
+            lenisInstanceRef.current = lenis;
+          }}
+          onScrollProgress={(progress) => {
+            setCurrentNavSection(progress <= HOME_ZONE ? 'home' : 'timeline');
+          }}
         />
       </main>
 
-      {/* 6. Official Litfest Participant Registration Modal */}
+      {/* 6. Participant Registration Modal */}
       {activeModal === 'register' && (
         <div
           className="ocean-modal-overlay"
@@ -220,7 +144,7 @@ export const App: React.FC = () => {
                   onClick={() => {
                     soundEngine.playDroplet();
                     setActiveModal(null);
-                    handleNavigateTimeline(0);
+                    handleNavigateTimeline();
                   }}
                   id="modal-register-action"
                 >
@@ -289,7 +213,7 @@ export const App: React.FC = () => {
                   onClick={() => {
                     soundEngine.playDroplet();
                     setActiveModal(null);
-                    handleNavigateTimeline(0);
+                    handleNavigateTimeline();
                   }}
                 >
                   View in Timeline
@@ -331,11 +255,11 @@ export const App: React.FC = () => {
                 type="button"
                 className="faq-modal-close-btn interactive"
                 onClick={() => toggleFaq(false)}
-                title="Return to Voyage"
+                title="Return to 3D Timeline"
                 aria-label="Close FAQs"
               >
-                <X size={18} />
-                <span>RETURN TO ODYSSEY</span>
+                <X size={20} />
+                <span>RETURN TO HELM</span>
               </button>
             </div>
 

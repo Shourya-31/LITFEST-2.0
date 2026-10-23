@@ -1,3 +1,5 @@
+import type Lenis from 'lenis';
+
 export interface TimelineMilestone {
   id: number;
   eventNumber: number; // 1 to 14 (Event index)
@@ -23,9 +25,7 @@ export interface PirateWheelTimelineProps {
   subtitle?: string;
   className?: string;
   isFaqOpen?: boolean;
-  timelineProgress?: number;
-  isTimelineActive?: boolean;
-  onNavigateToIndex?: (idx: number) => void;
-  onSnapToIndex?: (idx: number) => void;
   onMilestoneSelect?: (milestone: TimelineMilestone) => void;
+  onRegisterLenis?: (lenis: Lenis) => void;
+  onScrollProgress?: (progress: number) => void;
 }

@@ -12,6 +12,8 @@
   z-index: 10;
   transform-style: preserve-3d;
   backface-visibility: hidden;
+  transform-origin: 50% 48%;
+  will-change: transform, opacity, filter;
 }
 
 /* Audio toggle floating button in bottom left */

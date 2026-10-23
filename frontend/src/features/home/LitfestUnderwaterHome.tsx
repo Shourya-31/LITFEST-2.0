@@ -5,7 +5,6 @@ import { UnderwaterTitle } from './components/UnderwaterTitle';
 import './LitfestUnderwaterHome.css';
 
 interface LitfestUnderwaterHomeProps {
-  zoomProgress?: number;
   onExploreClick?: () => void;
   onRegisterClick?: () => void;
   isAudioPlaying?: boolean;
@@ -13,38 +12,17 @@ interface LitfestUnderwaterHomeProps {
 }
 
 export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
-  zoomProgress = 0,
   onExploreClick,
   onRegisterClick,
   isAudioPlaying = false,
   onToggleAudio,
 }) => {
-  // Calculate dynamic 3D zoom perspective scale and optical depth
-  // As user scrolls down, the homepage zooms in (1x to 3.4x), blurs slightly, and recedes
-  const clampedProgress = Math.max(0, Math.min(1, zoomProgress));
-  const scale = 1 + clampedProgress * 2.4;
-  const opacity = Math.max(0, 1 - Math.pow(clampedProgress, 1.6));
-  const blurPx = clampedProgress * 7;
-  const pointerEvents = clampedProgress > 0.7 ? 'none' : 'auto';
-
-  // If completely scrolled past, hide rendering for performance
-  if (clampedProgress >= 0.99) {
-    return null;
-  }
-
   return (
     <div
+      id="underwater-home-stage"
       className="litfest-underwater-root"
       role="region"
       aria-label="Litfest 2.0 Underwater Experience"
-      style={{
-        transform: `scale(${scale.toFixed(4)})`,
-        transformOrigin: '50% 48%',
-        opacity: Number(opacity.toFixed(3)),
-        filter: blurPx > 0.1 ? `blur(${blurPx.toFixed(2)}px)` : 'none',
-        pointerEvents: pointerEvents as React.CSSProperties['pointerEvents'],
-        willChange: 'transform, opacity, filter',
-      }}
     >
       {/* 1. Deep Sea Atmosphere & Volumetric Sunlight */}
       <OceanAtmosphere />
@@ -67,11 +45,6 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
           title={isAudioPlaying ? 'Mute Ocean Waves' : 'Play Ambient Deep Sea Audio'}
           aria-label="Toggle ocean sound"
           id="ocean-audio-toggle"
-          style={{
-            opacity: clampedProgress > 0.2 ? 0 : 1,
-            pointerEvents: clampedProgress > 0.2 ? 'none' : 'auto',
-            transition: 'opacity 0.2s ease',
-          }}
         >
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
             {isAudioPlaying ? (

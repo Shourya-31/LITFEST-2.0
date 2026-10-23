@@ -1,7 +1,6 @@
 /* ==========================================================================
    3D Z-AXIS ZOOM IN / ZOOM OUT TIMELINE STYLES
-   Zoom-Through 3D Camera Engine with 14-Spoke Upright Ship Helm
-   Color palette exact match to feat/underwater-homepage
+   Zoom-Through 3D Camera Engine with 14-Spoke Upright Pirate Ship Helm
    ========================================================================== */
 
 .z-axis-interactive-viewport {
@@ -9,7 +8,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 40%, #082845 0%, #05162a 35%, #020b18 70%, #010610 100%);
+  background: radial-gradient(circle at 50% 35%, #0e5c8a 0%, #083c5e 40%, #052438 80%, #031c2d 100%);
   user-select: none;
   touch-action: none;
 }
@@ -41,8 +40,8 @@
   height: 800px;
   margin-top: -400px;
   margin-left: -400px;
-  border: 1.5px dashed rgba(56, 189, 248, 0.28);
-  box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
+  border: 1.5px dashed rgba(128, 255, 213, 0.28);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
 }
 
 .ring-2 {
@@ -50,8 +49,8 @@
   height: 1300px;
   margin-top: -650px;
   margin-left: -650px;
-  border: 1.5px solid rgba(165, 243, 252, 0.18);
-  box-shadow: 0 0 60px rgba(56, 189, 248, 0.1);
+  border: 1.5px solid rgba(251, 191, 36, 0.22);
+  box-shadow: 0 0 60px rgba(251, 191, 36, 0.1);
 }
 
 .ring-3 {
@@ -59,7 +58,7 @@
   height: 1800px;
   margin-top: -900px;
   margin-left: -900px;
-  border: 2px dashed rgba(56, 189, 248, 0.12);
+  border: 2px dashed rgba(153, 255, 238, 0.16);
 }
 
 /* ==========================================================================
@@ -104,23 +103,19 @@
 }
 
 .z-checkpoint-card {
-  background: radial-gradient(
-    circle at 50% 0%,
-    rgba(14, 46, 82, 0.95) 0%,
-    rgba(2, 14, 30, 0.98) 100%
-  );
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: linear-gradient(155deg, rgba(8, 54, 87, 0.94) 0%, rgba(5, 34, 55, 0.97) 100%);
+  border: 1px solid var(--border-ocean-subtle);
   border-radius: var(--radius-lg);
   padding: 1.8rem;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(14, 165, 233, 0.2);
+  box-shadow: 0 25px 60px rgba(2, 20, 34, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .z-milestone-checkpoint-plane.is-active-checkpoint .z-checkpoint-card {
-  border-color: #38bdf8;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.45), inset 0 0 25px rgba(56, 189, 248, 0.15);
+  border-color: var(--beach-seafoam);
+  box-shadow: 0 30px 80px rgba(2, 20, 34, 0.88), 0 0 35px rgba(128, 255, 213, 0.45), inset 0 0 25px rgba(128, 255, 213, 0.1);
 }
 
 .z-milestone-checkpoint-plane.is-active-checkpoint .z-checkpoint-card::before {
@@ -130,7 +125,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #0284c7, #38bdf8, #a5f3fc);
+  background: linear-gradient(90deg, var(--pirate-gold), var(--beach-seafoam), var(--beach-sky));
 }
 
 /* Card Header */
@@ -148,15 +143,15 @@
   font-family: var(--font-serif);
   font-size: 0.82rem;
   font-weight: 700;
-  color: #bae6fd;
-  background: rgba(14, 165, 233, 0.15);
+  color: var(--pirate-gold-light);
+  background: rgba(212, 175, 55, 0.12);
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  border: 1px solid var(--border-gold-subtle);
 }
 
 .crest-anchor {
-  color: #38bdf8;
+  color: var(--sea-cyan);
 }
 
 .crest-roman {
@@ -167,11 +162,11 @@
 .card-z-depth-pill {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: #38bdf8;
-  background: rgba(14, 165, 233, 0.12);
+  color: var(--sea-cyan);
+  background: rgba(34, 211, 238, 0.12);
   padding: 0.25rem 0.65rem;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  border: 1px solid rgba(34, 211, 238, 0.25);
   font-weight: 600;
 }
 
@@ -191,7 +186,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.76rem;
-  color: #7dd3fc;
+  color: var(--beach-water-shallow);
   font-family: var(--font-mono);
   margin-bottom: 1rem;
 }
@@ -205,8 +200,8 @@
 }
 
 .meta-tile {
-  background: rgba(5, 22, 42, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.22);
+  background: rgba(6, 44, 71, 0.75);
+  border: 1px solid var(--border-ocean-subtle);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.7rem;
   display: flex;
@@ -223,7 +218,7 @@
   gap: 0.3rem;
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  color: var(--color-text-dim);
+  color: var(--text-muted);
   letter-spacing: 0.05em;
   margin-bottom: 0.15rem;
 }
@@ -236,8 +231,8 @@
 
 /* Captain's Logbook Placeholder */
 .card-captains-log {
-  background: rgba(2, 14, 30, 0.75);
-  border-left: 3px solid #38bdf8;
+  background: rgba(30, 20, 10, 0.45);
+  border-left: 3px solid var(--pirate-gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 0.7rem 0.85rem;
   margin-bottom: 0.9rem;
@@ -247,21 +242,21 @@
   font-family: var(--font-serif);
   font-size: 0.72rem;
   font-weight: 700;
-  color: #38bdf8;
+  color: var(--pirate-gold);
   margin-bottom: 0.2rem;
 }
 
 .log-text {
   font-size: 0.8rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   font-style: italic;
   line-height: 1.45;
 }
 
 /* Highlights Box */
 .card-highlights-box {
-  background: rgba(14, 165, 233, 0.06);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  background: rgba(34, 211, 238, 0.04);
+  border: 1px solid rgba(34, 211, 238, 0.12);
   border-radius: var(--radius-sm);
   padding: 0.65rem 0.8rem;
   margin-bottom: 1rem;
@@ -273,14 +268,14 @@
   gap: 0.35rem;
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: #38bdf8;
+  color: var(--sea-cyan);
   font-weight: 600;
   margin-bottom: 0.2rem;
 }
 
 .highlights-desc {
   font-size: 0.78rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
@@ -291,7 +286,7 @@
   justify-content: space-between;
   gap: 0.8rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .card-bounty-badge {
@@ -300,30 +295,31 @@
   gap: 0.4rem;
   font-size: 0.76rem;
   font-weight: 600;
-  color: #bae6fd;
+  color: var(--pirate-gold-light);
 }
 
 .card-explore-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  border: 1px solid rgba(186, 230, 253, 0.4);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(212, 175, 55, 0.15) 100%);
+  border: 1px solid var(--sea-cyan);
   color: #ffffff;
-  font-family: var(--font-sans);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.48rem 1.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.45rem 1.05rem;
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 4px 14px rgba(34, 211, 238, 0.25);
 }
 
 .card-explore-btn:hover {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.55);
+  background: linear-gradient(135deg, var(--sea-cyan) 0%, var(--pirate-gold) 100%);
+  color: #030b14;
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.55);
   transform: translateY(-2px);
 }
 
@@ -337,7 +333,7 @@
 
 /* ==========================================================================
    HEADS-UP DISPLAY (HUD) OVERLAY
-   ========================================================================== */
+   ========================================================================= */
 .z-axis-hud-overlay {
   position: absolute;
   inset: 0;
@@ -350,7 +346,7 @@
 }
 
 /* ==========================================================================
-   BOTTOM LEFT: PIRATE SHIP HELM (UNBOXED & FLOATING)
+   BOTTOM LEFT: PIRATE SHIP HELM (UNBOXED & FLOATING, NO CARD BACKGROUND)
    ========================================================================== */
 .z-hud-helm-dock {
   position: absolute;
@@ -377,26 +373,30 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
-  color: #bae6fd;
-  background: rgba(2, 14, 30, 0.75);
+  color: var(--text-sand);
+  background: rgba(5, 36, 56, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(128, 255, 213, 0.25);
   border-radius: var(--radius-pill);
   padding: 0.35rem 0.85rem;
   margin-bottom: 0.2rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(2, 20, 34, 0.35);
 }
 
 .dock-sub {
-  color: #38bdf8;
+  color: var(--pirate-gold);
   font-weight: 700;
 }
 
+/* Enlarged 300px x 300px Steering Wheel */
 .helm-dock-wheel-wrap {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  width: 290px;
-  height: 290px;
   margin: 0 auto;
   cursor: grab;
   touch-action: none;
@@ -409,6 +409,12 @@
   cursor: grabbing;
 }
 
+.z-hud-helm-dock.is-steering {
+  border: none;
+  box-shadow: none;
+}
+
+/* Floating Helm Wrapper */
 .pirate-helm-wrapper {
   position: relative;
   width: 100%;
@@ -418,11 +424,15 @@
   justify-content: center;
 }
 
+.helm-ambient-backlight {
+  display: none;
+}
+
 .pirate-helm-svg {
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.85));
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.8));
 }
 
 .active-pulse-aura {
@@ -445,11 +455,11 @@
   font-family: var(--font-sans);
   font-size: 0.72rem;
   letter-spacing: 0.04em;
-  color: #e0f2fe;
-  background: rgba(2, 14, 30, 0.75);
+  color: var(--text-primary);
+  background: rgba(5, 36, 56, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(128, 255, 213, 0.25);
   border-radius: var(--radius-pill);
   padding: 0.28rem 0.85rem;
   margin-top: 0.35rem;
@@ -461,7 +471,7 @@
 }
 
 .hint-compass-icon {
-  color: #38bdf8;
+  color: var(--beach-seafoam);
   animation: rotateCompass 12s linear infinite;
 }
 
@@ -478,8 +488,11 @@
   width: auto;
   gap: 0.8rem;
   background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: none;
   padding: 0;
+  box-shadow: none;
 }
 
 .dock-ctrl-btn {
@@ -490,7 +503,7 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
@@ -504,7 +517,7 @@
   flex: 0 0 30px;
   height: 30px;
   padding: 0;
-  color: #38bdf8;
+  color: var(--pirate-gold-light);
 }
 
 .dock-ctrl-btn:disabled {
@@ -514,9 +527,14 @@
 
 .dock-ctrl-btn:not(:disabled):hover {
   background: transparent;
-  color: #38bdf8;
-  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  color: var(--beach-seafoam);
+  text-shadow: 0 0 10px rgba(128, 255, 213, 0.6);
   transform: translateY(-1px);
+}
+
+.dock-ctrl-btn.sound-btn:not(:disabled):hover {
+  color: var(--beach-sun-gold);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
 }
 
 /* ==========================================================================
@@ -536,11 +554,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(2, 14, 30, 0.88);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(7, 24, 41, 0.92);
+  border: 1px solid var(--border-ocean-glow);
   border-radius: var(--radius-pill);
   padding: 0.7rem 1.15rem;
-  color: #f0f9ff;
+  color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 700;
@@ -556,10 +574,10 @@
 }
 
 .zoom-action-btn:not(:disabled):hover {
-  background: rgba(14, 165, 233, 0.2);
-  border-color: #38bdf8;
+  background: rgba(34, 211, 238, 0.2);
+  border-color: var(--sea-cyan);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
 }
 
 /* ==========================================================================
@@ -571,21 +589,21 @@
   flex-direction: column;
   gap: 0.45rem;
   width: min(520px, calc(100vw - 380px));
-  background: rgba(2, 14, 30, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(5, 36, 56, 0.78);
+  border: 1px solid rgba(128, 255, 213, 0.28);
   border-radius: var(--radius-pill);
   padding: 0.6rem 1.4rem;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   pointer-events: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 10px 30px rgba(2, 20, 34, 0.6);
   margin-bottom: 0.5rem;
   transition: all 0.25s ease;
 }
 
 .z-minimal-progress-dock:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.25);
+  border-color: var(--border-ocean-glow);
+  box-shadow: 0 12px 35px rgba(2, 20, 34, 0.75), 0 0 20px rgba(128, 255, 213, 0.25);
 }
 
 .minimal-progress-meta {
@@ -599,7 +617,7 @@
 }
 
 .meta-event-badge {
-  color: #38bdf8;
+  color: var(--pirate-gold-light);
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -617,7 +635,7 @@
 }
 
 .meta-event-pct {
-  color: #38bdf8;
+  color: var(--sea-cyan);
   font-weight: 700;
 }
 
@@ -639,13 +657,14 @@
   top: 4px;
   left: 0;
   height: 4px;
-  background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+  background: linear-gradient(90deg, var(--pirate-gold) 0%, var(--sea-cyan) 100%);
   border-radius: var(--radius-pill);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.75);
   transition: width 0.05s linear;
   pointer-events: none;
 }
 
+/* Subtle notch tick dots along track */
 .minimal-progress-tick {
   position: absolute;
   top: 4px;
@@ -660,7 +679,7 @@
 
 .minimal-progress-tick.active {
   background: #ffffff;
-  box-shadow: 0 0 6px #38bdf8;
+  box-shadow: 0 0 6px var(--sea-cyan);
 }
 
 /* ==========================================================================
@@ -671,6 +690,10 @@
     width: 220px;
     bottom: 4.8rem;
     left: 0.5rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
   }
 
   .helm-dock-wheel-wrap {
