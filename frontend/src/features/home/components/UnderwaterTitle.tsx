@@ -126,7 +126,21 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
         </div>
 
         {/* Downward indicator inviting deeper exploration */}
-        <div className="scroll-invitation" aria-hidden="true">
+        <div
+          className="scroll-invitation"
+          onClick={onExploreClick}
+          role="button"
+          tabIndex={0}
+          aria-label="Descend into Timeline"
+          title="Descend into Timeline"
+          style={{ cursor: 'pointer' }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              if (onExploreClick) onExploreClick();
+            }
+          }}
+        >
           <span className="scroll-caption">DESCEND</span>
           <svg
             className="scroll-arrow"

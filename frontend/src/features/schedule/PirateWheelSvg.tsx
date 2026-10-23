@@ -43,36 +43,39 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id="timberRimGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#5c2807" />
-            <stop offset="55%" stopColor="#854d0e" />
-            <stop offset="85%" stopColor="#a16207" />
-            <stop offset="100%" stopColor="#3b1401" />
+          {/* Deep Abyssal Obsidian & Navy Rim Gradient */}
+          <radialGradient id="abyssalRimGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#010610" />
+            <stop offset="55%" stopColor="#05162a" />
+            <stop offset="85%" stopColor="#082845" />
+            <stop offset="100%" stopColor="#010610" />
           </radialGradient>
 
-          <linearGradient id="spokeWoodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#451a03" />
-            <stop offset="30%" stopColor="#a16207" />
-            <stop offset="50%" stopColor="#ca8a04" />
-            <stop offset="70%" stopColor="#a16207" />
-            <stop offset="100%" stopColor="#3b1401" />
+          {/* Submerged Nautical Spoke Gradient */}
+          <linearGradient id="abyssalSpokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#020b18" />
+            <stop offset="30%" stopColor="#082845" />
+            <stop offset="50%" stopColor="#0e3a61" />
+            <stop offset="70%" stopColor="#082845" />
+            <stop offset="100%" stopColor="#010610" />
           </linearGradient>
 
-          <linearGradient id="brassGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef9c3" />
-            <stop offset="25%" stopColor="#fde047" />
-            <stop offset="55%" stopColor="#fbbf24" />
-            <stop offset="80%" stopColor="#f59e0b" />
-            <stop offset="100%" stopColor="#92400e" />
+          {/* Bioluminescent Cyan & Aquamarine Gleam Gradient */}
+          <linearGradient id="biolumCyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#f0f9ff" />
+            <stop offset="25%" stopColor="#a5f3fc" />
+            <stop offset="55%" stopColor="#38bdf8" />
+            <stop offset="80%" stopColor="#0284c7" />
+            <stop offset="100%" stopColor="#082845" />
           </linearGradient>
 
-          {/* Tropical Turquoise Lagoon Gem for Center Core */}
+          {/* Radiant Bioluminescent Core Sapphire Gradient */}
           <radialGradient id="sapphireCoreGrad" cx="38%" cy="32%" r="65%">
-            <stop offset="0%" stopColor="#e0fdf4" />
-            <stop offset="25%" stopColor="#80ffd5" />
-            <stop offset="60%" stopColor="#22d3ee" />
-            <stop offset="85%" stopColor="#089191" />
-            <stop offset="100%" stopColor="#052438" />
+            <stop offset="0%" stopColor="#f0f9ff" />
+            <stop offset="25%" stopColor="#a5f3fc" />
+            <stop offset="60%" stopColor="#38bdf8" />
+            <stop offset="85%" stopColor="#0284c7" />
+            <stop offset="100%" stopColor="#020b18" />
           </radialGradient>
 
           <filter id="cyanGlow" x="-30%" y="-30%" width="160%" height="160%">
@@ -80,15 +83,15 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
 
-          <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <filter id="subtleCyanGlow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
         </defs>
 
         {/* Outer Compass Tick Rings (Static reference) */}
-        <circle cx="0" cy="0" r="224" fill="none" stroke="rgba(128, 255, 213, 0.25)" strokeWidth="1" strokeDasharray="3 5" />
-        <circle cx="0" cy="0" r="228" fill="none" stroke="rgba(251, 191, 36, 0.35)" strokeWidth="1.2" />
+        <circle cx="0" cy="0" r="224" fill="none" stroke="rgba(56, 189, 248, 0.22)" strokeWidth="1" strokeDasharray="3 5" />
+        <circle cx="0" cy="0" r="228" fill="none" stroke="rgba(165, 243, 252, 0.3)" strokeWidth="1.2" />
 
         {/* ROTATING GROUP: Rotates smoothly by rotationDeg */}
         <g transform={`rotate(${rotationDeg})`}>
@@ -108,17 +111,17 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                   y="-152"
                   width="9"
                   height="110"
-                  fill="url(#spokeWoodGrad)"
-                  stroke="#1c0a00"
+                  fill="url(#abyssalSpokeGrad)"
+                  stroke="#010610"
                   strokeWidth="0.8"
                   rx="2"
                 />
 
-                {/* Brass ferrule sleeve near hub */}
-                <rect x="-5.5" y="-55" width="11" height="6.5" fill="url(#brassGoldGrad)" rx="1" />
+                {/* Bioluminescent cyan ferrule sleeve near hub */}
+                <rect x="-5.5" y="-55" width="11" height="6.5" fill="url(#biolumCyanGrad)" rx="1" />
 
                 {/* Turned baluster ring on spoke */}
-                <ellipse cx="0" cy="-80" rx="6" ry="3" fill="url(#brassGoldGrad)" />
+                <ellipse cx="0" cy="-80" rx="6" ry="3" fill="url(#biolumCyanGrad)" />
 
                 {/* Outer Ergonomic Handle extending beyond Outer Rim (r=152 to r=206) */}
                 <path
@@ -128,22 +131,22 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                      Q 0 -201 4.5 -194
                      Q 6.5 -182 3.2 -166
                      L 3.8 -152 Z"
-                  fill="url(#spokeWoodGrad)"
-                  stroke="#290e02"
+                  fill="url(#abyssalSpokeGrad)"
+                  stroke="#010610"
                   strokeWidth="0.8"
                 />
 
-                {/* Handle pommel brass ring */}
-                <ellipse cx="0" cy="-168" rx="5" ry="2.2" fill="url(#brassGoldGrad)" />
+                {/* Handle pommel ring */}
+                <ellipse cx="0" cy="-168" rx="5" ry="2.2" fill="url(#biolumCyanGrad)" />
 
-                {/* Handle brass crown knob (well within boundary at r=200) */}
-                <circle cx="0" cy="-198" r="5" fill="url(#brassGoldGrad)" stroke="#451a03" strokeWidth="0.8" />
-                <circle cx="0" cy="-198" r="2.2" fill="#fef08a" opacity="0.85" />
+                {/* Handle crown knob */}
+                <circle cx="0" cy="-198" r="5" fill="url(#biolumCyanGrad)" stroke="#020b18" strokeWidth="0.8" />
+                <circle cx="0" cy="-198" r="2.2" fill="#a5f3fc" opacity="0.9" />
               </g>
             ))}
           </g>
 
-          {/* 2. Heavy Timber Felloe / Double Ring Rim (r=98 to r=154) */}
+          {/* 2. Heavy Double Ring Rim (r=98 to r=154) */}
           <g className="wheel-felloe-rim">
             <path
               d="M 0 -154 
@@ -152,24 +155,24 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                  M 0 -98 
                  A 98 98 0 1 0 0 98 
                  A 98 98 0 1 0 0 -98 Z"
-              fill="url(#timberRimGrad)"
-              stroke="#1c0a00"
+              fill="url(#abyssalRimGrad)"
+              stroke="#010610"
               strokeWidth="2.2"
               fillRule="evenodd"
             />
 
-            {/* Outer and Inner Brass Bands */}
-            <circle cx="0" cy="0" r="154" fill="none" stroke="url(#brassGoldGrad)" strokeWidth="2.8" />
-            <circle cx="0" cy="0" r="150" fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="1" />
-            <circle cx="0" cy="0" r="98" fill="none" stroke="url(#brassGoldGrad)" strokeWidth="2.8" />
-            <circle cx="0" cy="0" r="102" fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="1" />
+            {/* Outer and Inner Glowing Bioluminescent Bands */}
+            <circle cx="0" cy="0" r="154" fill="none" stroke="url(#biolumCyanGrad)" strokeWidth="2.8" />
+            <circle cx="0" cy="0" r="150" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="1" />
+            <circle cx="0" cy="0" r="98" fill="none" stroke="url(#biolumCyanGrad)" strokeWidth="2.8" />
+            <circle cx="0" cy="0" r="102" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="1" />
 
-            {/* Brass joint straps */}
+            {/* Joint straps */}
             {spokes.map(({ index, angleDeg }) => (
               <g key={`joint-${index}`} transform={`rotate(${angleDeg + (360 / 28)})`}>
-                <line x1="0" y1="-98" x2="0" y2="-154" stroke="#1f0a01" strokeWidth="1.2" />
-                <circle cx="0" cy="-144" r="2.4" fill="url(#brassGoldGrad)" stroke="#3f1c04" strokeWidth="0.5" />
-                <circle cx="0" cy="-108" r="2.4" fill="url(#brassGoldGrad)" stroke="#3f1c04" strokeWidth="0.5" />
+                <line x1="0" y1="-98" x2="0" y2="-154" stroke="#010610" strokeWidth="1.2" />
+                <circle cx="0" cy="-144" r="2.4" fill="url(#biolumCyanGrad)" stroke="#010610" strokeWidth="0.5" />
+                <circle cx="0" cy="-108" r="2.4" fill="url(#biolumCyanGrad)" stroke="#010610" strokeWidth="0.5" />
               </g>
             ))}
 
@@ -179,14 +182,13 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
               cy="0"
               r="126"
               fill="none"
-              stroke="rgba(212, 175, 55, 0.35)"
+              stroke="rgba(56, 189, 248, 0.35)"
               strokeWidth="1.2"
               strokeDasharray="3 5"
             />
           </g>
 
           {/* 3. 14 SPOKE BADGES & UPRIGHT NUMERALS (Vector SVG elements)
-              Positioned at radius r=126 along the rim.
               The text group is counter-rotated by -(angleDeg + rotationDeg)
               so EVERY numeral is ALWAYS 100% STRICTLY UPRIGHT at all times! */}
           <g className="wheel-spoke-badges-layer">
@@ -200,7 +202,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                   role="button"
                   aria-label={`Event ${index + 1}: ${milestone.romanNumeral}`}
                 >
-                  {/* Active Spoke Glow Aura (Concentric breathing without coordinate jumping) */}
+                  {/* Active Spoke Glow Aura */}
                   {isActive && (
                     <>
                       <circle
@@ -208,7 +210,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                         cy="0"
                         r="20"
                         fill="none"
-                        stroke="#80ffd5"
+                        stroke="#a5f3fc"
                         strokeWidth="1.2"
                         strokeDasharray="2 3"
                         opacity="0.85"
@@ -218,7 +220,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                         cy="0"
                         r="18"
                         fill="none"
-                        stroke="#2dd4bf"
+                        stroke="#38bdf8"
                         strokeWidth="2.2"
                         filter="url(#cyanGlow)"
                         className="active-pulse-aura"
@@ -231,38 +233,29 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                     cx="0"
                     cy="0"
                     r="15"
-                    fill={isActive ? '#089191' : '#78350f'}
-                    stroke={isActive ? '#80ffd5' : '#fde047'}
+                    fill={isActive ? '#0284c7' : '#05162a'}
+                    stroke={isActive ? '#a5f3fc' : '#38bdf8'}
                     strokeWidth={isActive ? '2.4' : '1.2'}
                   />
 
-                  {/* Counter-Rotate Text: -angleDeg cancels spoke angle, -rotationDeg cancels wheel angle!
-                      Result: Net world rotation = 0 deg (Strictly Upright) */}
-                  <g transform={`rotate(${-angleDeg - rotationDeg})`}>
+                  {/* Counter-Rotate Text: Net world rotation = 0 deg (Strictly Upright) */}
+                  <g transform={`rotate(${-(angleDeg + rotationDeg)})`}>
                     <text
                       x="0"
-                      y="-1"
+                      y="4"
                       textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill={isActive ? '#ffffff' : '#fef9c3'}
+                      fill={isActive ? '#ffffff' : '#e0f2fe'}
+                      fontSize={milestone.romanNumeral.length > 3 ? '8.5' : '10'}
+                      fontWeight={isActive ? '900' : '700'}
                       fontFamily="var(--font-serif)"
-                      fontSize="9.5"
-                      fontWeight="800"
-                      letterSpacing="-0.02em"
+                      letterSpacing="0.02em"
+                      style={{
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                        textShadow: isActive ? '0 0 8px rgba(165, 243, 252, 0.9)' : '0 1px 2px rgba(0,0,0,0.8)'
+                      }}
                     >
                       {milestone.romanNumeral}
-                    </text>
-                    <text
-                      x="0"
-                      y="7.5"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill={isActive ? '#99ffee' : 'rgba(254, 249, 195, 0.85)'}
-                      fontFamily="var(--font-mono)"
-                      fontSize="5.5"
-                      fontWeight="600"
-                    >
-                      {index + 1}
                     </text>
                   </g>
                 </g>
@@ -270,50 +263,70 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
             })}
           </g>
 
-          {/* 4. Center Brass Hub (r=44) */}
-          <g className="wheel-center-hub" onClick={onCenterClick} style={{ cursor: 'pointer' }}>
-            <circle cx="0" cy="0" r="46" fill="url(#brassGoldGrad)" stroke="#260f02" strokeWidth="2.2" />
-            <circle cx="0" cy="0" r="42" fill="#451a03" stroke="#d4af37" strokeWidth="1" />
+          {/* 4. Massive Central Hub with 8-Pointed Celestial Compass Rose */}
+          <g
+            className="wheel-central-hub"
+            onClick={onCenterClick}
+            style={{ cursor: onCenterClick ? 'pointer' : 'default' }}
+          >
+            {/* Outer Hub Collar (r=48) */}
+            <circle cx="0" cy="0" r="48" fill="url(#abyssalRimGrad)" stroke="#010610" strokeWidth="2.5" />
+            <circle cx="0" cy="0" r="44" fill="none" stroke="url(#biolumCyanGrad)" strokeWidth="2.2" />
 
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, bIdx) => (
-              <g key={`bolt-${bIdx}`} transform={`rotate(${deg})`}>
-                <circle cx="0" cy="-36" r="2.2" fill="url(#brassGoldGrad)" stroke="#1a0700" strokeWidth="0.5" />
+            {/* 14 Hub mounting bolt rivets */}
+            {spokes.map(({ index, angleDeg }) => (
+              <g key={`bolt-${index}`} transform={`rotate(${angleDeg})`}>
+                <circle cx="0" cy="-44" r="1.8" fill="url(#biolumCyanGrad)" />
               </g>
             ))}
 
-            <g className="hub-compass-rose">
-              <polygon points="0,-32 3.5,-10 0,-7 -3.5,-10" fill="#fef08a" />
-              <polygon points="0,-32 0,-7 -3.5,-10" fill="#ca8a04" />
-              <polygon points="0,32 3.5,10 0,7 -3.5,10" fill="#fef08a" />
-              <polygon points="0,32 0,7 3.5,10" fill="#ca8a04" />
-              <polygon points="32,0 10,3.5 7,0 10,-3.5" fill="#fef08a" />
-              <polygon points="32,0 7,0 10,3.5" fill="#ca8a04" />
-              <polygon points="-32,0 -10,3.5 -7,0 -10,-3.5" fill="#fef08a" />
-              <polygon points="-32,0 -7,0 -10,-3.5" fill="#ca8a04" />
-            </g>
+            {/* Inner Hub Plate (r=36) */}
+            <circle cx="0" cy="0" r="36" fill="#020b18" stroke="url(#biolumCyanGrad)" strokeWidth="1.5" />
 
-            <circle
-              cx="0"
-              cy="0"
-              r="16"
-              fill="url(#sapphireCoreGrad)"
-              stroke="#22d3ee"
-              strokeWidth="2"
-            />
-            <ellipse cx="-3.5" cy="-4" rx="4" ry="2.5" fill="#ffffff" opacity="0.65" />
+            {/* Center Sapphire Core Dome (r=26) */}
+            <circle cx="0" cy="0" r="26" fill="url(#sapphireCoreGrad)" filter="url(#subtleCyanGlow)" />
+            <circle cx="0" cy="0" r="26" fill="none" stroke="#a5f3fc" strokeWidth="1" opacity="0.6" />
+
+            {/* 8-Point Compass Rose Star Emblem */}
+            <g className="hub-compass-star">
+              {/* Cardinal North/South/East/West Points */}
+              <polygon points="0,-22 4,-6 0,0 -4,-6" fill="#f0f9ff" />
+              <polygon points="0,22 4,6 0,0 -4,6" fill="#0284c7" />
+              <polygon points="22,0 6,4 0,0 6,-4" fill="#38bdf8" />
+              <polygon points="-22,0 -6,4 0,0 -6,-4" fill="#0284c7" />
+
+              {/* Diagonal NE/NW/SE/SW Points */}
+              <g transform="rotate(45)">
+                <polygon points="0,-16 3,-5 0,0 -3,-5" fill="#a5f3fc" opacity="0.9" />
+                <polygon points="0,16 3,5 0,0 -3,5" fill="#0284c7" opacity="0.9" />
+                <polygon points="16,0 5,3 0,0 5,-3" fill="#38bdf8" opacity="0.9" />
+                <polygon points="-16,0 -5,3 0,0 -5,-3" fill="#0284c7" opacity="0.9" />
+              </g>
+
+              {/* Center Pivot Point */}
+              <circle cx="0" cy="0" r="4.2" fill="#ffffff" stroke="#020b18" strokeWidth="1" />
+              <circle cx="0" cy="0" r="1.8" fill="#38bdf8" />
+            </g>
           </g>
         </g>
 
-        {/* FIXED 12 O'CLOCK ACTIVE SPOKE POINTER (Always marks the top selected spoke position) */}
-        <g className="fixed-active-spoke-pointer">
-          {/* Golden pointer needle pointing down at the top active spoke */}
-          <polygon points="0,-146 -7,-159 7,-159" fill="#f59e0b" filter="url(#goldGlow)" />
-          <polygon points="0,-146 0,-159 7,-159" fill="#d97706" />
-          <circle cx="0,-163" r="3.5" fill="#fef08a" stroke="#78350f" strokeWidth="1" />
+        {/* STATIC OVERLAY: Top 12 o'clock Gold Needle Pointer (Fixed at top, does NOT rotate) */}
+        <g className="wheel-top-pointer-static" transform="translate(0, -150)">
+          {/* Luminous beacon flare */}
+          <circle cx="0" cy="0" r="9" fill="#38bdf8" opacity="0.25" filter="url(#cyanGlow)" />
+          {/* Compass Arrow Pointing Down at active 12 o'clock Spoke */}
+          <polygon
+            points="0,16 -7,0 0,3 7,0"
+            fill="url(#biolumCyanGrad)"
+            stroke="#010610"
+            strokeWidth="0.8"
+            filter="url(#subtleCyanGlow)"
+          />
+          <polygon points="0,16 0,3 7,0" fill="#a5f3fc" opacity="0.9" />
         </g>
       </svg>
     </div>
   );
 };
 
-PirateWheelSvg.displayName = 'PirateWheelSvg';
+export default PirateWheelSvg;

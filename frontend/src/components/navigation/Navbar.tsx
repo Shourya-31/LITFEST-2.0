@@ -1,80 +1,178 @@
 import React, { useState } from 'react';
-import { Compass, HelpCircle, Menu, X } from 'lucide-react';
+import { Compass, HelpCircle, Sparkles, Volume2, VolumeX, Menu, X, Waves } from 'lucide-react';
 import { soundEngine } from '../../utils/soundEngine';
 
 interface NavbarProps {
+  currentSection?: 'home' | 'timeline' | 'faq';
+  onNavigateHome?: () => void;
+  onNavigateTimeline?: () => void;
   onOpenFaq?: () => void;
-  onOpenTimeline?: () => void;
+  onOpenArenas?: () => void;
+  onOpenRegister?: () => void;
   isFaqOpen?: boolean;
+  isAudioPlaying?: boolean;
+  onToggleAudio?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
+  currentSection = 'home',
+  onNavigateHome,
+  onNavigateTimeline,
   onOpenFaq,
-  onOpenTimeline,
-  isFaqOpen = false
+  onOpenArenas,
+  onOpenRegister,
+  isFaqOpen = false,
+  isAudioPlaying = false,
+  onToggleAudio,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  const handleTimelineClick = () => {
+  const handleHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     soundEngine.playDroplet();
     setMobileMenuOpen(false);
-    if (onOpenTimeline) onOpenTimeline();
+    if (onNavigateHome) onNavigateHome();
   };
 
-  const handleFaqClick = () => {
+  const handleTimelineClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    soundEngine.playDroplet();
+    setMobileMenuOpen(false);
+    if (onNavigateTimeline) onNavigateTimeline();
+  };
+
+  const handleFaqClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     soundEngine.playDroplet();
     setMobileMenuOpen(false);
     if (onOpenFaq) onOpenFaq();
   };
 
-  return (
-    <header className="nautical-navbar is-scrolled">
-      <div className="navbar-container">
-        {/* Brand: Clean Typography (No fest logo for now as requested) */}
-        <div className="nav-brand interactive" onClick={handleTimelineClick}>
-          <div className="brand-text">
-            <span className="brand-title">LITFEST 2.0</span>
-            <span className="brand-subtitle">[OFFICIAL FESTIVAL PORTAL]</span>
-          </div>
-        </div>
+  const handleArenasClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    soundEngine.playDroplet();
+    setMobileMenuOpen(false);
+    if (onOpenArenas) onOpenArenas();
+  };
 
-        {/* Links to Timeline & FAQ */}
-        <nav className="desktop-nav" aria-label="Main Navigation">
+  const handleRegisterClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    soundEngine.playDroplet();
+    setMobileMenuOpen(false);
+    if (onOpenRegister) onOpenRegister();
+  };
+
+  return (
+    <header className="festival-nav-header nautical-navbar" role="banner">
+      <div className="nav-inner-container navbar-container">
+        {/* Brand: Official Literati • NIT Raipur Logo from underwater homepage */}
+        <a
+          href="#home"
+          className="nav-brand-logo interactive"
+          id="nav-brand-logo"
+          onClick={handleHomeClick}
+          title="Litfest 2.0 — Return to Ocean Surface"
+        >
+          <span className="brand-primary">LITERATI</span>
+          <span className="brand-dot">•</span>
+          <span className="brand-secondary">NIT RAIPUR</span>
+        </a>
+
+        {/* Center Navigation Links */}
+        <nav className="desktop-nav nav-links-menu" aria-label="Main Navigation">
           <button
             type="button"
-            className={`nav-link-btn interactive ${!isFaqOpen ? 'active' : ''}`}
-            onClick={handleTimelineClick}
+            className={`nav-item nav-link-btn interactive ${currentSection === 'home' && !isFaqOpen ? 'active' : ''}`}
+            onClick={handleHomeClick}
+            id="nav-link-home"
           >
-            <Compass size={15} />
+            <Waves size={14} className="nav-icon" />
+            <span>Home</span>
+          </button>
+
+          <button
+            type="button"
+            className={`nav-item nav-link-btn interactive ${currentSection === 'timeline' && !isFaqOpen ? 'active' : ''}`}
+            onClick={handleTimelineClick}
+            id="nav-link-timeline"
+          >
+            <Compass size={14} className="nav-icon" />
             <span>Timeline</span>
           </button>
 
           <button
             type="button"
-            className={`nav-link-btn interactive ${isFaqOpen ? 'active' : ''}`}
+            className={`nav-item nav-link-btn interactive ${isFaqOpen ? 'active' : ''}`}
             onClick={handleFaqClick}
+            id="nav-link-faqs"
           >
-            <HelpCircle size={15} />
+            <HelpCircle size={14} className="nav-icon" />
             <span>Festival FAQs</span>
+          </button>
+
+          <button
+            type="button"
+            className="nav-item nav-link-btn interactive"
+            onClick={handleArenasClick}
+            id="nav-link-arenas"
+          >
+            <Sparkles size={14} className="nav-icon" />
+            <span>Arenas</span>
           </button>
         </nav>
 
-        {/* Mobile menu toggle */}
-        <div className="nav-actions">
+        {/* Right Actions: Ambient Audio Toggle & Register CTA */}
+        <div className="nav-right-actions">
+          {onToggleAudio && (
+            <button
+              type="button"
+              className={`nav-audio-btn interactive ${isAudioPlaying ? 'is-playing' : ''}`}
+              onClick={onToggleAudio}
+              title={isAudioPlaying ? 'Mute Ocean Waves' : 'Play Ambient Deep Sea Audio'}
+              aria-label="Toggle ocean sound"
+              id="navbar-audio-toggle"
+            >
+              {isAudioPlaying ? <Volume2 size={16} /> : <VolumeX size={16} />}
+              <span className="audio-btn-text">{isAudioPlaying ? 'Ocean Sound' : 'Muted'}</span>
+            </button>
+          )}
+
           <button
             type="button"
-            className="mobile-toggle-btn interactive"
+            className="nav-register-btn desktop-register interactive"
+            onClick={handleRegisterClick}
+            id="nav-register-btn"
+          >
+            <span>Register</span>
+          </button>
+
+          {/* Mobile hamburger toggle */}
+          <button
+            type="button"
+            className={`mobile-menu-toggle ${mobileMenuOpen ? 'open' : ''}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
+            id="nav-mobile-toggle"
           >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            <span className="bar" />
+            <span className="bar" />
+            <span className="bar" />
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Responsive Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="mobile-nav-drawer">
+        <div className="mobile-nav-drawer mobile-active">
+          <button
+            type="button"
+            className="mobile-nav-link"
+            onClick={handleHomeClick}
+          >
+            <Waves size={18} />
+            <span>Home</span>
+          </button>
+
           <button
             type="button"
             className="mobile-nav-link"
@@ -92,8 +190,38 @@ export const Navbar: React.FC<NavbarProps> = ({
             <HelpCircle size={18} />
             <span>Festival FAQs</span>
           </button>
+
+          <button
+            type="button"
+            className="mobile-nav-link"
+            onClick={handleArenasClick}
+          >
+            <Sparkles size={18} />
+            <span>Featured Arenas</span>
+          </button>
+
+          {onToggleAudio && (
+            <button
+              type="button"
+              className="mobile-nav-link"
+              onClick={onToggleAudio}
+            >
+              {isAudioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
+              <span>{isAudioPlaying ? 'Mute Ocean Waves' : 'Play Ocean Audio'}</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            className="nav-register-btn mobile-register"
+            onClick={handleRegisterClick}
+          >
+            Register for Litfest
+          </button>
         </div>
       )}
     </header>
   );
 };
+
+export default Navbar;

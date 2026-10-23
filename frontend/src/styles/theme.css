@@ -1,88 +1,93 @@
 /* ==========================================================================
    LITFEST 2.0 DESIGN SYSTEM & THEME TOKENS
-   Theme: High-Seas Pirate Odyssey & Sun-Drenched Summer Beach Vibe
+   Theme: Official Underwater Deep-Sea Oceanic Odyssey
+   Palette exact match to feat/underwater-homepage
    ========================================================================== */
 
 :root {
-  /* Summer Beach & Tropical Coastal Lagoon Palette */
-  --beach-ocean-deep: #052438;
-  --beach-ocean-azure: #083c5e;
-  --beach-lagoon-teal: #089191;
-  --beach-lagoon-mid: #0b4e78;
-  --beach-turquoise: #2dd4bf;
-  --beach-seafoam: #80ffd5;
-  --beach-water-shallow: #99ffee;
-  --beach-cyan: #22d3ee;
-  --beach-sky: #38bdf8;
-  --beach-coral: #fb7185;
-  --beach-sunset: #fb923c;
+  /* Core Deep-Sea Oceanic Palette from feat/underwater-homepage */
+  --color-abyss: #010610;
+  --color-ocean-deep: #020b18;
+  --color-ocean-mid: #05162a;
+  --color-ocean-teal: #082845;
+  --color-biolum-cyan: #38bdf8;
+  --color-biolum-glow: #22d3ee;
+  --color-surface-beam: #a5f3fc;
+  --color-text-bright: #f0f9ff;
+  --color-text-dim: #94a3b8;
 
-  /* Golden Beach Sand & Sunlit Coastal Timber */
-  --beach-sand-light: #fef9c3;
-  --beach-sand: #fef08a;
-  --beach-sand-gold: #fde047;
-  --beach-sun-gold: #fbbf24;
-  --beach-sun-amber: #f59e0b;
-  --beach-driftwood: #92400e;
-  --beach-driftwood-dark: #5c2807;
-  --beach-teak: #78350f;
-
-  /* System Color Mappings with Summer Beach Vibrance */
-  --sea-abyss: #052438;
-  --sea-deep: #083c5e;
-  --sea-mid: #0b4e78;
-  --sea-surface: #0e6396;
-  --sea-foam: #80ffd5;
-  --sea-cyan: #22d3ee;
-  --sea-teal: #2dd4bf;
-  --sea-emerald: #34d399;
-  --sea-mist: rgba(128, 255, 213, 0.18);
-
-  /* Pirate Brass, Sand Gold & Sun-Warmed Teak */
-  --pirate-gold: #fbbf24;
-  --pirate-gold-glow: #f59e0b;
-  --pirate-gold-light: #fef08a;
-  --pirate-bronze: #d97706;
-  --pirate-wood: #854d0e;
-  --pirate-wood-dark: #5c2807;
-  --pirate-copper: #ea580c;
-
-  /* Typography Colors */
-  --text-primary: #f8fafc;
-  --text-secondary: #e0f2fe;
-  --text-muted: #94a3b8;
-  --text-gold: #fde047;
-  --text-cyan: #67e8f9;
-  --text-sand: #fef3c7;
-
-  /* Glassmorphism & Sunlit Coastal Borders */
-  --bg-glass-ocean: rgba(6, 44, 71, 0.82);
-  --bg-glass-card: rgba(8, 54, 87, 0.75);
-  --bg-glass-highlight: rgba(128, 255, 213, 0.12);
-  --border-ocean-subtle: rgba(128, 255, 213, 0.28);
-  --border-ocean-glow: rgba(34, 211, 238, 0.55);
-  --border-gold-subtle: rgba(251, 191, 36, 0.35);
-  --border-gold-strong: rgba(245, 158, 11, 0.75);
-
-  /* Shadows & Radiant Beach Glows */
-  --shadow-ocean-sm: 0 4px 14px rgba(2, 20, 34, 0.5);
-  --shadow-ocean-lg: 0 20px 50px rgba(2, 18, 30, 0.85);
-  --glow-cyan-sm: 0 0 16px rgba(34, 211, 238, 0.45);
-  --glow-cyan-lg: 0 0 38px rgba(128, 255, 213, 0.7);
-  --glow-gold-sm: 0 0 16px rgba(251, 191, 36, 0.45);
-  --glow-gold-lg: 0 0 38px rgba(245, 158, 11, 0.65);
-
-  /* Fonts */
-  --font-serif: 'Cinzel', serif, Georgia;
+  /* Typography */
+  --font-display: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-pirate: 'Pirata One', 'Cinzel', cursive;
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'Space Grotesk', monospace;
 
+  /* Theme System Mappings */
+  --sea-abyss: #010610;
+  --sea-deep: #020b18;
+  --sea-mid: #05162a;
+  --sea-surface: #082845;
+  --sea-cyan: #38bdf8;
+  --sea-glow: #22d3ee;
+  --sea-beam: #a5f3fc;
+  --sea-foam: #7dd3fc;
+  --sea-mist: rgba(56, 189, 248, 0.16);
+
+  /* Accents & Inlays */
+  --pirate-gold: #38bdf8;
+  --pirate-gold-glow: #22d3ee;
+  --pirate-gold-light: #a5f3fc;
+  --pirate-bronze: #0284c7;
+  --pirate-wood: #05162a;
+  --pirate-wood-dark: #020b18;
+
+  /* Beach-legacy variable aliases redirected to underwater cyan palette */
+  --beach-ocean-deep: #010610;
+  --beach-ocean-azure: #020b18;
+  --beach-lagoon-teal: #082845;
+  --beach-lagoon-mid: #05162a;
+  --beach-turquoise: #22d3ee;
+  --beach-seafoam: #38bdf8;
+  --beach-water-shallow: #a5f3fc;
+  --beach-cyan: #22d3ee;
+  --beach-sky: #38bdf8;
+  --beach-sand-light: #f0f9ff;
+  --beach-sand: #e0f2fe;
+  --beach-sand-gold: #38bdf8;
+  --beach-sun-gold: #22d3ee;
+  --beach-sun-amber: #0284c7;
+
+  /* Typography Colors */
+  --text-primary: #f0f9ff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-gold: #a5f3fc;
+  --text-cyan: #38bdf8;
+  --text-sand: #e0f2fe;
+
+  /* Glassmorphism & Submerged Borders */
+  --bg-glass-ocean: rgba(1, 6, 16, 0.88);
+  --bg-glass-card: rgba(2, 14, 30, 0.94);
+  --bg-glass-highlight: rgba(56, 189, 248, 0.12);
+  --border-ocean-subtle: rgba(56, 189, 248, 0.28);
+  --border-ocean-glow: rgba(56, 189, 248, 0.6);
+  --border-gold-subtle: rgba(56, 189, 248, 0.35);
+  --border-gold-strong: rgba(34, 211, 238, 0.75);
+
+  /* Shadows & Deep Bioluminescent Glows */
+  --shadow-ocean-sm: 0 4px 14px rgba(0, 4, 10, 0.6);
+  --shadow-ocean-lg: 0 25px 60px rgba(0, 2, 6, 0.9);
+  --glow-cyan-sm: 0 0 16px rgba(56, 189, 248, 0.45);
+  --glow-cyan-lg: 0 0 38px rgba(34, 211, 238, 0.65);
+  --glow-gold-sm: 0 0 16px rgba(56, 189, 248, 0.4);
+  --glow-gold-lg: 0 0 38px rgba(165, 243, 252, 0.55);
+
   /* Layout */
-  --max-width: 1440px;
+  --max-width: 1360px;
   --radius-sm: 8px;
   --radius-md: 14px;
-  --radius-lg: 22px;
+  --radius-lg: 20px;
   --radius-pill: 9999px;
 }
 
@@ -100,81 +105,37 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--beach-ocean-deep);
+  background-color: var(--color-abyss);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 18% 22%, rgba(128, 255, 213, 0.22) 0%, transparent 45%),
-    radial-gradient(circle at 82% 18%, rgba(254, 240, 138, 0.16) 0%, transparent 40%),
-    radial-gradient(circle at 50% 85%, rgba(8, 145, 145, 0.28) 0%, transparent 55%),
-    radial-gradient(circle at 85% 75%, rgba(14, 165, 233, 0.25) 0%, transparent 50%),
-    radial-gradient(circle at 50% 30%, #083c5e 0%, #052438 100%);
+    radial-gradient(circle at 50% 0%, #082845 0%, #05162a 35%, #020b18 70%, #010610 100%);
   background-attachment: fixed;
 }
 
-/* Custom Scrollbar with Summer Beach Lagoon Glow */
+/* Custom Scrollbar with Deep Abyss & Cyan Bioluminescent Glow */
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--beach-ocean-deep);
+  background: var(--color-abyss);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--pirate-gold) 0%, var(--beach-seafoam) 100%);
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
   border-radius: var(--radius-pill);
-  border: 2px solid var(--beach-ocean-deep);
+  border: 2px solid var(--color-abyss);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--beach-seafoam);
+  background: #22d3ee;
 }
 
 /* Interactive helper */
 .interactive {
   cursor: pointer;
   user-select: none;
-}
-
-/* Wave Background Animation Effect */
-.ocean-ambient-canvas {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.ocean-wave-glow {
-  position: absolute;
-  width: 650px;
-  height: 650px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.15;
-  will-change: transform;
-  animation: floatOceanGlow 22s ease-in-out infinite alternate;
-}
-
-.glow-1 {
-  top: -100px;
-  left: 10%;
-  background: radial-gradient(circle, var(--sea-cyan) 0%, transparent 70%);
-}
-
-.glow-2 {
-  bottom: -150px;
-  right: 5%;
-  background: radial-gradient(circle, var(--pirate-gold) 0%, transparent 70%);
-  animation-duration: 28s;
-  animation-delay: -7s;
-}
-
-@keyframes floatOceanGlow {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(60px, 40px) scale(1.15); }
-  100% { transform: translate(-40px, -50px) scale(0.95); }
 }

@@ -23,5 +23,9 @@ export interface PirateWheelTimelineProps {
   subtitle?: string;
   className?: string;
   isFaqOpen?: boolean;
+  timelineProgress?: number;
+  isTimelineActive?: boolean;
+  onNavigateToIndex?: (idx: number) => void;
+  onSnapToIndex?: (idx: number) => void;
   onMilestoneSelect?: (milestone: TimelineMilestone) => void;
 }

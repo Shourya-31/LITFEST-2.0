@@ -1,5 +1,6 @@
 .litfest-underwater-root {
-  position: relative;
+  position: fixed;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
@@ -8,6 +9,9 @@
   overflow: hidden;
   background-color: var(--color-abyss);
   user-select: none;
+  z-index: 10;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 /* Audio toggle floating button in bottom left */
