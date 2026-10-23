@@ -226,6 +226,7 @@ html.lenis, html.lenis body {
   width: 100%;
   max-width: 1240px;
   height: 88vh;
+  max-height: 88vh;
   background: #040e1b;
   border: 1px solid var(--border-gold-subtle);
   border-radius: var(--radius-lg);
@@ -235,6 +236,7 @@ html.lenis, html.lenis body {
   overflow: hidden;
   animation: zoomModalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  overscroll-behavior: contain;
 }
 
 @keyframes zoomModalIn {
@@ -289,9 +291,35 @@ html.lenis, html.lenis body {
 }
 
 .faq-chamber-scroll-body {
-  flex: 1;
-  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto !important;
   overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  position: relative;
+  z-index: 1;
+}
+
+.faq-chamber-scroll-body::-webkit-scrollbar {
+  width: 9px;
+}
+
+.faq-chamber-scroll-body::-webkit-scrollbar-track {
+  background: rgba(3, 11, 20, 0.9);
+  border-left: 1px solid var(--border-ocean-subtle);
+}
+
+.faq-chamber-scroll-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--pirate-gold) 0%, var(--sea-cyan) 100%);
+  border-radius: var(--radius-pill);
+  border: 2px solid rgba(3, 11, 20, 0.9);
+}
+
+.faq-chamber-scroll-body::-webkit-scrollbar-thumb:hover {
+  background: var(--sea-cyan);
 }
 
 @media (max-width: 900px) {

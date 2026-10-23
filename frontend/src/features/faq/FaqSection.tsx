@@ -58,6 +58,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
     <section
       id="faq"
       className={`faq-section-wrapper ${className}`}
+      data-lenis-prevent
       aria-label="Frequently Asked Questions Section"
     >
       {/* Background ambient lighting */}

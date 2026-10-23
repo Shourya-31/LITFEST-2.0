@@ -32,13 +32,18 @@ export const App: React.FC = () => {
 
       {/* FAQ Chamber Modal Overlay (Opens on demand via Navbar so timeline maintains pure Z-axis scroll) */}
       {faqOpen && (
-        <div className="faq-chamber-backdrop" onClick={() => toggleFaq(false)}>
+        <div
+          className="faq-chamber-backdrop"
+          onClick={() => toggleFaq(false)}
+          data-lenis-prevent
+        >
           <div
             className="faq-chamber-modal"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-label="Frequently Asked Questions"
+            data-lenis-prevent
           >
             <div className="faq-chamber-modal-header">
               <div className="modal-title-wrap">
@@ -57,7 +62,12 @@ export const App: React.FC = () => {
               </button>
             </div>
 
-            <div className="faq-chamber-scroll-body">
+            <div
+              className="faq-chamber-scroll-body"
+              data-lenis-prevent
+              tabIndex={0}
+              onWheel={(e) => e.stopPropagation()}
+            >
               <FaqSection />
             </div>
           </div>

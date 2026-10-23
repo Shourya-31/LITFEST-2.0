@@ -100,8 +100,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       if (approxIdx !== prevActiveIdxRef.current) {
         prevActiveIdxRef.current = approxIdx;
         setActiveIdx(approxIdx);
-        soundEngine.playHelmClick(approxIdx);
-        soundEngine.playSeaBell(approxIdx);
+        soundEngine.playWaterTransition(approxIdx);
 
         // GSAP micro-animation on active event card
         const activeCard = document.querySelector(`.z-milestone-checkpoint-plane[data-event-idx="${approxIdx}"] .z-checkpoint-card`);
@@ -194,13 +193,17 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       if (cameraRef.current) {
         cameraRef.current.style.transform = `translate3d(0, 0, ${targetIdx * SPACING_Z}px)`;
       }
-      setActiveIdx(targetIdx);
+      if (targetIdx !== prevActiveIdxRef.current) {
+        prevActiveIdxRef.current = targetIdx;
+        setActiveIdx(targetIdx);
+        soundEngine.playWaterTransition(targetIdx);
+      }
       setRotationDeg(-targetIdx * (360 / totalEvents));
       setCurrentZ(targetIdx * SPACING_Z);
     }
 
-    soundEngine.playHelmClick(targetIdx);
-    soundEngine.playSeaBell(targetIdx);
+    // Note: lenis.on('scroll') & drag listener detect index transitions,
+    // ensuring clean, single audio playback without duplicates on button navigation!
 
     if (onMilestoneSelect) {
       onMilestoneSelect(milestones[targetIdx]);
@@ -221,13 +224,14 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     const newMuted = soundEngine.toggleMute();
     setIsMuted(newMuted);
     if (!newMuted) {
-      soundEngine.playSeaBell(activeIdx);
+      soundEngine.playWaterBell(activeIdx);
     }
   };
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isFaqOpen) return; // Allow natural arrow/space scrolling inside FAQ modal
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault();
         stepZoomIn();
@@ -239,7 +243,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeIdx, totalCards]);
+  }, [activeIdx, totalCards, isFaqOpen]);
 
   // Mouse / Pointer steering wheel turning by dragging around the helm
   const handleHelmPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -292,8 +296,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       if (approxIdx !== prevActiveIdxRef.current) {
         prevActiveIdxRef.current = approxIdx;
         setActiveIdx(approxIdx);
-        soundEngine.playHelmClick(approxIdx);
-        soundEngine.playSeaBell(approxIdx);
+        soundEngine.playWaterTransition(approxIdx);
       }
 
       setRotationDeg(-continuousIdx * (360 / totalEvents));
@@ -497,7 +500,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
               onEventClick={handleEventClick}
               onCenterClick={() => {
                 if (!hasDraggedRef.current) {
-                  soundEngine.playSeaBell(activeIdx + 1);
+                  soundEngine.playWaterBell(activeIdx);
                 }
               }}
             />
