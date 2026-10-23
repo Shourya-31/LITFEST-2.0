@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Compass, Anchor, HelpCircle, Calendar, Send, Menu, X } from 'lucide-react';
+import { Compass, Anchor, HelpCircle, Menu, X } from 'lucide-react';
 import { soundEngine } from '../../utils/soundEngine';
 
 export const Navbar: React.FC = () => {
@@ -15,10 +15,8 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { label: 'Voyage Timeline', href: '#timeline', icon: Compass },
-    { label: 'Festival FAQs', href: '#faq', icon: HelpCircle },
-    { label: 'Schedule', href: '#timeline', icon: Calendar },
-    { label: 'Literati NITRR', href: '#faq', icon: Anchor }
+    { label: '3D Z-Axis Timeline', href: '#timeline', icon: Compass },
+    { label: 'Festival FAQs', href: '#faq', icon: HelpCircle }
   ];
 
   const handleNavClick = (href: string) => {
@@ -33,18 +31,18 @@ export const Navbar: React.FC = () => {
   return (
     <header className={`nautical-navbar ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="navbar-container">
-        {/* Brand / Crest */}
-        <a href="#root" className="nav-brand interactive" onClick={() => soundEngine.playDroplet()}>
+        {/* Brand */}
+        <a href="#hero" className="nav-brand interactive" onClick={() => soundEngine.playDroplet()}>
           <div className="brand-crest">
             <Anchor size={20} className="brand-anchor" />
           </div>
           <div className="brand-text">
             <span className="brand-title">LITFEST 2.0</span>
-            <span className="brand-subtitle">LITERATI • NIT RAIPUR</span>
+            <span className="brand-subtitle">[NAVBAR PLACEHOLDER]</span>
           </div>
         </a>
 
-        {/* Desktop Nav Links */}
+        {/* Links to Timeline & FAQ */}
         <nav className="desktop-nav" aria-label="Main Navigation">
           {navLinks.map((item, idx) => {
             const Icon = item.icon;
@@ -65,18 +63,16 @@ export const Navbar: React.FC = () => {
           })}
         </nav>
 
-        {/* Action Button */}
+        {/* Action button */}
         <div className="nav-actions">
-          <a
-            href="mailto:literati@nitrr.ac.in"
+          <button
+            type="button"
             className="nav-cta-btn interactive"
-            onClick={() => soundEngine.playDroplet()}
+            onClick={() => handleNavClick('#timeline')}
           >
-            <Send size={14} />
-            <span>Join Fleet</span>
-          </a>
+            <span>Timeline</span>
+          </button>
 
-          {/* Mobile Menu Toggle */}
           <button
             type="button"
             className="mobile-toggle-btn interactive"

@@ -1,12 +1,12 @@
 /* ==========================================================================
    PIRATE WHEEL TIMELINE COMPONENT STYLES
-   14-Spoke Pirate Ship Steering Wheel & Horizontally Scrolling Track
+   14-Spoke Pirate Ship Steering Wheel & 3D Z-Axis Depth Stage
    ========================================================================== */
 
 .pirate-timeline-section {
   position: relative;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
 .pirate-timeline-container {
   display: grid;
   grid-template-columns: 460px 1fr;
-  gap: 2.5rem;
+  gap: 3rem;
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -90,7 +90,7 @@
 
 .helm-title {
   font-family: var(--font-serif);
-  font-size: 1.7rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.04em;
@@ -109,7 +109,7 @@
 }
 
 /* ==========================================================================
-   INTERACTIVE PIRATE WHEEL STAGE
+   PIRATE WHEEL STAGE (SMOOTH & ZERO JITTER)
    ========================================================================== */
 .helm-interactive-stage {
   position: relative;
@@ -117,7 +117,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.5rem 0;
+  margin: 0.4rem 0;
 }
 
 .pirate-helm-wrapper {
@@ -164,8 +164,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transform-origin: center center;
   will-change: transform;
   filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.75));
+  transition: none; /* STRICTLY NO CSS TRANSITIONS ON GSAP TRANSFORMED WHEEL */
 }
 
 .pirate-helm-svg {
@@ -195,10 +197,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -16px;
-  margin-left: -16px;
-  width: 32px;
-  height: 32px;
+  margin-top: -18px;
+  margin-left: -18px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: linear-gradient(135deg, #78350f 0%, #451a03 100%);
   border: 1.5px solid var(--pirate-gold);
@@ -208,12 +210,14 @@
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
   pointer-events: auto;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  transform-origin: center center;
   will-change: transform;
+  /* NO transition: all or transform! Only background and border */
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .helm-spoke-node:hover {
-  transform: scale(1.2) !important;
   border-color: #ffffff;
   background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
   box-shadow: 0 0 16px rgba(245, 158, 11, 0.8);
@@ -224,30 +228,33 @@
   border-color: var(--sea-cyan);
   color: #ffffff;
   box-shadow: 0 0 20px rgba(34, 211, 238, 0.95);
-  transform: scale(1.28) !important;
   z-index: 10;
 }
 
-.node-counter-rotator {
+/* Counter-Rotator Container targeted by GSAP: STRICTLY UPRIGHT AT ALL TIMES */
+.spoke-upright-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   line-height: 1;
   pointer-events: none;
+  transform-origin: center center;
+  will-change: transform;
+  transition: none; /* GSAP controls the rotation angle continuously */
 }
 
 .node-roman-num {
   font-family: var(--font-serif);
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .node-spoke-idx {
   font-family: var(--font-mono);
-  font-size: 0.48rem;
-  opacity: 0.8;
+  font-size: 0.5rem;
+  opacity: 0.85;
 }
 
 .active-pulse-aura {
@@ -257,6 +264,7 @@
   border: 1.5px solid var(--sea-cyan);
   opacity: 0.8;
   animation: ringPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
 }
 
 @keyframes ringPulse {
@@ -264,7 +272,7 @@
   100% { transform: scale(1.5); opacity: 0; }
 }
 
-/* Binnacle Compass Label */
+/* Binnacle Stand */
 .helm-binnacle-stand {
   margin-top: 0.4rem;
   width: 100%;
@@ -292,9 +300,7 @@
   font-weight: 700;
 }
 
-/* ==========================================================================
-   HELMSMAN NAVIGATION CONTROLS (PORT / SOUND / STARBOARD)
-   ========================================================================== */
+/* Controls */
 .helm-controls-bar {
   display: flex;
   align-items: center;
@@ -320,9 +326,15 @@
   letter-spacing: 0.08em;
   padding: 0.5rem 0.6rem;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.steer-btn:hover {
+.steer-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.steer-btn:not(:disabled):hover {
   background: rgba(34, 211, 238, 0.15);
   border-color: var(--sea-cyan);
   color: #ffffff;
@@ -342,12 +354,12 @@
   font-weight: 600;
   padding: 0.5rem 0.7rem;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .sound-toggle-btn:hover {
   background: rgba(212, 175, 55, 0.25);
   border-color: var(--pirate-gold);
-  box-shadow: 0 0 14px rgba(212, 175, 55, 0.4);
 }
 
 .sound-toggle-btn.muted {
@@ -356,9 +368,7 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* ==========================================================================
-   ACTIVE SPOKE TELEMETRY CARD
-   ========================================================================== */
+/* Telemetry Card */
 .helm-telemetry-card {
   width: 100%;
   margin-top: 0.8rem;
@@ -389,32 +399,29 @@
   border: 1px solid var(--pirate-gold);
 }
 
-.telemetry-category-pill {
+.telemetry-z-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--sea-cyan);
   background: rgba(34, 211, 238, 0.12);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
+  font-weight: 600;
 }
 
 .telemetry-coord {
   margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--text-muted);
 }
 
-.coord-icon {
-  color: var(--sea-cyan);
-}
-
 .telemetry-title {
   font-family: var(--font-serif);
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.35;
@@ -436,62 +443,74 @@
 }
 
 /* ==========================================================================
-   RIGHT COLUMN: HORIZONTALLY SCROLLING VOYAGE TRACK
+   RIGHT COLUMN: 3D Z-AXIS TUNNEL DEPTH STAGE
    ========================================================================== */
-.timeline-track-column {
-  overflow: hidden;
+.timeline-z-stage-column {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  overflow: visible;
 }
 
-.timeline-voyage-track {
+.z-axis-depth-viewport {
+  position: relative;
+  width: 100%;
+  height: 560px;
   display: flex;
-  gap: 2.2rem;
-  padding: 1rem 2rem 1rem 0;
-  will-change: transform;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
 }
 
-/* The Individual 14 Milestone Cards */
-.timeline-voyage-card {
-  width: 430px;
-  flex-shrink: 0;
+/* 3D Perspective Tunnel Grid in Background */
+.z-tunnel-perspective-grid {
+  position: absolute;
+  inset: -40px;
+  border: 1px dashed rgba(56, 189, 248, 0.12);
+  border-radius: var(--radius-lg);
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.04) 0%, transparent 60%),
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  transform: translateZ(-800px);
 }
 
-.voyage-card-inner {
-  background: linear-gradient(145deg, rgba(13, 40, 71, 0.85) 0%, rgba(7, 24, 41, 0.95) 100%);
+/* Individual Milestone Layer in 3D Space (Manipulated strictly along Z-axis) */
+.z-milestone-layer {
+  position: absolute;
+  width: 480px;
+  max-width: 95%;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  transition: none; /* STRICTLY NO CSS TRANSITION FIGHTING GSAP Z-AXIS ENGINE */
+}
+
+/* Card Content Container */
+.voyage-card-inner.z-card-content {
+  background: linear-gradient(150deg, rgba(13, 40, 71, 0.9) 0%, rgba(5, 17, 31, 0.96) 100%);
   border: 1px solid var(--border-ocean-subtle);
   border-radius: var(--radius-lg);
   padding: 1.8rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.voyage-card-inner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  pointer-events: none;
-  border: 1px solid transparent;
-  transition: border-color 0.3s ease;
-}
-
-.voyage-card-inner:hover {
-  transform: translateY(-6px);
-  border-color: rgba(34, 211, 238, 0.45);
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.85), 0 0 25px rgba(34, 211, 238, 0.2);
-}
-
-.timeline-voyage-card.is-active-card .voyage-card-inner {
+.z-milestone-layer.is-in-focus .voyage-card-inner.z-card-content {
   border-color: var(--sea-cyan);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(34, 211, 238, 0.4), inset 0 0 25px rgba(34, 211, 238, 0.08);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(34, 211, 238, 0.4), inset 0 0 25px rgba(34, 211, 238, 0.08);
 }
 
-.timeline-voyage-card.is-active-card .voyage-card-inner::before {
+.z-milestone-layer.is-in-focus .voyage-card-inner.z-card-content::before {
   content: '';
   position: absolute;
   top: 0;
@@ -506,7 +525,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.8rem;
 }
 
 .card-spoke-crest {
@@ -532,96 +551,51 @@
   letter-spacing: 0.05em;
 }
 
-.card-status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+.card-z-depth-pill {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-pill);
-}
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-}
-
-.status-navigating {
-  background: rgba(34, 211, 238, 0.12);
+  font-size: 0.68rem;
   color: var(--sea-cyan);
-  border: 1px solid rgba(34, 211, 238, 0.3);
-}
-
-.status-navigating .status-dot {
-  background: var(--sea-cyan);
-  box-shadow: 0 0 8px var(--sea-cyan);
-  animation: beaconPulse 1.5s infinite;
-}
-
-.status-anchored {
-  background: rgba(245, 158, 11, 0.12);
-  color: var(--pirate-gold-glow);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.status-anchored .status-dot {
-  background: var(--pirate-gold-glow);
-}
-
-.status-charted {
-  background: rgba(16, 185, 129, 0.12);
-  color: var(--sea-emerald);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.status-charted .status-dot {
-  background: var(--sea-emerald);
-}
-
-@keyframes beaconPulse {
-  0% { opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { opacity: 0.4; }
+  background: rgba(34, 211, 238, 0.12);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  font-weight: 600;
 }
 
 /* Card Title */
 .card-milestone-title {
   font-family: var(--font-serif);
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.35;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
 }
 
-/* Nautical Theme Tag */
+/* Theme tag */
 .card-theme-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--sea-cyan);
   font-family: var(--font-mono);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
 }
 
-/* Date, Time & Venue Grid */
+/* Voyage Meta Grid */
 .card-voyage-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
-  margin-bottom: 1.1rem;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
 }
 
 .meta-tile {
-  background: rgba(7, 24, 41, 0.6);
+  background: rgba(7, 24, 41, 0.65);
   border: 1px solid var(--border-ocean-subtle);
   border-radius: var(--radius-sm);
-  padding: 0.55rem 0.75rem;
+  padding: 0.5rem 0.7rem;
   display: flex;
   flex-direction: column;
 }
@@ -642,33 +616,33 @@
 }
 
 .meta-tile-value {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-primary);
   font-weight: 500;
 }
 
-/* Captain's Log Parchment Block */
+/* Captain's Logbook Placeholder */
 .card-captains-log {
   background: rgba(30, 20, 10, 0.45);
   border-left: 3px solid var(--pirate-gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.75rem 0.9rem;
-  margin-bottom: 1rem;
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.9rem;
 }
 
 .log-feather-icon {
   font-family: var(--font-serif);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--pirate-gold);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .log-text {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 /* Highlights Box */
@@ -676,8 +650,8 @@
   background: rgba(34, 211, 238, 0.04);
   border: 1px solid rgba(34, 211, 238, 0.12);
   border-radius: var(--radius-sm);
-  padding: 0.7rem 0.85rem;
-  margin-bottom: 1.2rem;
+  padding: 0.65rem 0.8rem;
+  margin-bottom: 1rem;
 }
 
 .highlights-header {
@@ -685,25 +659,25 @@
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--sea-cyan);
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .highlights-desc {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
-/* Card Footer */
+/* Footer Row */
 .card-footer-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  padding-top: 0.8rem;
+  padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
@@ -711,7 +685,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: var(--pirate-gold-light);
 }
@@ -724,7 +698,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.95rem;
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition: all 0.25s ease;
@@ -738,7 +712,7 @@
 }
 
 /* ==========================================================================
-   RESPONSIVE LAYOUT & MEDIA QUERIES
+   RESPONSIVE DESIGN FOR 3D Z-AXIS STAGE
    ========================================================================== */
 @media (max-width: 1024px) {
   .pirate-timeline-section {
@@ -758,17 +732,13 @@
     width: 100%;
   }
 
-  .timeline-track-column {
-    overflow-x: auto;
-    padding-bottom: 1.5rem;
+  .timeline-z-stage-column {
+    perspective: 800px;
+    min-height: 520px;
   }
 
-  .timeline-voyage-track {
-    padding: 0 1rem;
-  }
-
-  .timeline-voyage-card {
-    width: 340px;
+  .z-milestone-layer {
+    width: 400px;
   }
 }
 
@@ -779,17 +749,17 @@
   }
 
   .helm-spoke-node {
-    width: 28px;
-    height: 28px;
-    margin-top: -14px;
-    margin-left: -14px;
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+    margin-left: -16px;
   }
 
-  .timeline-voyage-card {
-    width: 300px;
+  .z-milestone-layer {
+    width: 320px;
   }
 
-  .voyage-card-inner {
+  .voyage-card-inner.z-card-content {
     padding: 1.2rem;
   }
 }

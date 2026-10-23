@@ -3,7 +3,7 @@ export interface TimelineMilestone {
   spokeNumber: number; // 1 to 14
   romanNumeral: string; // I to XIV
   title: string;
-  category: 'Ceremony' | 'Competition' | 'Keynote' | 'Flagship' | 'Debate' | 'Literature';
+  category: string;
   date: string;
   time: string;
   venue: string;
@@ -13,7 +13,7 @@ export interface TimelineMilestone {
   crewRoles: string;
   bountyOrPrize: string;
   coordinates: string;
-  status: 'Anchored' | 'Navigating' | 'Charted';
+  status: string;
 }
 
 export interface PirateWheelTimelineProps {

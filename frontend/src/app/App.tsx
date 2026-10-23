@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar } from '../components/navigation/Navbar';
 import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
-import { Compass, HelpCircle, Anchor, Sparkles } from 'lucide-react';
+import { Compass, HelpCircle, Sparkles } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export const App: React.FC = () => {
@@ -19,7 +19,7 @@ export const App: React.FC = () => {
       {/* Navigation Header */}
       <Navbar />
 
-      {/* Hero Showcase Section */}
+      {/* Hero Section Placeholder (Other team's domain) */}
       <section className="hero-ocean-section" id="hero">
         <div className="ocean-ambient-canvas" aria-hidden="true">
           <div className="ocean-wave-glow glow-1" />
@@ -29,18 +29,18 @@ export const App: React.FC = () => {
         <div className="hero-content">
           <div className="hero-ship-crest">
             <Compass size={15} className="spin-slow" />
-            <span>NIT RAIPUR • LITERATI COMMITTEE PRESENTS</span>
+            <span>[HERO COMPONENT PLACEHOLDER — OTHER TEAM DOMAIN]</span>
           </div>
 
           <h1 className="hero-main-title">
             LITFEST 2.0<br />
-            <span style={{ fontSize: '0.65em', color: 'var(--pirate-gold)' }}>
-              THE HIGH-SEAS ODYSSEY
+            <span style={{ fontSize: '0.62em', color: 'var(--pirate-gold)' }}>
+              [High-Seas Literary Odyssey Placeholder]
             </span>
           </h1>
 
           <p className="hero-description">
-            Unfurl the sails and take the helm. Journey through 14 voyage milestones of central India's flagship literary festival — from the Model United Nations and Poetry Slam to the legendary Aircrash showdown.
+            [Placeholder banner for landing screen / hero introduction. Team members working on the landing/hero component can replace this container directly.]
           </p>
 
           <div className="hero-cta-group">
@@ -50,7 +50,7 @@ export const App: React.FC = () => {
               onClick={() => scrollToSection('#timeline')}
             >
               <Compass size={18} />
-              <span>Turn the Pirate Helm</span>
+              <span>Jump to 3D Z-Axis Timeline</span>
             </button>
 
             <button
@@ -59,62 +59,46 @@ export const App: React.FC = () => {
               onClick={() => scrollToSection('#faq')}
             >
               <HelpCircle size={18} />
-              <span>Explore Inquiries & FAQs</span>
+              <span>Jump to FAQs</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* 1. TIMELINE: 14-Spoke Pirate Ship Steering Wheel (Scroll & Interactive) */}
+      {/* ASSIGNED COMPONENT 1: 3D Z-Axis Timeline with 14-Spoke Pirate Ship Wheel */}
       <PirateWheelTimeline />
 
-      {/* 2. FAQS: Full Litfest NIT Raipur Frequently Asked Questions */}
+      {/* ASSIGNED COMPONENT 2: Official LitFest FAQ Section */}
       <FaqSection />
 
-      {/* High-Seas Nautical Footer */}
-      <footer className="high-seas-footer">
+      {/* Footer Placeholder (Other team's domain) */}
+      <footer className="high-seas-footer" id="footer">
         <div className="footer-container">
           <div className="footer-brand">
-            <div className="nav-brand">
-              <div className="brand-crest">
-                <Anchor size={18} />
-              </div>
-              <div className="brand-text">
-                <span className="brand-title">LITFEST 2.0</span>
-                <span className="brand-subtitle">LITERATI NIT RAIPUR</span>
-              </div>
+            <div className="brand-text">
+              <span className="brand-title">LITFEST 2.0</span>
+              <span className="brand-subtitle">[FOOTER PLACEHOLDER — OTHER TEAM DOMAIN]</span>
             </div>
             <p>
-              The official annual literature, debating, and cultural festival organized by Literati — the Literary Committee of National Institute of Technology Raipur.
+              [Footer component placeholder. Social links, sponsors, and institutional copyright blocks to be integrated by the respective team.]
             </p>
           </div>
 
           <div className="footer-col">
-            <h4>Festival Navigation</h4>
+            <h4>Quick Section Jump</h4>
             <ul className="footer-links">
-              <li><a href="#hero" onClick={() => scrollToSection('#hero')}>Quarterdeck (Home)</a></li>
-              <li><a href="#timeline" onClick={() => scrollToSection('#timeline')}>14-Spoke Voyage Timeline</a></li>
-              <li><a href="#faq" onClick={() => scrollToSection('#faq')}>Captain's Desk FAQs</a></li>
-              <li><a href="mailto:literati@nitrr.ac.in">Hostel & Outstation Logistics</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-col">
-            <h4>Literati Secretariat</h4>
-            <ul className="footer-links">
-              <li><a href="mailto:literati@nitrr.ac.in">literati@nitrr.ac.in</a></li>
-              <li><a href="https://litfestnitrr.in" target="_blank" rel="noreferrer">litfestnitrr.in</a></li>
-              <li><a href="https://nitrr.ac.in" target="_blank" rel="noreferrer">nitrr.ac.in</a></li>
-              <li><span style={{ color: 'var(--text-muted)' }}>G.E. Road, Raipur, CG - 492010</span></li>
+              <li><a href="#hero" onClick={() => scrollToSection('#hero')}>Top / Hero Placeholder</a></li>
+              <li><a href="#timeline" onClick={() => scrollToSection('#timeline')}>3D Z-Axis Timeline</a></li>
+              <li><a href="#faq" onClick={() => scrollToSection('#faq')}>Frequently Asked Questions</a></li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <span>© 2026 Literati, NIT Raipur. Built with React & TypeScript for LitFest 2.0.</span>
+          <span>[NIT Raipur Literati 2.0 Website Scaffold]</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <Sparkles size={14} style={{ color: 'var(--pirate-gold)' }} />
-            Fair Winds & Following Seas
+            Timeline & FAQ Modules Ready for Integration
           </span>
         </div>
       </footer>
