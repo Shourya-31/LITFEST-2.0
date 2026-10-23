@@ -28,4 +28,5 @@ export interface PirateWheelTimelineProps {
   onMilestoneSelect?: (milestone: TimelineMilestone) => void;
   onRegisterLenis?: (lenis: Lenis) => void;
   onScrollProgress?: (progress: number) => void;
+  onNavigateHome?: () => void;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import type Lenis from 'lenis';
+import { gsap } from 'gsap';
 import { Navbar } from '../components/navigation/Navbar';
 import { LitfestUnderwaterHome } from '../features/home/LitfestUnderwaterHome';
 import { BubblesTransition } from '../features/home/components/BubblesTransition';
@@ -13,43 +14,97 @@ export const App: React.FC = () => {
   const [activeModal, setActiveModal] = useState<'register' | 'arenas' | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
   const [currentNavSection, setCurrentNavSection] = useState<'home' | 'timeline'>('home');
-  const navSectionRef = useRef<'home' | 'timeline'>('home');
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const lenisInstanceRef = useRef<Lenis | null>(null);
-  const HOME_ZONE = 0.12;
 
   const toggleFaq = (open: boolean) => {
     soundEngine.playDroplet();
     setFaqOpen(open);
   };
 
-  const handleNavigateHome = () => {
-    if (lenisInstanceRef.current) {
-      lenisInstanceRef.current.scrollTo(0, {
-        duration: 0.85,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  const handleNavigateTimeline = () => {
+    if (currentNavSection === 'timeline' || isTransitioning) return;
+    setIsTransitioning(true);
+    soundEngine.playBubbleDive();
+
+    const homeStage = document.getElementById('underwater-home-stage');
+    if (homeStage) {
+      gsap.to(homeStage, {
+        scale: 2.2,
+        opacity: 0,
+        filter: 'blur(8px)',
+        duration: 0.7,
+        ease: 'power2.inOut',
       });
     }
-    navSectionRef.current = 'home';
-    setCurrentNavSection('home');
-    setFaqOpen(false);
+
+    const bubblesStage = document.getElementById('underwater-bubbles-stage');
+    if (bubblesStage) {
+      bubblesStage.style.display = 'block';
+      gsap.fromTo(
+        bubblesStage,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.35,
+          yoyo: true,
+          repeat: 1,
+          ease: 'power1.inOut',
+          onComplete: () => {
+            bubblesStage.style.display = 'none';
+            bubblesStage.style.opacity = '0';
+          },
+        }
+      );
+    }
+
+    setTimeout(() => {
+      setCurrentNavSection('timeline');
+      if (lenisInstanceRef.current) {
+        lenisInstanceRef.current.scrollTo(0, { immediate: true });
+      }
+      setIsTransitioning(false);
+    }, 380);
   };
 
-  const handleNavigateTimeline = () => {
-    if (lenisInstanceRef.current) {
-      const limit = lenisInstanceRef.current.limit > 0
-        ? lenisInstanceRef.current.limit
-        : (document.documentElement.scrollHeight - window.innerHeight);
-      if (limit > 0) {
-        const targetScroll = (HOME_ZONE + 0.005) * limit;
-        lenisInstanceRef.current.scrollTo(targetScroll, {
-          duration: 0.85,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        });
-      }
+  const handleNavigateHome = () => {
+    if (currentNavSection === 'home' || isTransitioning) return;
+    setIsTransitioning(true);
+    soundEngine.playBubbleDive();
+
+    const bubblesStage = document.getElementById('underwater-bubbles-stage');
+    if (bubblesStage) {
+      bubblesStage.style.display = 'block';
+      gsap.fromTo(
+        bubblesStage,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.35,
+          yoyo: true,
+          repeat: 1,
+          ease: 'power1.inOut',
+          onComplete: () => {
+            bubblesStage.style.display = 'none';
+            bubblesStage.style.opacity = '0';
+          },
+        }
+      );
     }
-    navSectionRef.current = 'timeline';
-    setCurrentNavSection('timeline');
-    setFaqOpen(false);
+
+    setTimeout(() => {
+      setCurrentNavSection('home');
+      const homeStage = document.getElementById('underwater-home-stage');
+      if (homeStage) {
+        homeStage.style.display = 'block';
+        gsap.fromTo(
+          homeStage,
+          { scale: 2.2, opacity: 0, filter: 'blur(8px)' },
+          { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.65, ease: 'power2.out' }
+        );
+      }
+      setIsTransitioning(false);
+    }, 380);
   };
 
   const toggleAudio = () => {
@@ -72,10 +127,14 @@ export const App: React.FC = () => {
         onToggleAudio={toggleAudio}
       />
 
-      {/* 2. Lenis Virtual Scroll Spacer (1400vh for natural, buttery smooth travel) */}
-      <div className="lenis-scroll-spacer" style={{ height: '1400vh' }} aria-hidden="true" />
+      {/* 2. Lenis Virtual Scroll Spacer (800vh when in timeline for silky smooth navigation) */}
+      <div
+        className="lenis-scroll-spacer"
+        style={{ height: currentNavSection === 'timeline' ? '800vh' : '100vh' }}
+        aria-hidden="true"
+      />
 
-      {/* 3. Surface & Abyssal Underwater Homepage (Controlled directly in Lenis RAF for 120fps) */}
+      {/* 3. Surface & Abyssal Underwater Homepage */}
       <LitfestUnderwaterHome
         onExploreClick={handleNavigateTimeline}
         onRegisterClick={() => setActiveModal('register')}
@@ -85,7 +144,17 @@ export const App: React.FC = () => {
       />
 
       {/* 4. Cinematic Oceanic Bubbles Transition Layer */}
-      <div id="underwater-bubbles-stage" style={{ opacity: 0, display: 'none' }}>
+      <div
+        id="underwater-bubbles-stage"
+        style={{
+          opacity: 0,
+          display: 'none',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 120,
+          pointerEvents: 'none',
+        }}
+      >
         <BubblesTransition progress={1} />
       </div>
 
@@ -93,21 +162,17 @@ export const App: React.FC = () => {
       <main
         className="main-3d-z-viewport"
         style={{
-          pointerEvents: currentNavSection === 'home' ? 'none' : 'auto',
-          zIndex: currentNavSection === 'home' ? 5 : 20,
+          zIndex: currentNavSection === 'timeline' ? 15 : 0,
+          opacity: currentNavSection === 'timeline' ? 1 : 0,
+          pointerEvents: currentNavSection === 'timeline' ? 'auto' : 'none',
+          display: currentNavSection === 'timeline' ? 'block' : 'none',
         }}
       >
         <PirateWheelTimeline
           isFaqOpen={faqOpen}
+          onNavigateHome={handleNavigateHome}
           onRegisterLenis={(lenis) => {
             lenisInstanceRef.current = lenis;
-          }}
-          onScrollProgress={(progress) => {
-            const next = progress < HOME_ZONE ? 'home' : 'timeline';
-            if (next !== navSectionRef.current) {
-              navSectionRef.current = next;
-              setCurrentNavSection(next);
-            }
           }}
         />
       </main>
@@ -150,11 +215,11 @@ export const App: React.FC = () => {
                 </div>
                 <div className="perk-item">
                   <CheckCircle2 size={16} className="perk-check" />
-                  <span>National guest speaker panels, workshops & masterclasses</span>
+                  <span>Keynote speaker panels, masterclasses & author workshops</span>
                 </div>
                 <div className="perk-item">
                   <CheckCircle2 size={16} className="perk-check" />
-                  <span>Official certificate of participation & merit cash prizes</span>
+                  <span>Official Literati Certificate of Merit & flagship bounties</span>
                 </div>
               </div>
               <div className="modal-cta-group">
@@ -162,20 +227,18 @@ export const App: React.FC = () => {
                   type="button"
                   className="modal-primary-btn"
                   onClick={() => {
-                    soundEngine.playDroplet();
+                    soundEngine.playWaterBell(0);
                     setActiveModal(null);
-                    handleNavigateTimeline();
                   }}
-                  id="modal-register-action"
                 >
-                  Explore Arenas in Timeline
+                  Confirm Registration
                 </button>
                 <button
                   type="button"
                   className="modal-secondary-btn"
                   onClick={() => setActiveModal(null)}
                 >
-                  Return to Ocean
+                  Return to Voyage
                 </button>
               </div>
             </div>
@@ -183,7 +246,7 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* 7. Featured Arenas Modal */}
+      {/* 7. Arenas Overview Modal */}
       {activeModal === 'arenas' && (
         <div
           className="ocean-modal-overlay"
@@ -215,15 +278,15 @@ export const App: React.FC = () => {
               <div className="events-grid-preview">
                 <div className="event-preview-card">
                   <h4>Verbatim</h4>
-                  <p>Parliamentary Debate & Extempore Battles</p>
+                  <p>Parliamentary Debate & Extempore Battles on the main stage.</p>
                 </div>
                 <div className="event-preview-card">
                   <h4>Inkspire</h4>
-                  <p>Creative Poetry, Flash Fiction & Journalism</p>
+                  <p>Creative Poetry, Flash Fiction & Investigative Journalism.</p>
                 </div>
                 <div className="event-preview-card">
                   <h4>Quizzitch</h4>
-                  <p>Flagship General & Pop-Culture Trivia Quest</p>
+                  <p>Flagship General & Pop-Culture High Seas Trivia Quest.</p>
                 </div>
               </div>
               <div className="modal-cta-group">
@@ -231,12 +294,11 @@ export const App: React.FC = () => {
                   type="button"
                   className="modal-primary-btn"
                   onClick={() => {
-                    soundEngine.playDroplet();
                     setActiveModal(null);
                     handleNavigateTimeline();
                   }}
                 >
-                  View in Timeline
+                  Explore in 3D Timeline
                 </button>
                 <button
                   type="button"

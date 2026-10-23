@@ -8,9 +8,9 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 35%, #0e5c8a 0%, #083c5e 40%, #052438 80%, #031c2d 100%);
+  background: radial-gradient(circle at 50% 35%, #082845 0%, #05162a 40%, #020b18 80%, #010610 100%);
   user-select: none;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 /* ==========================================================================

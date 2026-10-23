@@ -29,13 +29,24 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   isFaqOpen = false,
   onMilestoneSelect,
   onRegisterLenis,
-  onScrollProgress
+  onScrollProgress,
+  onNavigateHome
 }) => {
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const [rotationDeg, setRotationDeg] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(soundEngine.getMuted());
   const [currentZ, setCurrentZ] = useState<number>(0);
   const [isSteering, setIsSteering] = useState<boolean>(false);
+
+  // Stable refs to prevent tearing down Lenis during parent re-renders
+  const onRegisterLenisRef = useRef(onRegisterLenis);
+  onRegisterLenisRef.current = onRegisterLenis;
+  const onScrollProgressRef = useRef(onScrollProgress);
+  onScrollProgressRef.current = onScrollProgress;
+  const onNavigateHomeRef = useRef(onNavigateHome);
+  onNavigateHomeRef.current = onNavigateHome;
+  const activeIdxRef = useRef<number>(0);
+  activeIdxRef.current = activeIdx;
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const cameraRef = useRef<HTMLDivElement | null>(null);
@@ -47,9 +58,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   const totalCards = milestones.length;
   const maxCameraZ = (totalCards - 1) * SPACING_Z;
   const totalEvents = 14;
-
-  // Fraction of total virtual scroll dedicated to Underwater Home Zoom-In & Bubble Dive
-  const HOME_ZONE = 0.12;
 
   const targetZRef = useRef<number>(0);
   const currentZRef = useRef<number>(0);
@@ -64,25 +72,24 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   // Snap-to-nearest checkpoint timer refs
   const scrollSnapTimerRef = useRef<number | null>(null);
   const dragSnapTimerRef = useRef<number | null>(null);
-  const hasPlayedDiveSoundRef = useRef<boolean>(false);
 
   const selectedMilestone = milestones[activeIdx] || milestones[0];
 
   // Initialize Lenis smooth scroll engine synchronized with GSAP Ticker
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.7,
+      duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.35,
+      wheelMultiplier: 1.25,
       touchMultiplier: 2.0,
     });
     lenisRef.current = lenis;
 
-    if (onRegisterLenis) {
-      onRegisterLenis(lenis);
+    if (onRegisterLenisRef.current) {
+      onRegisterLenisRef.current(lenis);
     }
 
     // Connect Lenis animation frame to GSAP ticker for 60/120fps hardware rendering
@@ -92,117 +99,50 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     gsap.ticker.add(tickerUpdate);
     gsap.ticker.lagSmoothing(0);
 
-    // Lenis scroll listener: Drives home zoom, bubbles veil, and 3D Z-axis traversal
+    // Lenis scroll listener: Translates scroll progress into pure 3D Z-axis traversal
     lenis.on('scroll', (e: { progress: number; velocity: number }) => {
-      if (onScrollProgress) {
-        onScrollProgress(e.progress);
+      if (onScrollProgressRef.current) {
+        onScrollProgressRef.current(e.progress);
       }
 
-      const homeStage = document.getElementById('underwater-home-stage');
-      const bubblesStage = document.getElementById('underwater-bubbles-stage');
-      const timelineViewport = containerRef.current;
+      if (isDraggingHelmRef.current) return;
 
-      if (e.progress < HOME_ZONE) {
-        // ZONE 1: Underwater Homepage Zoom-In & Bubbles Transition
-        const homeZoom = Math.min(1, Math.max(0, e.progress / HOME_ZONE)); // 0 to 1
-        const scale = 1 + homeZoom * 2.4;
-        const opacity = Math.max(0, 1 - Math.pow(homeZoom, 1.8));
-        const blur = homeZoom * 6;
+      const zVal = e.progress * maxCameraZ;
+      currentZRef.current = zVal;
+      targetZRef.current = zVal;
 
-        if (homeZoom > 0.45 && homeZoom < 0.95 && !hasPlayedDiveSoundRef.current) {
-          soundEngine.playBubbleDive();
-          hasPlayedDiveSoundRef.current = true;
-        } else if (homeZoom < 0.2 || e.progress >= HOME_ZONE) {
-          hasPlayedDiveSoundRef.current = false;
-        }
-
-        if (homeStage) {
-          homeStage.style.transform = `scale(${scale.toFixed(4)})`;
-          homeStage.style.opacity = opacity.toFixed(3);
-          homeStage.style.filter = blur > 0.1 ? `blur(${blur.toFixed(2)}px)` : 'none';
-          homeStage.style.pointerEvents = homeZoom > 0.75 ? 'none' : 'auto';
-          homeStage.style.display = 'block';
-        }
-
-        if (bubblesStage) {
-          let bubbleOpacity = 0;
-          if (homeZoom > 0.15) {
-            bubbleOpacity = Math.sin(((homeZoom - 0.15) / 0.85) * Math.PI);
-          }
-          bubblesStage.style.opacity = bubbleOpacity.toFixed(3);
-          bubblesStage.style.display = bubbleOpacity > 0.01 ? 'block' : 'none';
-        }
-
-        if (timelineViewport) {
-          const tOp = homeZoom > 0.6 ? (homeZoom - 0.6) / 0.4 : 0;
-          timelineViewport.style.opacity = tOp.toFixed(3);
-          timelineViewport.style.pointerEvents = homeZoom > 0.85 ? 'auto' : 'none';
-        }
-
-        // Keep timeline at milestone 0
-        if (cameraRef.current) {
-          cameraRef.current.style.transform = 'translate3d(0, 0, 0px)';
-        }
-        currentZRef.current = 0;
-        targetZRef.current = 0;
-        if (prevActiveIdxRef.current !== 0) {
-          prevActiveIdxRef.current = 0;
-          setActiveIdx(0);
-          setRotationDeg(0);
-          setCurrentZ(0);
-        }
-      } else {
-        // ZONE 2: 3D Pirate Steering Wheel Timeline in deep abyss
-        if (homeStage) {
-          homeStage.style.display = 'none';
-          homeStage.style.pointerEvents = 'none';
-        }
-        if (bubblesStage) {
-          bubblesStage.style.display = 'none';
-        }
-        if (timelineViewport) {
-          timelineViewport.style.opacity = '1';
-          timelineViewport.style.pointerEvents = 'auto';
-        }
-
-        if (isDraggingHelmRef.current) return;
-
-        const timelineProgress = Math.min(1, Math.max(0, (e.progress - HOME_ZONE) / (1 - HOME_ZONE)));
-        const zVal = timelineProgress * maxCameraZ;
-        currentZRef.current = zVal;
-        targetZRef.current = zVal;
-
-        if (cameraRef.current) {
-          cameraRef.current.style.transform = `translate3d(0, 0, ${zVal}px)`;
-        }
-
-        const continuousIdx = zVal / SPACING_Z;
-        const approxIdx = Math.max(0, Math.min(Math.round(continuousIdx), totalCards - 1));
-
-        if (approxIdx !== prevActiveIdxRef.current) {
-          prevActiveIdxRef.current = approxIdx;
-          setActiveIdx(approxIdx);
-          soundEngine.playWaterTransition(approxIdx);
-
-          // GSAP micro-animation on active event card
-          const activeCard = document.querySelector(`.z-milestone-checkpoint-plane[data-event-idx="${approxIdx}"] .z-checkpoint-card`);
-          if (activeCard) {
-            gsap.fromTo(
-              activeCard,
-              { scale: 0.97 },
-              { scale: 1, duration: 0.28, ease: 'power2.out' }
-            );
-          }
-        }
-
-        // Selected event remains fixed at 12 o'clock top pointer
-        const targetWheelRotation = -continuousIdx * (360 / totalEvents);
-        setRotationDeg(targetWheelRotation);
-        setCurrentZ(Math.round(zVal));
+      if (cameraRef.current) {
+        cameraRef.current.style.transform = `translate3d(0, 0, ${zVal}px)`;
       }
+
+      const continuousIdx = zVal / SPACING_Z;
+      const approxIdx = Math.max(0, Math.min(Math.round(continuousIdx), totalCards - 1));
+
+      if (approxIdx !== prevActiveIdxRef.current) {
+        prevActiveIdxRef.current = approxIdx;
+        setActiveIdx(approxIdx);
+        soundEngine.playWaterTransition(approxIdx);
+
+        // GSAP micro-animation on active event card
+        const activeCard = document.querySelector(
+          `.z-milestone-checkpoint-plane[data-event-idx="${approxIdx}"] .z-checkpoint-card`
+        );
+        if (activeCard) {
+          gsap.fromTo(
+            activeCard,
+            { scale: 0.96 },
+            { scale: 1, duration: 0.3, ease: 'back.out(1.4)' }
+          );
+        }
+      }
+
+      // Selected event remains fixed at 12 o'clock top pointer
+      const targetWheelRotation = -continuousIdx * (360 / totalEvents);
+      setRotationDeg(targetWheelRotation);
+      setCurrentZ(Math.round(zVal));
     });
 
-    // Snap to nearest event milestone or home on scroll stop
+    // Snap to nearest event milestone on scroll stop
     lenis.on('scroll', () => {
       if (isDraggingHelmRef.current) return;
       if (scrollSnapTimerRef.current) clearTimeout(scrollSnapTimerRef.current);
@@ -211,34 +151,41 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         if (isDraggingHelmRef.current) return;
         const limit = lenis.limit;
         if (limit > 0) {
-          if (lenis.progress < HOME_ZONE * 0.65) {
-            // Snap back to top of homepage
-            lenis.scrollTo(0, {
-              duration: 0.5,
-              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-            });
-          } else {
-            // Snap to nearest event milestone in timeline
-            const effectiveProgress = Math.max(0, (lenis.progress - HOME_ZONE) / (1 - HOME_ZONE));
-            const nearestIdx = Math.max(0, Math.min(Math.round(effectiveProgress * (totalCards - 1)), totalCards - 1));
-            const snapScroll = (HOME_ZONE + (nearestIdx / (totalCards - 1)) * (1 - HOME_ZONE)) * limit;
+          const nearestIdx = Math.max(0, Math.min(Math.round(lenis.progress * (totalCards - 1)), totalCards - 1));
+          const snapScroll = (nearestIdx / (totalCards - 1)) * limit;
+          if (Math.abs(lenis.scroll - snapScroll) > 8) {
             lenis.scrollTo(snapScroll, {
-              duration: 0.5,
-              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+              duration: 0.45,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             });
           }
         }
-      }, 140);
+      }, 150);
     });
+
+    // Upward scroll at Milestone 0 smoothly surfaces back to Home
+    const handleHomeAscendWheel = (e: WheelEvent) => {
+      if (isFaqOpen) return;
+      if (document.querySelector('.ocean-modal-overlay') || document.querySelector('.faq-chamber-backdrop')) {
+        return;
+      }
+      if (activeIdxRef.current === 0 && lenis.scroll <= 8 && e.deltaY < -20) {
+        if (onNavigateHomeRef.current) {
+          onNavigateHomeRef.current();
+        }
+      }
+    };
+    window.addEventListener('wheel', handleHomeAscendWheel, { passive: true });
 
     return () => {
       gsap.ticker.remove(tickerUpdate);
+      window.removeEventListener('wheel', handleHomeAscendWheel);
       lenis.destroy();
       lenisRef.current = null;
       if (scrollSnapTimerRef.current) clearTimeout(scrollSnapTimerRef.current);
       if (dragSnapTimerRef.current) clearTimeout(dragSnapTimerRef.current);
     };
-  }, [totalCards, maxCameraZ, SPACING_Z, totalEvents, HOME_ZONE, onRegisterLenis, onScrollProgress]);
+  }, [totalCards, maxCameraZ, SPACING_Z, totalEvents, isFaqOpen]);
 
   // Pause / Resume Lenis when FAQ chamber modal opens
   useEffect(() => {
@@ -258,16 +205,17 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       : (document.documentElement.scrollHeight - window.innerHeight);
 
     if (lenisRef.current && limit > 0) {
-      const targetScroll = (HOME_ZONE + (targetIdx / (totalCards - 1)) * (1 - HOME_ZONE)) * limit;
+      const targetScroll = (targetIdx / (totalCards - 1)) * limit;
       lenisRef.current.scrollTo(targetScroll, {
         duration: 0.55,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
       });
     } else {
-      targetZRef.current = targetIdx * SPACING_Z;
-      currentZRef.current = targetIdx * SPACING_Z;
+      const newZ = targetIdx * SPACING_Z;
+      targetZRef.current = newZ;
+      currentZRef.current = newZ;
       if (cameraRef.current) {
-        cameraRef.current.style.transform = `translate3d(0, 0, ${targetIdx * SPACING_Z}px)`;
+        cameraRef.current.style.transform = `translate3d(0, 0, ${newZ}px)`;
       }
       if (targetIdx !== prevActiveIdxRef.current) {
         prevActiveIdxRef.current = targetIdx;
@@ -275,23 +223,29 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         soundEngine.playWaterTransition(targetIdx);
       }
       setRotationDeg(-targetIdx * (360 / totalEvents));
-      setCurrentZ(targetIdx * SPACING_Z);
+      setCurrentZ(newZ);
     }
 
     if (onMilestoneSelect) {
       onMilestoneSelect(milestones[targetIdx]);
     }
-  }, [totalCards, totalEvents, SPACING_Z, HOME_ZONE, milestones, onMilestoneSelect]);
+  }, [totalCards, totalEvents, SPACING_Z, milestones, onMilestoneSelect]);
 
-  const stepZoomOut = () => {
-    const targetIdx = Math.max(0, activeIdx - 1);
-    zoomToMilestone(targetIdx);
-  };
+  const stepZoomOut = useCallback(() => {
+    const current = activeIdxRef.current;
+    if (current > 0) {
+      zoomToMilestone(current - 1);
+    } else if (onNavigateHomeRef.current) {
+      onNavigateHomeRef.current();
+    }
+  }, [zoomToMilestone]);
 
-  const stepZoomIn = () => {
-    const targetIdx = Math.min(totalCards - 1, activeIdx + 1);
-    zoomToMilestone(targetIdx);
-  };
+  const stepZoomIn = useCallback(() => {
+    const current = activeIdxRef.current;
+    if (current < totalCards - 1) {
+      zoomToMilestone(current + 1);
+    }
+  }, [totalCards, zoomToMilestone]);
 
   const toggleSound = () => {
     const newMuted = soundEngine.toggleMute();
@@ -316,7 +270,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeIdx, totalCards, isFaqOpen]);
+  }, [isFaqOpen, stepZoomIn, stepZoomOut]);
 
   // Mouse / Pointer steering wheel turning by dragging around the helm
   const handleHelmPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -373,9 +327,8 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       setRotationDeg(-continuousIdx * (360 / totalEvents));
       setCurrentZ(Math.round(newZ));
 
-      // Synchronize Lenis scroll
       if (lenisRef.current && lenisRef.current.limit > 0) {
-        const syncScroll = (HOME_ZONE + (newZ / maxCameraZ) * (1 - HOME_ZONE)) * lenisRef.current.limit;
+        const syncScroll = (newZ / maxCameraZ) * lenisRef.current.limit;
         lenisRef.current.scrollTo(syncScroll, { immediate: true });
       }
 
@@ -385,24 +338,21 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       dragSnapTimerRef.current = window.setTimeout(() => {
         const nearestIdx = Math.max(0, Math.min(Math.round(currentZRef.current / SPACING_Z), totalCards - 1));
         zoomToMilestone(nearestIdx);
-      }, 200);
+      }, 140);
     };
 
     const onPointerUp = () => {
       isDraggingHelmRef.current = false;
       setIsSteering(false);
-      if (dragSnapTimerRef.current) clearTimeout(dragSnapTimerRef.current);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerUp);
 
       const nearestIdx = Math.max(0, Math.min(Math.round(currentZRef.current / SPACING_Z), totalCards - 1));
       zoomToMilestone(nearestIdx);
     };
 
-    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointercancel', onPointerUp);
   };
 
   const handleEventClick = (idx: number) => {
@@ -447,7 +397,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
               opacity = Math.max(0, Math.min(1, 1 - Math.abs(relDist) / 2200));
               blurPx = Math.min(6, Math.abs(relDist) / 400);
             } else {
-              // Fade out smoothly as camera zooms inside, before reaching navbar height
+              // Fade out smoothly as camera zooms inside
               opacity = Math.max(0, Math.min(1, 1 - relDist / 200));
               blurPx = Math.min(8, relDist / 25);
             }
@@ -590,18 +540,19 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
               type="button"
               className="dock-ctrl-btn interactive"
               onClick={stepZoomOut}
-              disabled={activeIdx === 0}
-              title="Reverse Helm (Port / Previous Event)"
+              title={activeIdx === 0 ? "Return to Ocean Surface" : "Reverse Helm (Port / Previous Event)"}
+              aria-label={activeIdx === 0 ? "Return to Home" : "Previous Event"}
             >
               <ChevronLeft size={16} />
-              <span>PORT</span>
+              <span>{activeIdx === 0 ? 'SURFACE' : 'PORT'}</span>
             </button>
 
             <button
               type="button"
-              className="dock-ctrl-btn sound-btn interactive"
+              className={`dock-ctrl-btn sound-btn interactive ${isMuted ? 'muted' : ''}`}
               onClick={toggleSound}
               title={isMuted ? "Unmute Audio" : "Mute Audio"}
+              aria-label={isMuted ? "Unmute audio" : "Mute audio"}
             >
               {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
             </button>
@@ -612,6 +563,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
               onClick={stepZoomIn}
               disabled={activeIdx === totalCards - 1}
               title="Advance Helm (Starboard / Next Event)"
+              aria-label="Next Event"
             >
               <span>STBD</span>
               <ChevronRight size={16} />
@@ -620,7 +572,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         </div>
 
         {/* BOTTOM CENTER: Minimal Event Progress Bar */}
-        <div className="z-minimal-progress-dock">
+        <div className="z-minimal-progress-dock" aria-label="Event Timeline Progress">
           <div className="minimal-progress-meta">
             <span className="meta-event-badge">EVENT {selectedMilestone.romanNumeral}</span>
             <span className="meta-event-title">{selectedMilestone.title}</span>
@@ -631,6 +583,10 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             className="minimal-progress-track interactive"
             onClick={handleProgressBarClick}
             title="Click progress track to travel directly"
+            role="progressbar"
+            aria-valuenow={activeIdx + 1}
+            aria-valuemin={1}
+            aria-valuemax={totalCards}
           >
             <div
               className="minimal-progress-fill"
@@ -656,6 +612,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             onClick={stepZoomIn}
             disabled={activeIdx === totalCards - 1}
             title="Zoom In Forward (Next Milestone)"
+            aria-label="Next Event"
           >
             <ZoomIn size={15} />
             <span>ZOOM IN</span>
@@ -665,11 +622,11 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             type="button"
             className="zoom-action-btn interactive"
             onClick={stepZoomOut}
-            disabled={activeIdx === 0}
-            title="Zoom Out Reverse (Previous Milestone)"
+            title={activeIdx === 0 ? "Return to Surface" : "Zoom Out Reverse (Previous Milestone)"}
+            aria-label={activeIdx === 0 ? "Return to Home" : "Previous Event"}
           >
             <ZoomOut size={15} />
-            <span>ZOOM OUT</span>
+            <span>{activeIdx === 0 ? 'SURFACE' : 'ZOOM OUT'}</span>
           </button>
         </div>
       </div>
