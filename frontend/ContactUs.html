@@ -150,17 +150,20 @@
 
   <script>
     const TO_EMAIL = "vanshchauhan4578@gmail.com";
+
     const usernameInput = document.getElementById("username");
+    const phoneInput = document.getElementById("PhoneNo");
 
     usernameInput.addEventListener("input", function () {
       this.value = this.value.replace(/[0-9]/g, "");
     });
 
-    const phoneInput = document.getElementById("PhoneNo");
-
-phoneInput.addEventListener("input", function () {
-  this.value = this.value.replace(/\D/g, "");
-});
+    phoneInput.addEventListener("input", function () {
+      this.value = this.value.replace(/[^0-9+]/g, "");
+      if (this.value.includes("+")) {
+        this.value = "+" + this.value.replace(/\+/g, "").replace(/\D/g, "");
+      }
+    });
 
     document.getElementById("contactForm").addEventListener("submit", function (e) {
       e.preventDefault();
