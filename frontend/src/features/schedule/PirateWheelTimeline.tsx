@@ -102,9 +102,9 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       const bubblesStage = document.getElementById('underwater-bubbles-stage');
       const timelineViewport = containerRef.current;
 
-      if (e.progress <= HOME_ZONE) {
+      if (e.progress < HOME_ZONE) {
         // ZONE 1: Underwater Homepage Zoom-In & Bubbles Transition
-        const homeZoom = e.progress / HOME_ZONE; // 0 to 1
+        const homeZoom = Math.min(1, Math.max(0, e.progress / HOME_ZONE)); // 0 to 1
         const scale = 1 + homeZoom * 2.4;
         const opacity = Math.max(0, 1 - Math.pow(homeZoom, 1.8));
         const blur = homeZoom * 6;
@@ -112,7 +112,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         if (homeZoom > 0.45 && homeZoom < 0.95 && !hasPlayedDiveSoundRef.current) {
           soundEngine.playBubbleDive();
           hasPlayedDiveSoundRef.current = true;
-        } else if (homeZoom < 0.2 || e.progress > HOME_ZONE * 1.5) {
+        } else if (homeZoom < 0.2 || e.progress >= HOME_ZONE) {
           hasPlayedDiveSoundRef.current = false;
         }
 
@@ -167,7 +167,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
         if (isDraggingHelmRef.current) return;
 
-        const timelineProgress = (e.progress - HOME_ZONE) / (1 - HOME_ZONE);
+        const timelineProgress = Math.min(1, Math.max(0, (e.progress - HOME_ZONE) / (1 - HOME_ZONE)));
         const zVal = timelineProgress * maxCameraZ;
         currentZRef.current = zVal;
         targetZRef.current = zVal;
@@ -211,7 +211,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         if (isDraggingHelmRef.current) return;
         const limit = lenis.limit;
         if (limit > 0) {
-          if (lenis.progress <= HOME_ZONE * 0.7) {
+          if (lenis.progress < HOME_ZONE * 0.65) {
             // Snap back to top of homepage
             lenis.scrollTo(0, {
               duration: 0.5,
@@ -228,7 +228,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             });
           }
         }
-      }, 120);
+      }, 140);
     });
 
     return () => {
@@ -253,8 +253,12 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   // Navigate directly to a specific event milestone
   const zoomToMilestone = useCallback((idx: number) => {
     const targetIdx = Math.max(0, Math.min(idx, totalCards - 1));
-    if (lenisRef.current && lenisRef.current.limit > 0) {
-      const targetScroll = (HOME_ZONE + (targetIdx / (totalCards - 1)) * (1 - HOME_ZONE)) * lenisRef.current.limit;
+    const limit = (lenisRef.current && lenisRef.current.limit > 0)
+      ? lenisRef.current.limit
+      : (document.documentElement.scrollHeight - window.innerHeight);
+
+    if (lenisRef.current && limit > 0) {
+      const targetScroll = (HOME_ZONE + (targetIdx / (totalCards - 1)) * (1 - HOME_ZONE)) * limit;
       lenisRef.current.scrollTo(targetScroll, {
         duration: 0.55,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
@@ -419,113 +423,125 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       id="timeline-stage"
       className={`z-axis-interactive-viewport ${className}`}
       aria-label="Interactive 3D Z-Axis Timeline Traversal"
-      style={{ opacity: 0, pointerEvents: 'none' }}
     >
-      {/* 1. Background Oceanic Atmosphere & Tunnel Concentric Rings */}
+      {/* 1. Background Oceanic Atmosphere & Tunnel Concentric Rings with Parallax Depth */}
       <div className="z-ocean-starfield" aria-hidden="true">
-        <div className="z-tunnel-ring ring-1" />
-        <div className="z-tunnel-ring ring-2" />
-        <div className="z-tunnel-ring ring-3" />
+        <div className="z-tunnel-ring ring-1" style={{ transform: `translateZ(${-(currentZ * 0.4) % 1800}px)` }} />
+        <div className="z-tunnel-ring ring-2" style={{ transform: `translateZ(${-(currentZ * 0.7) % 2400}px)` }} />
+        <div className="z-tunnel-ring ring-3" style={{ transform: `translateZ(${-(currentZ * 1.0) % 3000}px)` }} />
       </div>
 
       {/* 2. 3D Perspective Stage & Moving Camera Rig */}
       <div className="z-world-perspective-stage">
         <div ref={cameraRef} className="z-world-camera">
           {milestones.map((m, idx) => {
-            const zPlane = -idx * SPACING_Z;
-            const isActive = activeIdx === idx;
-            const distFromCamera = Math.abs(currentZ - idx * SPACING_Z);
+            const milestoneWorldZ = -idx * SPACING_Z;
+            const relDist = milestoneWorldZ + currentZ;
 
-            let planeOpacity = 1;
-            let blurAmount = 0;
-            if (distFromCamera > SPACING_Z * 2.2) {
-              planeOpacity = Math.max(0, 1 - (distFromCamera - SPACING_Z * 2.2) / (SPACING_Z * 1.5));
-              blurAmount = Math.min(8, (distFromCamera - SPACING_Z * 2.2) * 0.005);
+            const isVisible = relDist > -3600 && relDist < 250;
+            if (!isVisible) return null;
+
+            let opacity = 1;
+            let blurPx = 0;
+            if (relDist < 0) {
+              opacity = Math.max(0, Math.min(1, 1 - Math.abs(relDist) / 2200));
+              blurPx = Math.min(6, Math.abs(relDist) / 400);
+            } else {
+              // Fade out smoothly as camera zooms inside, before reaching navbar height
+              opacity = Math.max(0, Math.min(1, 1 - relDist / 200));
+              blurPx = Math.min(8, relDist / 25);
             }
+
+            const isInFocus = activeIdx === idx;
 
             return (
               <div
                 key={`milestone-plane-${m.id}`}
-                className={`z-milestone-checkpoint-plane ${isActive ? 'is-active-checkpoint' : ''}`}
+                className={`z-milestone-checkpoint-plane ${isInFocus ? 'is-active-checkpoint' : ''}`}
                 data-event-idx={idx}
                 style={{
-                  transform: `translate3d(0, 0, ${zPlane}px)`,
-                  opacity: planeOpacity,
-                  filter: blurAmount > 0 ? `blur(${blurAmount}px)` : 'none',
-                  pointerEvents: isActive ? 'auto' : 'none'
+                  transform: `translate3d(0, 0, ${milestoneWorldZ}px)`,
+                  opacity,
+                  filter: `blur(${blurPx.toFixed(1)}px)`,
+                  pointerEvents: isInFocus ? 'auto' : 'none'
                 }}
+                onClick={() => zoomToMilestone(idx)}
               >
                 <article
-                  className="z-checkpoint-card"
+                  className="voyage-card-inner z-checkpoint-card interactive"
                   onClick={() => handleEventClick(idx)}
                 >
                   <div className="card-header-row">
                     <div className="card-spoke-crest">
                       <Anchor size={14} className="crest-anchor" />
-                      <span className="crest-roman">EVENT {m.romanNumeral}</span>
+                      <span>EVENT {m.eventNumber || idx + 1}</span>
+                      <strong className="crest-roman">[{m.romanNumeral}]</strong>
                     </div>
-                    <div className="card-z-depth-pill">
-                      <span>CHKP #{m.eventNumber}</span>
-                    </div>
+                    <span className="card-z-depth-pill">
+                      EVENT {idx + 1} OF {totalCards}
+                    </span>
                   </div>
 
                   <h3 className="card-milestone-title">{m.title}</h3>
                   <div className="card-theme-tag">
-                    <Sparkles size={13} />
+                    <Compass size={13} />
                     <span>{m.nauticalTheme}</span>
                   </div>
 
                   <div className="card-voyage-meta">
                     <div className="meta-tile">
                       <span className="meta-tile-label">
-                        <Calendar size={11} /> DATE
+                        <Calendar size={12} /> DATE
                       </span>
-                      <span className="meta-tile-value">{m.date}</span>
+                      <strong className="meta-tile-value">{m.date}</strong>
                     </div>
 
                     <div className="meta-tile">
                       <span className="meta-tile-label">
-                        <Clock size={11} /> TIME
+                        <Clock size={12} /> TIME
                       </span>
-                      <span className="meta-tile-value">{m.time}</span>
+                      <strong className="meta-tile-value">{m.time}</strong>
                     </div>
 
                     <div className="meta-tile meta-tile-full">
                       <span className="meta-tile-label">
-                        <MapPin size={11} /> ANCHORAGE VENUE
+                        <MapPin size={12} /> LOCATION DECK
                       </span>
-                      <span className="meta-tile-value">{m.venue}</span>
+                      <strong className="meta-tile-value">{m.venue}</strong>
                     </div>
                   </div>
 
                   <div className="card-captains-log">
-                    <div className="log-feather-icon">LOGBOOK DISPATCH</div>
+                    <div className="log-feather-icon">📜 Captain's Logbook Dispatch:</div>
                     <p className="log-text">"{m.captainLog}"</p>
                   </div>
 
                   <div className="card-highlights-box">
                     <div className="highlights-header">
-                      <Award size={13} />
-                      <span>HIGHLIGHT ARENAS</span>
+                      <Sparkles size={13} />
+                      <span>Highlights:</span>
                     </div>
                     <p className="highlights-desc">{m.highlights}</p>
                   </div>
 
                   <div className="card-footer-row">
                     <div className="card-bounty-badge">
-                      <span>BOUNTY: {m.bountyOrPrize}</span>
+                      <Award size={15} />
+                      <span>{m.bountyOrPrize}</span>
                     </div>
                     <button
                       type="button"
                       className="card-explore-btn interactive"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEventClick(idx);
+                        zoomToMilestone(idx);
+                        if (onMilestoneSelect) onMilestoneSelect(m);
                       }}
                       title={`Inspect details for ${m.title}`}
+                      aria-label={`Explore details for Event ${m.eventNumber || idx + 1}: ${m.title}`}
                     >
                       <span>Explore Event</span>
-                      <span className="explore-arrow">→</span>
+                      <ChevronRight size={14} className="explore-arrow" />
                     </button>
                   </div>
                 </article>
@@ -619,7 +635,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             <div
               className="minimal-progress-fill"
               style={{
-                width: `${(activeIdx / (totalCards - 1)) * 100}%`
+                width: `${Math.max(3, (currentZ / maxCameraZ) * 100)}%`
               }}
             />
             {milestones.map((_, i) => (

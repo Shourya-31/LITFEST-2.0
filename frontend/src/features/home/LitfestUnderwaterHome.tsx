@@ -9,6 +9,7 @@ interface LitfestUnderwaterHomeProps {
   onRegisterClick?: () => void;
   isAudioPlaying?: boolean;
   onToggleAudio?: () => void;
+  isTimelineActive?: boolean;
 }
 
 export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
@@ -16,6 +17,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   onRegisterClick,
   isAudioPlaying = false,
   onToggleAudio,
+  isTimelineActive = false,
 }) => {
   return (
     <div
@@ -23,6 +25,10 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       className="litfest-underwater-root"
       role="region"
       aria-label="Litfest 2.0 Underwater Experience"
+      style={{
+        display: isTimelineActive ? 'none' : 'block',
+        pointerEvents: isTimelineActive ? 'none' : 'auto',
+      }}
     >
       {/* 1. Deep Sea Atmosphere & Volumetric Sunlight */}
       <OceanAtmosphere />

@@ -13,7 +13,7 @@ export const App: React.FC = () => {
   const [activeModal, setActiveModal] = useState<'register' | 'arenas' | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
   const [currentNavSection, setCurrentNavSection] = useState<'home' | 'timeline'>('home');
-
+  const navSectionRef = useRef<'home' | 'timeline'>('home');
   const lenisInstanceRef = useRef<Lenis | null>(null);
   const HOME_ZONE = 0.12;
 
@@ -29,17 +29,26 @@ export const App: React.FC = () => {
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
     }
+    navSectionRef.current = 'home';
+    setCurrentNavSection('home');
     setFaqOpen(false);
   };
 
   const handleNavigateTimeline = () => {
-    if (lenisInstanceRef.current && lenisInstanceRef.current.limit > 0) {
-      const targetScroll = HOME_ZONE * lenisInstanceRef.current.limit;
-      lenisInstanceRef.current.scrollTo(targetScroll, {
-        duration: 0.8,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      });
+    if (lenisInstanceRef.current) {
+      const limit = lenisInstanceRef.current.limit > 0
+        ? lenisInstanceRef.current.limit
+        : (document.documentElement.scrollHeight - window.innerHeight);
+      if (limit > 0) {
+        const targetScroll = (HOME_ZONE + 0.005) * limit;
+        lenisInstanceRef.current.scrollTo(targetScroll, {
+          duration: 0.85,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
+      }
     }
+    navSectionRef.current = 'timeline';
+    setCurrentNavSection('timeline');
     setFaqOpen(false);
   };
 
@@ -72,6 +81,7 @@ export const App: React.FC = () => {
         onRegisterClick={() => setActiveModal('register')}
         isAudioPlaying={isAudioPlaying}
         onToggleAudio={toggleAudio}
+        isTimelineActive={currentNavSection === 'timeline'}
       />
 
       {/* 4. Cinematic Oceanic Bubbles Transition Layer */}
@@ -80,14 +90,24 @@ export const App: React.FC = () => {
       </div>
 
       {/* 5. PRIMARY COMPONENT: 3D Z-Axis Voyage Timeline */}
-      <main className="main-3d-z-viewport">
+      <main
+        className="main-3d-z-viewport"
+        style={{
+          pointerEvents: currentNavSection === 'home' ? 'none' : 'auto',
+          zIndex: currentNavSection === 'home' ? 5 : 20,
+        }}
+      >
         <PirateWheelTimeline
           isFaqOpen={faqOpen}
           onRegisterLenis={(lenis) => {
             lenisInstanceRef.current = lenis;
           }}
           onScrollProgress={(progress) => {
-            setCurrentNavSection(progress <= HOME_ZONE ? 'home' : 'timeline');
+            const next = progress < HOME_ZONE ? 'home' : 'timeline';
+            if (next !== navSectionRef.current) {
+              navSectionRef.current = next;
+              setCurrentNavSection(next);
+            }
           }}
         />
       </main>
