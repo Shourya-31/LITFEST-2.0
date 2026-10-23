@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleTimelineClick}
           >
             <Compass size={15} />
-            <span>3D Z-Axis Timeline</span>
+            <span>Timeline</span>
           </button>
 
           <button
@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleTimelineClick}
           >
             <Compass size={18} />
-            <span>3D Z-Axis Timeline</span>
+            <span>Timeline</span>
           </button>
 
           <button

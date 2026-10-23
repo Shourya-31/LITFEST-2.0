@@ -486,49 +486,55 @@
   align-items: center;
   justify-content: center;
   width: auto;
-  gap: 0.5rem;
-  background: rgba(5, 36, 56, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(128, 255, 213, 0.25);
-  border-radius: var(--radius-pill);
-  padding: 0.35rem 0.65rem;
-  box-shadow: 0 8px 24px rgba(2, 20, 34, 0.4);
+  gap: 0.8rem;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 
 .dock-ctrl-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(128, 255, 213, 0.2);
-  border-radius: var(--radius-pill);
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  outline: none;
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.42rem 0.8rem;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .dock-ctrl-btn.sound-btn {
-  flex: 0 0 34px;
-  height: 34px;
+  flex: 0 0 30px;
+  height: 30px;
   padding: 0;
   color: var(--pirate-gold-light);
 }
 
 .dock-ctrl-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 .dock-ctrl-btn:not(:disabled):hover {
-  background: var(--beach-seafoam);
-  border-color: var(--beach-seafoam);
-  color: #042438;
+  background: transparent;
+  color: var(--beach-seafoam);
+  text-shadow: 0 0 10px rgba(128, 255, 213, 0.6);
+  transform: translateY(-1px);
+}
+
+.dock-ctrl-btn.sound-btn:not(:disabled):hover {
+  color: var(--beach-sun-gold);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
 }
 
 /* ==========================================================================
