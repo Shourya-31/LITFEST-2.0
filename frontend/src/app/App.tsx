@@ -15,6 +15,7 @@ export const App: React.FC = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
   const [currentNavSection, setCurrentNavSection] = useState<'home' | 'timeline'>('home');
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [transitionDirection, setTransitionDirection] = useState<'dive' | 'surface'>('dive');
   const lenisInstanceRef = useRef<Lenis | null>(null);
 
   const toggleFaq = (open: boolean) => {
@@ -25,74 +26,35 @@ export const App: React.FC = () => {
   const handleNavigateTimeline = () => {
     if (currentNavSection === 'timeline' || isTransitioning) return;
     setIsTransitioning(true);
-    soundEngine.playBubbleDive();
+    setTransitionDirection('dive');
 
+    // Zoom into home view to accompany rising bubbles
     const homeStage = document.getElementById('underwater-home-stage');
     if (homeStage) {
       gsap.to(homeStage, {
         scale: 2.2,
         opacity: 0,
         filter: 'blur(8px)',
-        duration: 0.7,
-        ease: 'power2.inOut',
+        duration: 0.55,
+        ease: 'power2.in',
       });
     }
-
-    const bubblesStage = document.getElementById('underwater-bubbles-stage');
-    if (bubblesStage) {
-      bubblesStage.style.display = 'block';
-      gsap.fromTo(
-        bubblesStage,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.35,
-          yoyo: true,
-          repeat: 1,
-          ease: 'power1.inOut',
-          onComplete: () => {
-            bubblesStage.style.display = 'none';
-            bubblesStage.style.opacity = '0';
-          },
-        }
-      );
-    }
-
-    setTimeout(() => {
-      setCurrentNavSection('timeline');
-      if (lenisInstanceRef.current) {
-        lenisInstanceRef.current.scrollTo(0, { immediate: true });
-      }
-      setIsTransitioning(false);
-    }, 380);
   };
 
   const handleNavigateHome = () => {
     if (currentNavSection === 'home' || isTransitioning) return;
     setIsTransitioning(true);
-    soundEngine.playBubbleDive();
+    setTransitionDirection('surface');
+  };
 
-    const bubblesStage = document.getElementById('underwater-bubbles-stage');
-    if (bubblesStage) {
-      bubblesStage.style.display = 'block';
-      gsap.fromTo(
-        bubblesStage,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.35,
-          yoyo: true,
-          repeat: 1,
-          ease: 'power1.inOut',
-          onComplete: () => {
-            bubblesStage.style.display = 'none';
-            bubblesStage.style.opacity = '0';
-          },
-        }
-      );
-    }
-
-    setTimeout(() => {
+  // Switch views at peak bubble surge density (360ms)
+  const handleTransitionMidpoint = () => {
+    if (transitionDirection === 'dive') {
+      setCurrentNavSection('timeline');
+      if (lenisInstanceRef.current) {
+        lenisInstanceRef.current.scrollTo(0, { immediate: true });
+      }
+    } else {
       setCurrentNavSection('home');
       const homeStage = document.getElementById('underwater-home-stage');
       if (homeStage) {
@@ -100,11 +62,14 @@ export const App: React.FC = () => {
         gsap.fromTo(
           homeStage,
           { scale: 2.2, opacity: 0, filter: 'blur(8px)' },
-          { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.65, ease: 'power2.out' }
+          { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power2.out' }
         );
       }
-      setIsTransitioning(false);
-    }, 380);
+    }
+  };
+
+  const handleTransitionComplete = () => {
+    setIsTransitioning(false);
   };
 
   const toggleAudio = () => {
@@ -144,19 +109,12 @@ export const App: React.FC = () => {
       />
 
       {/* 4. Cinematic Oceanic Bubbles Transition Layer */}
-      <div
-        id="underwater-bubbles-stage"
-        style={{
-          opacity: 0,
-          display: 'none',
-          position: 'fixed',
-          inset: 0,
-          zIndex: 120,
-          pointerEvents: 'none',
-        }}
-      >
-        <BubblesTransition progress={1} />
-      </div>
+      <BubblesTransition
+        isActive={isTransitioning}
+        direction={transitionDirection}
+        onMidpoint={handleTransitionMidpoint}
+        onComplete={handleTransitionComplete}
+      />
 
       {/* 5. PRIMARY COMPONENT: 3D Z-Axis Voyage Timeline */}
       <main

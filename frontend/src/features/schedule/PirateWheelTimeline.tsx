@@ -72,6 +72,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   // Snap-to-nearest checkpoint timer refs
   const scrollSnapTimerRef = useRef<number | null>(null);
   const dragSnapTimerRef = useRef<number | null>(null);
+  const atMilestoneZeroSinceRef = useRef<number>(Date.now());
 
   const selectedMilestone = milestones[activeIdx] || milestones[0];
 
@@ -140,6 +141,14 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       const targetWheelRotation = -continuousIdx * (360 / totalEvents);
       setRotationDeg(targetWheelRotation);
       setCurrentZ(Math.round(zVal));
+
+      if (approxIdx === 0 && lenis.scroll <= 25) {
+        if (atMilestoneZeroSinceRef.current === 0) {
+          atMilestoneZeroSinceRef.current = Date.now();
+        }
+      } else {
+        atMilestoneZeroSinceRef.current = 0;
+      }
     });
 
     // Snap to nearest event milestone on scroll stop
@@ -169,9 +178,11 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       if (document.querySelector('.ocean-modal-overlay') || document.querySelector('.faq-chamber-backdrop')) {
         return;
       }
-      if (activeIdxRef.current === 0 && lenis.scroll <= 8 && e.deltaY < -20) {
-        if (onNavigateHomeRef.current) {
-          onNavigateHomeRef.current();
+      if (activeIdxRef.current === 0 && lenis.scroll <= 40 && e.deltaY < -15) {
+        if (atMilestoneZeroSinceRef.current > 0 && Date.now() - atMilestoneZeroSinceRef.current > 150) {
+          if (onNavigateHomeRef.current) {
+            onNavigateHomeRef.current();
+          }
         }
       }
     };
