@@ -30,13 +30,11 @@ export interface BubblesTransitionProps {
 interface BubbleParticle {
   id: number;
   leftPercent: number; // 2% to 98%
-  size: number; // 8px to 48px
-  duration: number; // 0.75s to 1.15s
-  delay: number; // 0s to 0.28s
-  swayDuration: number; // 2.2s to 4s
-  swayDelay: number;
+  size: number; // 10px to 48px
+  duration: number; // 0.62s to 0.88s
+  delay: number; // 0s to 0.22s
+  driftX: number; // -35px to 35px GPU lateral sway
   opacity: number;
-  blur: number;
   isLarge: boolean;
 }
 
@@ -58,17 +56,15 @@ export const BubblesTransition: React.FC<BubblesTransitionProps> = ({
   const completeTimerRef = useRef<number | null>(null);
   const hasTriggeredSoundRef = useRef<boolean>(false);
 
-  // Generate 64 procedural multi-depth bubble particles
+  // Generate 40 lightweight, high-impact GPU bubble particles
   const bubbles = useMemo<BubbleParticle[]>(() => {
-    return Array.from({ length: 64 }, (_, i) => {
-      const leftPercent = 2 + Math.random() * 96;
-      const size = 8 + Math.pow(Math.random(), 1.5) * 40;
-      const duration = 0.75 + Math.random() * 0.38;
-      const delay = Math.random() * 0.28;
-      const swayDuration = 2.2 + Math.random() * 2;
-      const swayDelay = -(Math.random() * swayDuration);
-      const opacity = 0.55 + Math.random() * 0.42;
-      const blur = Math.random() < 0.2 ? 1.5 : 0;
+    return Array.from({ length: 40 }, (_, i) => {
+      const leftPercent = 3 + Math.random() * 94;
+      const size = 10 + Math.pow(Math.random(), 1.4) * 38;
+      const duration = 0.62 + Math.random() * 0.26;
+      const delay = Math.random() * 0.18;
+      const driftX = (Math.random() - 0.5) * 60; // -30px to +30px
+      const opacity = 0.6 + Math.random() * 0.38;
       const isLarge = size > 26;
 
       return {
@@ -77,10 +73,8 @@ export const BubblesTransition: React.FC<BubblesTransitionProps> = ({
         size,
         duration,
         delay,
-        swayDuration,
-        swayDelay,
+        driftX,
         opacity,
-        blur,
         isLarge,
       };
     });
@@ -88,7 +82,7 @@ export const BubblesTransition: React.FC<BubblesTransitionProps> = ({
 
   const isSurging = isActive || isAnimating;
 
-  // Handle active dive/surface surge lifecycle
+  // Handle active dive/surface surge lifecycle (optimized 720ms total, 300ms midpoint)
   useEffect(() => {
     if (!isActive) {
       setIsAnimating(false);
@@ -106,16 +100,16 @@ export const BubblesTransition: React.FC<BubblesTransitionProps> = ({
       hasTriggeredSoundRef.current = true;
     }
 
-    // Trigger midpoint screen switch at peak bubble density (380ms)
+    // Trigger midpoint screen switch at peak bubble density (300ms)
     midpointTimerRef.current = window.setTimeout(() => {
       if (onMidpointRef.current) onMidpointRef.current();
-    }, 380);
+    }, 300);
 
-    // Complete transition when bubbles clear (850ms)
+    // Complete transition when bubbles clear (720ms)
     completeTimerRef.current = window.setTimeout(() => {
       setIsAnimating(false);
       if (onCompleteRef.current) onCompleteRef.current();
-    }, 850);
+    }, 720);
 
     return () => {
       if (midpointTimerRef.current) clearTimeout(midpointTimerRef.current);
@@ -182,16 +176,14 @@ export const BubblesTransition: React.FC<BubblesTransitionProps> = ({
                 left: `${b.leftPercent}%`,
                 width: `${b.size}px`,
                 height: `${b.size}px`,
-                filter: b.blur > 0 ? `blur(${b.blur}px)` : 'none',
                 '--bubble-op': b.opacity,
                 '--bubble-duration': `${b.duration}s`,
                 '--bubble-delay': `${b.delay}s`,
-                '--sway-duration': `${b.swayDuration}s`,
-                '--sway-delay': `${b.swayDelay}s`,
+                '--drift-x': `${b.driftX}px`,
                 ...(isProgressMode
                   ? {
                       opacity: b.opacity,
-                      transform: `translate3d(0, ${yOffsetPercent}vh, 0)`,
+                      transform: `translate3d(${b.driftX * manualProgress}px, ${yOffsetPercent}vh, 0)`,
                     }
                   : {}),
               } as React.CSSProperties}

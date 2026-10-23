@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, HelpCircle, Sparkles, Volume2, VolumeX, Menu, X, Waves } from 'lucide-react';
+import { Compass, HelpCircle, Sparkles, Menu, X, Waves } from 'lucide-react';
 import { soundEngine } from '../../utils/soundEngine';
 
 interface NavbarProps {
@@ -121,22 +121,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Right Actions: Ambient Audio Toggle & Register CTA */}
+        {/* Right Actions: Register CTA & Mobile Menu */}
         <div className="nav-right-actions">
-          {onToggleAudio && (
-            <button
-              type="button"
-              className={`nav-audio-btn interactive ${isAudioPlaying ? 'is-playing' : ''}`}
-              onClick={onToggleAudio}
-              title={isAudioPlaying ? 'Mute Ocean Waves' : 'Play Ambient Deep Sea Audio'}
-              aria-label="Toggle ocean sound"
-              id="navbar-audio-toggle"
-            >
-              {isAudioPlaying ? <Volume2 size={16} /> : <VolumeX size={16} />}
-              <span className="audio-btn-text">{isAudioPlaying ? 'Ocean Sound' : 'Muted'}</span>
-            </button>
-          )}
-
           <button
             type="button"
             className="nav-register-btn desktop-register interactive"
@@ -199,17 +185,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Sparkles size={18} />
             <span>Featured Arenas</span>
           </button>
-
-          {onToggleAudio && (
-            <button
-              type="button"
-              className="mobile-nav-link"
-              onClick={onToggleAudio}
-            >
-              {isAudioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
-              <span>{isAudioPlaying ? 'Mute Ocean Waves' : 'Play Ocean Audio'}</span>
-            </button>
-          )}
 
           <button
             type="button"

@@ -6,7 +6,7 @@ import { LitfestUnderwaterHome } from '../features/home/LitfestUnderwaterHome';
 import { BubblesTransition } from '../features/home/components/BubblesTransition';
 import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
-import { X, Compass, CheckCircle2 } from 'lucide-react';
+import { X, Compass, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export const App: React.FC = () => {
@@ -35,7 +35,7 @@ export const App: React.FC = () => {
         scale: 2.2,
         opacity: 0,
         filter: 'blur(8px)',
-        duration: 0.55,
+        duration: 0.45,
         ease: 'power2.in',
       });
     }
@@ -47,7 +47,7 @@ export const App: React.FC = () => {
     setTransitionDirection('surface');
   };
 
-  // Switch views at peak bubble surge density (360ms)
+  // Switch views at peak bubble surge density (300ms)
   const handleTransitionMidpoint = () => {
     if (transitionDirection === 'dive') {
       setCurrentNavSection('timeline');
@@ -62,7 +62,7 @@ export const App: React.FC = () => {
         gsap.fromTo(
           homeStage,
           { scale: 2.2, opacity: 0, filter: 'blur(8px)' },
-          { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power2.out' }
+          { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.5, ease: 'power2.out' }
         );
       }
     }
@@ -92,14 +92,26 @@ export const App: React.FC = () => {
         onToggleAudio={toggleAudio}
       />
 
-      {/* 2. Lenis Virtual Scroll Spacer (800vh when in timeline for silky smooth navigation) */}
+      {/* 2. Sleek Floating Bottom-Left Mute Button */}
+      <button
+        type="button"
+        className={`ocean-mute-btn ${isAudioPlaying ? 'is-playing' : ''}`}
+        onClick={toggleAudio}
+        title={isAudioPlaying ? 'Mute Ocean Ambience' : 'Play Ambient Deep Sea Audio'}
+        aria-label="Toggle ocean audio"
+        id="ocean-mute-toggle"
+      >
+        {isAudioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
+      </button>
+
+      {/* 3. Lenis Virtual Scroll Spacer (800vh when in timeline for silky smooth navigation) */}
       <div
         className="lenis-scroll-spacer"
         style={{ height: currentNavSection === 'timeline' ? '800vh' : '100vh' }}
         aria-hidden="true"
       />
 
-      {/* 3. Surface & Abyssal Underwater Homepage */}
+      {/* 4. Surface & Abyssal Underwater Homepage */}
       <LitfestUnderwaterHome
         onExploreClick={handleNavigateTimeline}
         onRegisterClick={() => setActiveModal('register')}
