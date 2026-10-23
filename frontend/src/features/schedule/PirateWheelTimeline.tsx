@@ -11,7 +11,6 @@ import {
   ChevronRight,
   Sparkles,
   Award,
-  Layers,
   ZoomIn,
   ZoomOut
 } from 'lucide-react';
@@ -54,6 +53,27 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   const lastPointerAngleRef = useRef<number>(0);
   const totalDragAngleRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false);
+
+  // Snap-to-nearest checkpoint timer refs
+  const scrollSnapTimerRef = useRef<number | null>(null);
+  const dragSnapTimerRef = useRef<number | null>(null);
+
+  // Automatically select and snap camera & wheel to the nearest milestone card
+  const snapToNearestCheckpoint = useCallback(() => {
+    const nearestIdx = Math.max(
+      0,
+      Math.min(Math.round(targetZRef.current / SPACING_Z), totalCards - 1)
+    );
+    targetZRef.current = nearestIdx * SPACING_Z;
+  }, [totalCards, SPACING_Z]);
+
+  // Clean up snap timers on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollSnapTimerRef.current) clearTimeout(scrollSnapTimerRef.current);
+      if (dragSnapTimerRef.current) clearTimeout(dragSnapTimerRef.current);
+    };
+  }, []);
 
   const selectedMilestone = milestones[activeIdx] || milestones[0];
 
@@ -113,7 +133,15 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     e.stopPropagation();
     const zoomDelta = e.deltaY * 1.6;
     targetZRef.current = Math.max(0, Math.min(targetZRef.current + zoomDelta, maxCameraZ));
-  }, [maxCameraZ]);
+
+    // When scrolling stops, automatically select and snap to the nearest card!
+    if (scrollSnapTimerRef.current) {
+      clearTimeout(scrollSnapTimerRef.current);
+    }
+    scrollSnapTimerRef.current = window.setTimeout(() => {
+      snapToNearestCheckpoint();
+    }, 180);
+  }, [maxCameraZ, snapToNearestCheckpoint]);
 
   // Touch navigation for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -125,6 +153,17 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     const deltaY = (touchStartYRef.current - currentY) * 2.2;
     touchStartYRef.current = currentY;
     targetZRef.current = Math.max(0, Math.min(targetZRef.current + deltaY, maxCameraZ));
+
+    if (scrollSnapTimerRef.current) {
+      clearTimeout(scrollSnapTimerRef.current);
+    }
+    scrollSnapTimerRef.current = window.setTimeout(() => {
+      snapToNearestCheckpoint();
+    }, 200);
+  };
+
+  const handleTouchEnd = () => {
+    snapToNearestCheckpoint();
   };
 
   // Keyboard navigation
@@ -216,14 +255,28 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       currentZRef.current += (targetZRef.current - currentZRef.current) * 0.25;
 
       lastPointerAngleRef.current = currentAngle;
+
+      // If dragging pauses in between, smoothly snap to nearest card
+      if (dragSnapTimerRef.current) {
+        clearTimeout(dragSnapTimerRef.current);
+      }
+      dragSnapTimerRef.current = window.setTimeout(() => {
+        snapToNearestCheckpoint();
+      }, 300);
     };
 
     const onPointerUp = () => {
       isDraggingHelmRef.current = false;
       setIsSteering(false);
+      if (dragSnapTimerRef.current) {
+        clearTimeout(dragSnapTimerRef.current);
+      }
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
+
+      // When stopping steering wheel drag, automatically snap to nearest card!
+      snapToNearestCheckpoint();
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: false });
@@ -245,6 +298,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       aria-label="LitFest 2.0 3D Z-Axis Zoom Timeline"
     >
       {/* 3D Oceanic Starfield / Water Tunnel */}
@@ -262,7 +316,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             const milestoneWorldZ = -idx * SPACING_Z;
             const relDist = milestoneWorldZ + currentZ;
 
-            const isVisible = relDist > -3600 && relDist < 900;
+            const isVisible = relDist > -3600 && relDist < 250;
             if (!isVisible) return null;
 
             let opacity = 1;
@@ -271,8 +325,9 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
               opacity = Math.max(0, Math.min(1, 1 - Math.abs(relDist) / 2200));
               blurPx = Math.min(6, Math.abs(relDist) / 400);
             } else {
-              opacity = Math.max(0, Math.min(1, 1 - relDist / 500));
-              blurPx = Math.min(8, relDist / 80);
+              // Fade out smoothly as camera zooms inside, before reaching navbar height
+              opacity = Math.max(0, Math.min(1, 1 - relDist / 200));
+              blurPx = Math.min(8, relDist / 25);
             }
 
             const isInFocus = activeIdx === idx;
@@ -368,24 +423,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
       {/* HEADS-UP DISPLAY (HUD) */}
       <div className="z-axis-hud-overlay">
-        {/* Top Floating HUD Bar (Reset & Jump to FAQ removed as requested) */}
-        <div className="z-hud-top-bar">
-          <div className="z-depth-gauge">
-            <Layers size={15} className="depth-icon" />
-            <span className="gauge-label">Z-AXIS DEPTH:</span>
-            <strong className="gauge-value">{currentZ}m</strong>
-            <span className="gauge-checkpoint-tag">
-              [CHECKPOINT {activeIdx + 1} / 14]
-            </span>
-          </div>
-
-          <div className="z-hud-instructions">
-            <span className="hud-scroll-hint">
-              ▼ SCROLL DOWN TO ENTER INSIDE SCREEN • SCROLL UP TO ZOOM OUT ▲
-            </span>
-          </div>
-        </div>
-
         {/* Bottom Left: The 14-Spoke Pirate Ship Steering Wheel
             Turnable by mouse drag or scroll, with selected spoke fixed at 12 o'clock! */}
         <div className={`z-hud-helm-dock ${isSteering ? 'is-steering' : ''}`}>
