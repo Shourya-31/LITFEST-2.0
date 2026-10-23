@@ -22,9 +22,12 @@ export const App: React.FC = () => {
         isFaqOpen={faqOpen}
       />
 
+      {/* Lenis Virtual Scroll Height Spacer for momentum smooth scrolling */}
+      <div className="lenis-scroll-spacer" style={{ height: '1400vh' }} aria-hidden="true" />
+
       {/* PRIMARY COMPONENT: 3D Z-Axis Zoom-In / Zoom-Out Timeline */}
       <main className="main-3d-z-viewport">
-        <PirateWheelTimeline />
+        <PirateWheelTimeline isFaqOpen={faqOpen} />
       </main>
 
       {/* FAQ Chamber Modal Overlay (Opens on demand via Navbar so timeline maintains pure Z-axis scroll) */}

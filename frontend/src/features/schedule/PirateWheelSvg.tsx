@@ -5,7 +5,8 @@ interface PirateWheelSvgProps {
   milestones: TimelineMilestone[];
   activeIdx: number;
   rotationDeg: number;
-  onSpokeClick: (idx: number) => void;
+  onEventClick?: (idx: number) => void;
+  onSpokeClick?: (idx: number) => void;
   onCenterClick?: () => void;
 }
 
@@ -13,13 +14,15 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
   milestones,
   activeIdx,
   rotationDeg,
+  onEventClick,
   onSpokeClick,
   onCenterClick
 }) => {
+  const handleClick = onEventClick || onSpokeClick || (() => {});
   const totalSpokes = 14;
 
   const spokes = Array.from({ length: totalSpokes }, (_, i) => {
-    // Spoke 0 starts at 0 deg (12 o'clock / top)
+    // Event 0 starts at 0 deg (12 o'clock / top)
     const angleDeg = (i * 360) / totalSpokes;
     const milestone = milestones[i] || milestones[0];
     const isActive = activeIdx === i;
@@ -98,7 +101,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                 key={`spoke-${index}`}
                 transform={`rotate(${angleDeg})`}
                 className={`helm-spoke-element ${isActive ? 'is-active-spoke' : ''}`}
-                onClick={() => onSpokeClick(index)}
+                onClick={() => handleClick(index)}
                 style={{ cursor: 'pointer' }}
               >
                 {/* Spoke Shaft from hub (r=42) to rim (r=152) */}
@@ -194,8 +197,10 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                 <g
                   key={`spoke-badge-${index}`}
                   transform={`rotate(${angleDeg}) translate(0, -126)`}
-                  onClick={() => onSpokeClick(index)}
+                  onClick={() => handleClick(index)}
                   style={{ cursor: 'pointer' }}
+                  role="button"
+                  aria-label={`Event ${index + 1}: ${milestone.romanNumeral}`}
                 >
                   {/* Active Spoke Glow Aura (Concentric breathing without coordinate jumping) */}
                   {isActive && (

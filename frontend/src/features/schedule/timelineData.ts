@@ -14,6 +14,7 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = Array.from({ length:
 
   return {
     id: i,
+    eventNumber: num,
     spokeNumber: num,
     romanNumeral: romanNumerals[i],
     title: `Milestone ${numStr}: [Event Title Placeholder]`,

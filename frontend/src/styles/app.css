@@ -141,6 +141,29 @@
   display: none;
 }
 
+/* Lenis Smooth Scroll Virtual Spacer */
+.lenis-scroll-spacer {
+  width: 1px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -10;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* Main 3D Viewport: Full screen lock without vertical scroll */
 .main-3d-z-viewport {
   position: fixed;

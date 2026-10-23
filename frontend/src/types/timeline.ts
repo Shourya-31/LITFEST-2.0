@@ -1,6 +1,7 @@
 export interface TimelineMilestone {
   id: number;
-  spokeNumber: number; // 1 to 14
+  eventNumber: number; // 1 to 14 (Event index)
+  spokeNumber: number; // Backward-compatible alias
   romanNumeral: string; // I to XIV
   title: string;
   category: string;
@@ -21,5 +22,6 @@ export interface PirateWheelTimelineProps {
   title?: string;
   subtitle?: string;
   className?: string;
+  isFaqOpen?: boolean;
   onMilestoneSelect?: (milestone: TimelineMilestone) => void;
 }
