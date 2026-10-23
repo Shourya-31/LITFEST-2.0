@@ -31,10 +31,12 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   const [rotationDeg, setRotationDeg] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(soundEngine.getMuted());
   const [currentZ, setCurrentZ] = useState<number>(0);
+  const [isSteering, setIsSteering] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const cameraRef = useRef<HTMLDivElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
+  const wheelWrapRef = useRef<HTMLDivElement | null>(null);
 
   // Z-spacing between milestone checkpoints in 3D world space
   const SPACING_Z = 1200;
@@ -46,6 +48,12 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   const currentZRef = useRef<number>(0);
   const touchStartYRef = useRef<number>(0);
   const prevActiveIdxRef = useRef<number>(0);
+
+  // Mouse drag steering wheel refs
+  const isDraggingHelmRef = useRef<boolean>(false);
+  const lastPointerAngleRef = useRef<number>(0);
+  const totalDragAngleRef = useRef<number>(0);
+  const hasDraggedRef = useRef<boolean>(false);
 
   const selectedMilestone = milestones[activeIdx] || milestones[0];
 
@@ -162,6 +170,71 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     if (!newMuted) {
       soundEngine.playSeaBell(activeIdx);
     }
+  };
+
+  // Mouse / Pointer steering wheel turning by dragging around the helm
+  const handleHelmPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const wrap = wheelWrapRef.current;
+    if (!wrap) return;
+
+    const rect = wrap.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const startAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+    lastPointerAngleRef.current = startAngle;
+    isDraggingHelmRef.current = true;
+    hasDraggedRef.current = false;
+    totalDragAngleRef.current = 0;
+    setIsSteering(true);
+
+    const onPointerMove = (moveEvt: PointerEvent) => {
+      if (!isDraggingHelmRef.current) return;
+      moveEvt.preventDefault();
+
+      const currentAngle = Math.atan2(moveEvt.clientY - centerY, moveEvt.clientX - centerX) * (180 / Math.PI);
+      let deltaAngle = currentAngle - lastPointerAngleRef.current;
+
+      // Handle wrap-around across the +/- 180 degree threshold
+      if (deltaAngle > 180) deltaAngle -= 360;
+      if (deltaAngle < -180) deltaAngle += 360;
+
+      totalDragAngleRef.current += Math.abs(deltaAngle);
+      if (totalDragAngleRef.current > 2.5) {
+        hasDraggedRef.current = true;
+      }
+
+      // Convert wheel angular change to Z-axis travel:
+      // Counter-clockwise drag (deltaAngle < 0) sails forward into screen (+Z)
+      // Clockwise drag (deltaAngle > 0) navigates backward (-Z)
+      const degPerMilestone = 360 / totalCards;
+      const deltaZ = -deltaAngle * (SPACING_Z / degPerMilestone);
+      targetZRef.current = Math.max(0, Math.min(targetZRef.current + deltaZ, maxCameraZ));
+
+      // Snappy direct response while dragging
+      currentZRef.current += (targetZRef.current - currentZRef.current) * 0.25;
+
+      lastPointerAngleRef.current = currentAngle;
+    };
+
+    const onPointerUp = () => {
+      isDraggingHelmRef.current = false;
+      setIsSteering(false);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+    };
+
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+  };
+
+  const handleSpokeClick = (idx: number) => {
+    // If the user was actively dragging/turning the helm, suppress spoke jump
+    if (hasDraggedRef.current) return;
+    zoomToMilestone(idx);
   };
 
   return (
@@ -314,21 +387,34 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         </div>
 
         {/* Bottom Left: The 14-Spoke Pirate Ship Steering Wheel
-            Selected spoke remains at the exact same 12 o'clock top pointer position at all times! */}
-        <div className="z-hud-helm-dock">
+            Turnable by mouse drag or scroll, with selected spoke fixed at 12 o'clock! */}
+        <div className={`z-hud-helm-dock ${isSteering ? 'is-steering' : ''}`}>
           <div className="helm-dock-header">
             <span className="dock-title">PIRATE SHIP HELM</span>
-            <span className="dock-sub">SPOKE {activeIdx + 1} AT TOP</span>
+            <span className="dock-sub">{isSteering ? '⚓ STEERING...' : `SPOKE ${activeIdx + 1} AT TOP`}</span>
           </div>
 
-          <div className="helm-dock-wheel-wrap">
+          <div
+            ref={wheelWrapRef}
+            className={`helm-dock-wheel-wrap ${isSteering ? 'is-steering' : ''}`}
+            onPointerDown={handleHelmPointerDown}
+            title="Click and drag around the wheel to steer the voyage"
+          >
             <PirateWheelSvg
               milestones={milestones}
               activeIdx={activeIdx}
               rotationDeg={rotationDeg}
-              onSpokeClick={zoomToMilestone}
-              onCenterClick={() => soundEngine.playSeaBell(activeIdx + 1)}
+              onSpokeClick={handleSpokeClick}
+              onCenterClick={() => {
+                if (!hasDraggedRef.current) {
+                  soundEngine.playSeaBell(activeIdx + 1);
+                }
+              }}
             />
+          </div>
+
+          <div className="helm-drag-hint">
+            <span>✋ DRAG HELM TO TURN • SCROLL TO VOYAGE</span>
           </div>
 
           {/* Steer Port / Sound / Starboard Buttons */}

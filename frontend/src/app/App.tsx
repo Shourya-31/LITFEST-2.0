@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar } from '../components/navigation/Navbar';
 import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
-import { HelpCircle, X, Compass, Sparkles } from 'lucide-react';
+import { X, Compass } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export const App: React.FC = () => {
@@ -27,21 +27,7 @@ export const App: React.FC = () => {
         <PirateWheelTimeline />
       </main>
 
-      {/* Floating FAQ Chamber Trigger Button */}
-      {!faqOpen && (
-        <button
-          type="button"
-          className="floating-faq-trigger-btn interactive"
-          onClick={() => toggleFaq(true)}
-          title="Open Festival FAQs"
-          aria-label="Open FAQs"
-        >
-          <HelpCircle size={18} />
-          <span>FESTIVAL FAQS</span>
-        </button>
-      )}
-
-      {/* FAQ Chamber Modal Overlay (Opens on demand so timeline maintains pure Z-axis scroll) */}
+      {/* FAQ Chamber Modal Overlay (Opens on demand via Navbar so timeline maintains pure Z-axis scroll) */}
       {faqOpen && (
         <div className="faq-chamber-backdrop" onClick={() => toggleFaq(false)}>
           <div

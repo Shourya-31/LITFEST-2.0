@@ -59,16 +59,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Action button */}
+        {/* Mobile menu toggle */}
         <div className="nav-actions">
-          <button
-            type="button"
-            className="nav-cta-btn interactive"
-            onClick={isFaqOpen ? handleTimelineClick : handleFaqClick}
-          >
-            <span>{isFaqOpen ? 'Back to 3D Helm' : 'Festival FAQs'}</span>
-          </button>
-
           <button
             type="button"
             className="mobile-toggle-btn interactive"

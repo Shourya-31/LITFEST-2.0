@@ -197,18 +197,30 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                   onClick={() => onSpokeClick(index)}
                   style={{ cursor: 'pointer' }}
                 >
-                  {/* Active Spoke Glow Aura */}
+                  {/* Active Spoke Glow Aura (Concentric breathing without coordinate jumping) */}
                   {isActive && (
-                    <circle
-                      cx="0"
-                      cy="0"
-                      r="19"
-                      fill="none"
-                      stroke="#22d3ee"
-                      strokeWidth="2.5"
-                      filter="url(#cyanGlow)"
-                      className="active-pulse-aura"
-                    />
+                    <>
+                      <circle
+                        cx="0"
+                        cy="0"
+                        r="20"
+                        fill="none"
+                        stroke="#38bdf8"
+                        strokeWidth="1.2"
+                        strokeDasharray="2 3"
+                        opacity="0.8"
+                      />
+                      <circle
+                        cx="0"
+                        cy="0"
+                        r="18"
+                        fill="none"
+                        stroke="#22d3ee"
+                        strokeWidth="2"
+                        filter="url(#cyanGlow)"
+                        className="active-pulse-aura"
+                      />
+                    </>
                   )}
 
                   {/* Badge Circle Coin */}
@@ -217,8 +229,8 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                     cy="0"
                     r="15"
                     fill={isActive ? '#0284c7' : '#5c2406'}
-                    stroke={isActive ? '#22d3ee' : '#d4af37'}
-                    strokeWidth={isActive ? '2' : '1.2'}
+                    stroke={isActive ? '#38bdf8' : '#d4af37'}
+                    strokeWidth={isActive ? '2.2' : '1.2'}
                   />
 
                   {/* Counter-Rotate Text: -angleDeg cancels spoke angle, -rotationDeg cancels wheel angle!

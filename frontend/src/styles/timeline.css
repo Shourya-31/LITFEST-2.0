@@ -440,6 +440,20 @@
   justify-content: center;
   position: relative;
   margin: 0.2rem auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.helm-dock-wheel-wrap:active,
+.helm-dock-wheel-wrap.is-steering {
+  cursor: grabbing;
+}
+
+.z-hud-helm-dock.is-steering {
+  border-color: rgba(34, 211, 238, 0.65);
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.25), 0 20px 50px rgba(0, 0, 0, 0.95);
 }
 
 /* Contained within dock */
@@ -470,13 +484,35 @@
 }
 
 .active-pulse-aura {
-  animation: ringPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-  transform-origin: center;
+  animation: activeAuraBreathe 1.8s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-@keyframes ringPulse {
-  0% { transform: scale(0.9); opacity: 0.9; }
-  100% { transform: scale(1.4); opacity: 0; }
+@keyframes activeAuraBreathe {
+  0% {
+    opacity: 0.35;
+    stroke-width: 1.4px;
+  }
+  100% {
+    opacity: 1;
+    stroke-width: 2.8px;
+  }
+}
+
+.helm-drag-hint {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--pirate-gold-light);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.6rem;
+  margin-top: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  pointer-events: none;
 }
 
 /* Helm Dock Controls */
