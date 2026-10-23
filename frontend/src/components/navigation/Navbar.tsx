@@ -114,10 +114,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             type="button"
             className="nav-item nav-link-btn interactive"
             onClick={handleArenasClick}
-            id="nav-link-arenas"
+            id="nav-link-events"
           >
             <Sparkles size={14} className="nav-icon" />
-            <span>Arenas</span>
+            <span>Events</span>
           </button>
         </nav>
 
@@ -183,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleArenasClick}
           >
             <Sparkles size={18} />
-            <span>Featured Arenas</span>
+            <span>Events</span>
           </button>
 
           <button

@@ -92,17 +92,19 @@ export const App: React.FC = () => {
         onToggleAudio={toggleAudio}
       />
 
-      {/* 2. Sleek Floating Bottom-Left Mute Button */}
-      <button
-        type="button"
-        className={`ocean-mute-btn ${isAudioPlaying ? 'is-playing' : ''}`}
-        onClick={toggleAudio}
-        title={isAudioPlaying ? 'Mute Ocean Ambience' : 'Play Ambient Deep Sea Audio'}
-        aria-label="Toggle ocean audio"
-        id="ocean-mute-toggle"
-      >
-        {isAudioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
-      </button>
+      {/* 2. Sleek Floating Bottom-Left Mute Button - Only visible on Home */}
+      {currentNavSection === 'home' && !isTransitioning && (
+        <button
+          type="button"
+          className={`ocean-mute-btn ${isAudioPlaying ? 'is-playing' : ''}`}
+          onClick={toggleAudio}
+          title={isAudioPlaying ? 'Mute Ocean Waves' : 'Play Ambient Deep Sea Audio'}
+          aria-label="Toggle ocean audio"
+          id="ocean-mute-toggle"
+        >
+          {isAudioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
+        </button>
+      )}
 
       {/* 3. Lenis Virtual Scroll Spacer (800vh when in timeline for silky smooth navigation) */}
       <div
@@ -241,9 +243,9 @@ export const App: React.FC = () => {
 
             <div className="modal-body">
               <span className="modal-eyebrow">FESTIVAL LINEUP</span>
-              <h3>Featured Arenas</h3>
+              <h3>Featured Events</h3>
               <p>
-                Discover the literary and expressive categories configured for Litfest 2.0.
+                Discover the literary and expressive competitive events configured for Litfest 2.0.
               </p>
               <div className="events-grid-preview">
                 <div className="event-preview-card">
