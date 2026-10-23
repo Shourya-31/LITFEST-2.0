@@ -142,65 +142,7 @@ export const OceanAtmosphere: React.FC = () => {
         ))}
       </div>
 
-      {/* 6. Deep Sea Bed Reef and Kelp Silhouettes */}
-      <div className="seabed-silhouettes">
-        <svg
-          className="seabed-svg"
-          viewBox="0 0 1440 280"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient id="reefGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#010712" stopOpacity="0.85" />
-              <stop offset="60%" stopColor="#01040a" stopOpacity="0.98" />
-              <stop offset="100%" stopColor="#000205" stopOpacity="1" />
-            </linearGradient>
-          </defs>
 
-          {/* Rocky Outcrops & Coral Silhouettes */}
-          <path
-            className="seabed-rocks"
-            d="M0,280 L0,180 Q80,120 180,165 Q260,200 340,150 Q430,95 520,140 Q620,190 720,155 Q830,120 940,160 Q1040,195 1140,140 Q1240,90 1340,150 L1440,170 L1440,280 Z"
-            fill="url(#reefGrad)"
-          />
-
-          {/* Left Reef Foliage / Kelp Blades */}
-          <g className="kelp-cluster left-kelp">
-            <path
-              d="M30,280 Q20,180 50,110 Q65,60 45,20 Q60,65 50,120 Q30,190 40,280 Z"
-              fill="#010815"
-            />
-            <path
-              d="M75,280 Q85,190 60,130 Q45,85 70,35 Q65,85 80,140 Q95,200 85,280 Z"
-              fill="#020d20"
-            />
-            <path
-              d="M120,280 Q105,210 130,150 Q145,100 125,55 Q145,105 135,160 Q115,220 130,280 Z"
-              fill="#010610"
-            />
-            <circle cx="45" cy="20" r="2.5" fill="#38bdf8" opacity="0.8" className="biolum-bud" />
-            <circle cx="70" cy="35" r="2" fill="#22d3ee" opacity="0.75" className="biolum-bud" />
-          </g>
-
-          {/* Right Reef Foliage / Kelp Blades */}
-          <g className="kelp-cluster right-kelp">
-            <path
-              d="M1380,280 Q1390,190 1365,120 Q1350,70 1370,25 Q1355,75 1370,130 Q1395,200 1390,280 Z"
-              fill="#010815"
-            />
-            <path
-              d="M1340,280 Q1325,195 1350,135 Q1365,90 1345,40 Q1365,95 1355,145 Q1335,210 1350,280 Z"
-              fill="#020d20"
-            />
-            <path
-              d="M1280,280 Q1295,210 1270,160 Q1255,115 1280,70 Q1265,120 1275,170 Q1295,225 1290,280 Z"
-              fill="#010610"
-            />
-            <circle cx="1370" cy="25" r="2.5" fill="#38bdf8" opacity="0.8" className="biolum-bud" />
-            <circle cx="1345" cy="40" r="2" fill="#22d3ee" opacity="0.75" className="biolum-bud" />
-          </g>
-        </svg>
-      </div>
 
       {/* 7. Vignette depth framing */}
       <div className="ocean-vignette" />

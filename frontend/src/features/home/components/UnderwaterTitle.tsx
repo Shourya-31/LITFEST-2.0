@@ -2,13 +2,13 @@ import React from 'react';
 import './UnderwaterTitle.css';
 
 interface UnderwaterTitleProps {
-  onRegisterClick?: () => void;
   onExploreClick?: () => void;
+  onDescendClick?: () => void;
 }
 
 export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
-  onRegisterClick,
   onExploreClick,
+  onDescendClick,
 }) => {
   return (
     <div className="underwater-title-wrapper">
@@ -90,7 +90,7 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
         </div>
 
 
-        {/* FREE-FLOATING INTEGRATED ACTION LINKS */}
+        {/* PRIMARY CALL TO ACTION BUTTON */}
         <div className="hero-action-buttons">
           <button
             type="button"
@@ -102,8 +102,8 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
             <svg
               className="cta-chevron"
               viewBox="0 0 20 20"
-              width="16"
-              height="16"
+              width="18"
+              height="18"
               fill="currentColor"
             >
               <path
@@ -113,20 +113,16 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
               />
             </svg>
           </button>
-
-          <button
-            type="button"
-            className="ocean-cta register-btn"
-            onClick={onRegisterClick}
-            id="hero-register-btn"
-          >
-            <span>Register Now</span>
-            <span className="btn-glow-pulse" />
-          </button>
         </div>
 
         {/* Downward indicator inviting deeper exploration */}
-        <div className="scroll-invitation" aria-hidden="true">
+        <button
+          type="button"
+          className="scroll-invitation"
+          onClick={onDescendClick}
+          aria-label="Descend to About Litfest section"
+          id="hero-descend-btn"
+        >
           <span className="scroll-caption">DESCEND</span>
           <svg
             className="scroll-arrow"
@@ -141,7 +137,7 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
           >
             <path d="M7 10l5 5 5-5" />
           </svg>
-        </div>
+        </button>
       </div>
     </div>
   );

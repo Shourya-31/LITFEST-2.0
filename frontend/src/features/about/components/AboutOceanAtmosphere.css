@@ -1,0 +1,283 @@
+/* =========================================
+   ABOUT OCEAN ATMOSPHERE LAYER (SAME OCEAN, DEEPER REALM)
+   ========================================= */
+.about-ocean-atmosphere-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+/* 1. Deep Ocean Gradient */
+.about-abyss-gradient {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 90% 50% at 50% 10%, rgba(6, 32, 60, 0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 20% 70%, rgba(3, 20, 42, 0.5) 0%, transparent 75%),
+    linear-gradient(180deg, #010610 0%, #010816 20%, #00040d 55%, #010714 85%, #010610 100%);
+}
+
+/* 2. Soft Downwelling Light Rays */
+.about-light-rays-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.about-rays-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.about-sunbeam {
+  transform-origin: top center;
+  animation: aboutRaySway 16s ease-in-out infinite alternate;
+}
+
+.ray-center {
+  animation-duration: 14s;
+}
+
+.ray-left {
+  animation-duration: 18s;
+  animation-delay: -4s;
+}
+
+.ray-right {
+  animation-duration: 15s;
+  animation-delay: -2s;
+}
+
+@keyframes aboutRaySway {
+  0% { transform: rotate(-1deg); opacity: 0.7; }
+  50% { transform: rotate(1.2deg); opacity: 1; }
+  100% { transform: rotate(-0.5deg); opacity: 0.8; }
+}
+
+/* 3. Rising Ambient Bubbles */
+.about-bubbles-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.about-ambient-bubble {
+  position: absolute;
+  bottom: -25px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(125, 211, 252, 0.28) 40%,
+    rgba(14, 165, 233, 0.06) 75%
+  );
+  border: 1px solid rgba(224, 242, 254, 0.35);
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
+  animation: aboutBubbleAscend linear infinite;
+  will-change: transform;
+}
+
+@keyframes aboutBubbleAscend {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.9);
+  }
+  50% {
+    transform: translate3d(8px, -50vh, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-6px, -105vh, 0) scale(1);
+  }
+}
+
+/* 4. Drifting Marine Particles */
+.about-particles-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.about-marine-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(224, 242, 254, 0.85) 0%,
+    rgba(56, 189, 248, 0.45) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.55);
+  animation: aboutParticleDrift ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes aboutParticleDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(14px, -18px, 0);
+  }
+  100% {
+    transform: translate3d(-10px, 12px, 0);
+  }
+}
+
+/* 5. Swimming Distant Fish School */
+.about-creature-track {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.about-fish-school-track {
+  top: 22%;
+  left: 0;
+  animation: aboutSchoolCross 48s linear infinite;
+  will-change: transform;
+}
+
+.about-fish-school-cluster {
+  position: relative;
+  width: 140px;
+  height: 40px;
+}
+
+.about-single-fish {
+  position: absolute;
+  opacity: 0.5;
+}
+
+.about-fish-tail {
+  transform-origin: 2px 7px;
+  animation: aboutTailWag 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes aboutSchoolCross {
+  0% {
+    transform: translate3d(-180px, 0, 0) scale(0.85);
+  }
+  100% {
+    transform: translate3d(calc(100vw + 200px), 18px, 0) scale(0.85);
+  }
+}
+
+@keyframes aboutTailWag {
+  0% { transform: rotate(-14deg); }
+  100% { transform: rotate(14deg); }
+}
+
+/* 6. Distant Manta Cruiser */
+.about-manta-track {
+  top: 45%;
+  left: 0;
+  animation: aboutMantaGlide 42s ease-in-out infinite;
+  will-change: transform;
+}
+
+.about-manta-wings {
+  transform-origin: 70px 60px;
+  animation: aboutWingFlap 7s ease-in-out infinite alternate;
+}
+
+@keyframes aboutMantaGlide {
+  0% {
+    transform: translate3d(-150px, 30px, 0) rotate(2deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  85% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate3d(calc(100vw + 160px), -40px, 0) rotate(-3deg);
+    opacity: 0;
+  }
+}
+
+@keyframes aboutWingFlap {
+  0% { transform: scaleY(0.92); }
+  50% { transform: scaleY(1.08); }
+  100% { transform: scaleY(0.95); }
+}
+
+/* 7. Marine Flora Flanks (Left & Right Seaweed) */
+.about-flora-flanks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.about-kelp-left {
+  position: absolute;
+  bottom: -40px;
+  left: -20px;
+  width: clamp(160px, 18vw, 260px);
+  height: clamp(380px, 55vh, 580px);
+}
+
+.about-kelp-right {
+  position: absolute;
+  bottom: -40px;
+  right: -20px;
+  width: clamp(160px, 18vw, 260px);
+  height: clamp(380px, 55vh, 580px);
+}
+
+.about-kelp-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.about-kelp-sway-1 {
+  transform-origin: 30px 600px;
+  animation: aboutKelpSwayLeft 12s ease-in-out infinite alternate;
+}
+
+.about-kelp-sway-2 {
+  transform-origin: 190px 600px;
+  animation: aboutKelpSwayRight 13s ease-in-out infinite alternate;
+  animation-delay: -3s;
+}
+
+@keyframes aboutKelpSwayLeft {
+  0% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.8deg); }
+  100% { transform: rotate(-0.5deg); }
+}
+
+@keyframes aboutKelpSwayRight {
+  0% { transform: rotate(1.5deg); }
+  50% { transform: rotate(-1.8deg); }
+  100% { transform: rotate(0.5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-sunbeam,
+  .about-ambient-bubble,
+  .about-marine-particle,
+  .about-fish-school-track,
+  .about-fish-tail,
+  .about-manta-track,
+  .about-manta-wings,
+  .about-kelp-sway-1,
+  .about-kelp-sway-2 {
+    animation: none !important;
+  }
+}

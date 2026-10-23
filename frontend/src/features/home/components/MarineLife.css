@@ -21,7 +21,7 @@
 .whale-track {
   top: 50%;
   left: 0;
-  opacity: 0.28;
+  opacity: 0.23;
   filter: blur(1.5px) drop-shadow(0 15px 35px rgba(0, 0, 0, 0.7));
   animation: whaleCruise 56s cubic-bezier(0.25, 1, 0.5, 1) infinite;
   z-index: 2;
@@ -38,14 +38,14 @@
     opacity: 0;
   }
   10% {
-    opacity: 0.28;
+    opacity: 0.23;
   }
   50% {
     transform: translate3d(50vw, -30px, 0) scale(1.15);
-    opacity: 0.32;
+    opacity: 0.27;
   }
   90% {
-    opacity: 0.28;
+    opacity: 0.23;
   }
   100% {
     transform: translate3d(125vw, -10px, 0) scale(1.1);
@@ -73,7 +73,7 @@
   right: -250px;
   animation: fishShoalSwim 17s linear infinite;
   z-index: 4;
-  opacity: 0.75;
+  opacity: 0.62;
 }
 
 .fish-school-cluster {
@@ -124,7 +124,7 @@
 .shark-track {
   top: 38%;
   left: -350px;
-  opacity: 0.38;
+  opacity: 0.31;
   filter: drop-shadow(0 10px 24px rgba(0, 5, 14, 0.6));
   animation: sharkGliding 28s linear infinite;
   animation-delay: 2s;
@@ -168,7 +168,7 @@
 .octopus-track {
   top: 9%;
   right: 12%;
-  opacity: 0.52;
+  opacity: 0.43;
   filter: drop-shadow(0 8px 20px rgba(1, 8, 18, 0.55));
   animation: octopusSway 14s ease-in-out infinite alternate;
   z-index: 3;
@@ -244,7 +244,7 @@
 
 .jelly-distant {
   right: 28%;
-  opacity: 0.4;
+  opacity: 0.33;
   animation-duration: 28s;
   animation-delay: 8s;
 }
@@ -302,14 +302,14 @@
     opacity: 0;
   }
   10% {
-    opacity: 1;
+    opacity: 0.82;
   }
   50% {
     transform: translate3d(28px, -55vh, 0);
-    opacity: 0.95;
+    opacity: 0.8;
   }
   85% {
-    opacity: 0.85;
+    opacity: 0.72;
   }
   100% {
     transform: translate3d(-20px, -125vh, 0);
@@ -322,7 +322,7 @@
    ========================================= */
 .manta-track {
   z-index: 3;
-  opacity: 0.32;
+  opacity: 0.26;
   filter: drop-shadow(0 6px 14px rgba(0, 4, 10, 0.7));
 }
 
@@ -335,7 +335,7 @@
 .manta-2 {
   bottom: 18%;
   left: 44%;
-  opacity: 0.22;
+  opacity: 0.18;
   animation: mantaGlide2 26s ease-in-out infinite alternate;
   animation-delay: -5s;
 }

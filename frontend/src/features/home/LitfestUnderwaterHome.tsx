@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { OceanAtmosphere } from './components/OceanAtmosphere';
 import { MarineLife } from './components/MarineLife';
+import { MarineVegetation } from './components/MarineVegetation';
 import { UnderwaterTitle } from './components/UnderwaterTitle';
 import { FestivalNav } from './components/FestivalNav';
+import { LitfestAboutSection } from '../about';
 import './LitfestUnderwaterHome.css';
 
 export const LitfestUnderwaterHome: React.FC = () => {
@@ -11,6 +13,28 @@ export const LitfestUnderwaterHome: React.FC = () => {
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
+
+  // Smooth scroll handler for in-page oceanic descent navigation
+  const scrollToSection = (sectionId: string) => {
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const elem = document.getElementById(sectionId);
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleNavClick = (sec: string) => {
+    if (sec === 'home') {
+      scrollToSection('home');
+    } else if (sec === 'about') {
+      scrollToSection('about');
+    } else if (sec === 'events' || sec === 'schedule' || sec === 'speakers' || sec === 'gallery') {
+      setActiveModal('events');
+    }
+  };
 
   // Synthesize realistic ambient ocean swell audio using Web Audio API (zero external assets needed)
   const toggleAmbientAudio = () => {
@@ -88,29 +112,43 @@ export const LitfestUnderwaterHome: React.FC = () => {
       role="main"
       aria-label="Litfest 2.0 Underwater Experience"
     >
-      {/* 1. Global Navigation Header (Floating, unboxed) */}
+      {/* 1. Global Navigation Header (Floating, fixed with glassmorphism on scroll) */}
       <FestivalNav
         onRegisterClick={() => setActiveModal('register')}
-        onNavClick={(sec) => {
-          if (sec === 'events' || sec === 'schedule' || sec === 'speakers') {
-            setActiveModal('events');
-          }
-        }}
+        onNavClick={handleNavClick}
       />
 
-      {/* 2. Deep Sea Atmosphere & Volumetric Sunlight */}
-      <OceanAtmosphere />
+      {/* 2. Primary Upper-Ocean Illuminated Viewport (Homepage) */}
+      <section
+        id="home"
+        className="hero-underwater-viewport"
+        aria-label="Litfest 2.0 Surface & Title"
+      >
+        {/* Deep Sea Atmosphere & Volumetric Sunlight */}
+        <OceanAtmosphere />
 
-      {/* 3. Layered Flat Marine Silhouettes (Whale, Shark, Shoal, Octopus, Jellyfish, Manta) */}
-      <MarineLife />
+        {/* Layered Flat Marine Silhouettes (Whale, Shark, Shoal, Octopus, Jellyfish, Manta) */}
+        <MarineLife showJellyfish={true} />
 
-      {/* 4. Central Prominent Display Title (LITFEST 2.0, Unboxed) */}
-      <UnderwaterTitle
+        {/* Underwater Vegetation (Tall Left/Right Kelp & Bioluminescent Corals) */}
+        <MarineVegetation />
+
+        {/* Central Prominent Display Title & Interactive Descend Indicator */}
+        <UnderwaterTitle
+          onExploreClick={() => setActiveModal('events')}
+          onDescendClick={() => scrollToSection('about')}
+        />
+      </section>
+
+      {/* 3. Deeper Ocean Descent & Litfest 2.0 About Experience */}
+      <LitfestAboutSection
+        id="about"
+        onExploreEvents={() => setActiveModal('events')}
         onRegisterClick={() => setActiveModal('register')}
-        onExploreClick={() => setActiveModal('events')}
+        onAscendClick={() => scrollToSection('home')}
       />
 
-      {/* 5. Minimal Sound Toggle (Corner Icon) */}
+      {/* 4. Ambient Ocean Swell Audio Toggle (Fixed Floating Button) */}
       <button
         type="button"
         className={`ambient-audio-toggle ${isPlayingAudio ? 'playing' : ''}`}
