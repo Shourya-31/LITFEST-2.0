@@ -1,19 +1,21 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { TimelineMilestone } from '../../types/timeline';
 
 interface PirateWheelSvgProps {
   milestones: TimelineMilestone[];
   activeIdx: number;
+  rotationDeg: number;
   onSpokeClick: (idx: number) => void;
   onCenterClick?: () => void;
 }
 
-export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
+export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
   milestones,
   activeIdx,
+  rotationDeg,
   onSpokeClick,
   onCenterClick
-}, ref) => {
+}) => {
   const totalSpokes = 14;
 
   const spokes = Array.from({ length: totalSpokes }, (_, i) => {
@@ -33,16 +35,21 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
       {/* Ambient Seafoam Backlight */}
       <div className="helm-ambient-backlight" />
 
-      {/* Outer Water Ring Ticks */}
+      {/* Compass Ring */}
       <div className="helm-outer-compass-ring">
         <svg viewBox="0 0 500 500" className="compass-ticks-svg">
-          <circle cx="250" cy="250" r="242" fill="none" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" strokeDasharray="3 5" />
-          <circle cx="250" cy="250" r="246" fill="none" stroke="rgba(212, 175, 55, 0.3)" strokeWidth="1.5" />
+          <circle cx="250" cy="250" r="242" fill="none" stroke="rgba(56, 189, 248, 0.2)" strokeWidth="1" strokeDasharray="3 5" />
+          <circle cx="250" cy="250" r="246" fill="none" stroke="rgba(212, 175, 55, 0.35)" strokeWidth="1.5" />
         </svg>
       </div>
 
-      {/* The Rotating Ship's Wheel (Container animated by GSAP) */}
-      <div ref={ref} className="pirate-helm-wheel">
+      {/* The Rotating Ship's Wheel (Rotates by rotationDeg) */}
+      <div
+        className="pirate-helm-wheel"
+        style={{
+          transform: `rotate(${rotationDeg}deg)`
+        }}
+      >
         <svg
           viewBox="-240 -240 480 480"
           className="pirate-helm-svg"
@@ -95,7 +102,7 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
                 className={`helm-spoke-element ${isActive ? 'is-active-spoke' : ''}`}
                 onClick={() => onSpokeClick(index)}
               >
-                {/* Inner shaft segment */}
+                {/* Spoke shaft */}
                 <rect
                   x="-5"
                   y="-165"
@@ -126,10 +133,7 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
                   strokeWidth="0.8"
                 />
 
-                {/* Handle brass pommel ring */}
                 <ellipse cx="0" cy="-182" rx="5.5" ry="2.5" fill="url(#brassGoldGrad)" />
-
-                {/* Handle outer brass crown knob */}
                 <circle cx="0" cy="-213" r="5.5" fill="url(#brassGoldGrad)" stroke="#451a03" strokeWidth="0.8" />
                 <circle cx="0" cy="-213" r="2.5" fill="#fef08a" opacity="0.85" />
               </g>
@@ -167,7 +171,6 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
               </g>
             ))}
 
-            {/* Wave Rope Inlay */}
             <circle
               cx="0"
               cy="0"
@@ -184,34 +187,27 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
             <circle cx="0" cy="0" r="50" fill="url(#brassGoldGrad)" stroke="#260f02" strokeWidth="2.5" />
             <circle cx="0" cy="0" r="46" fill="#451a03" stroke="#d4af37" strokeWidth="1" />
 
-            {/* 8 Hub Bolts */}
             {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, bIdx) => (
               <g key={`hub-bolt-${bIdx}`} transform={`rotate(${deg})`}>
                 <circle cx="0" cy="-40" r="2.4" fill="url(#brassGoldGrad)" stroke="#1a0700" strokeWidth="0.5" />
               </g>
             ))}
 
-            {/* Golden Compass Rose */}
             <g className="hub-compass-rose">
               <polygon points="0,-36 4,-12 0,-8 -4,-12" fill="#fef08a" />
               <polygon points="0,-36 0,-8 -4,-12" fill="#ca8a04" />
-
               <polygon points="0,36 4,12 0,8 -4,12" fill="#fef08a" />
               <polygon points="0,36 0,8 4,12" fill="#ca8a04" />
-
               <polygon points="36,0 12,4 8,0 12,-4" fill="#fef08a" />
               <polygon points="36,0 8,0 12,4" fill="#ca8a04" />
-
               <polygon points="-36,0 -12,4 -8,0 -12,-4" fill="#fef08a" />
               <polygon points="-36,0 -8,0 -12,-4" fill="#ca8a04" />
-
               <polygon points="22,-22 9,-5 6,-6 5,-9" fill="#d4af37" />
               <polygon points="-22,-22 -9,-5 -6,-6 -5,-9" fill="#d4af37" />
               <polygon points="22,22 9,5 6,6 5,9" fill="#d4af37" />
               <polygon points="-22,22 -9,5 -6,6 -5,9" fill="#d4af37" />
             </g>
 
-            {/* Ocean Sapphire Core */}
             <circle
               cx="0"
               cy="0"
@@ -226,10 +222,10 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
           </g>
         </svg>
 
-        {/* 4. LAYER: 14 HTML Spoke Badges (Roman Numerals I through XIV)
-            The parent .helm-spoke-node is fixed at (x,y) on the wheel circle.
-            The child .spoke-upright-content is counter-rotated by GSAP by -360deg
-            so all numerals and text stay 100% strictly upright without glitching! */}
+        {/* 4. LAYER: 14 HTML Spoke Badges
+            Positioned along the wheel rim at radius r=136.
+            Each inner .spoke-upright-content is counter-rotated by -rotationDeg
+            so all Roman numerals and text stay STRICTLY UPRIGHT without tilting! */}
         <div className="helm-nodes-overlay">
           {spokes.map(({ index, angleDeg, milestone, isActive }) => {
             const rad = ((angleDeg - 90) * Math.PI) / 180;
@@ -252,8 +248,13 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
                 title={`Spoke ${index + 1}: ${milestone.romanNumeral} — ${milestone.title}`}
                 aria-label={`Select Spoke ${index + 1}: ${milestone.title}`}
               >
-                {/* This element will be targeted by GSAP for clean counter-rotation */}
-                <div className="spoke-upright-content">
+                {/* Counter-rotate inner content by exactly -rotationDeg to maintain upright position */}
+                <div
+                  className="spoke-upright-content"
+                  style={{
+                    transform: `rotate(${-rotationDeg}deg)`
+                  }}
+                >
                   <span className="node-roman-num">{milestone.romanNumeral}</span>
                   <span className="node-spoke-idx">{index + 1}</span>
                 </div>
@@ -276,6 +277,4 @@ export const PirateWheelSvg = forwardRef<HTMLDivElement, PirateWheelSvgProps>(({
       </div>
     </div>
   );
-});
-
-PirateWheelSvg.displayName = 'PirateWheelSvg';
+};

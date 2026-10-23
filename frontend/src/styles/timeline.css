@@ -1,516 +1,124 @@
 /* ==========================================================================
-   PIRATE WHEEL TIMELINE COMPONENT STYLES
-   14-Spoke Pirate Ship Steering Wheel & 3D Z-Axis Depth Stage
+   3D Z-AXIS ZOOM IN / ZOOM OUT TIMELINE STYLES
+   Zoom-Through 3D Camera Engine with 14-Spoke Upright Pirate Ship Helm
    ========================================================================== */
 
-.pirate-timeline-section {
+.z-axis-interactive-viewport {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, #02070e 0%, #071829 45%, #030b14 100%);
-  padding: 0 1.5rem;
-}
-
-.pirate-timeline-container {
-  display: grid;
-  grid-template-columns: 460px 1fr;
-  gap: 3rem;
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  align-items: center;
-  height: 100%;
-  position: relative;
-  z-index: 2;
+  background: radial-gradient(circle at 50% 50%, #082038 0%, #030b14 65%, #010408 100%);
+  user-select: none;
+  touch-action: none; /* Capture touch gestures for 3D Z zoom */
 }
 
 /* ==========================================================================
-   LEFT COLUMN: PIRATE SHIP HELM & TELEMETRY
+   3D OCEANIC STARFIELD & TUNNEL RINGS
    ========================================================================== */
-.timeline-helm-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 1.6rem 1.4rem;
-  background: var(--bg-glass-ocean);
-  border: 1px solid var(--border-gold-subtle);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  z-index: 10;
-  position: relative;
-  overflow: hidden;
-}
-
-.timeline-helm-column::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--pirate-gold), var(--sea-cyan), transparent);
-}
-
-.helm-header {
-  margin-bottom: 0.8rem;
-  width: 100%;
-}
-
-.nautical-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  color: var(--sea-cyan);
-  background: rgba(34, 211, 238, 0.08);
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(34, 211, 238, 0.2);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.eyebrow-icon.spin-slow {
-  animation: spinSlow 20s linear infinite;
-}
-
-@keyframes spinSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.helm-title {
-  font-family: var(--font-serif);
-  font-size: 1.65rem;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.3rem;
-  background: linear-gradient(135deg, #ffffff 40%, var(--pirate-gold-light) 75%, var(--pirate-gold) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.helm-subtitle {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  max-width: 380px;
-  margin: 0 auto;
-}
-
-/* ==========================================================================
-   PIRATE WHEEL STAGE (SMOOTH & ZERO JITTER)
-   ========================================================================== */
-.helm-interactive-stage {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.4rem 0;
-}
-
-.pirate-helm-wrapper {
-  position: relative;
-  width: 330px;
-  height: 330px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.helm-ambient-backlight {
-  position: absolute;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.22) 0%, rgba(212, 175, 55, 0.15) 50%, transparent 70%);
-  filter: blur(25px);
-  pointer-events: none;
-  animation: pulseBacklight 4s ease-in-out infinite alternate;
-}
-
-@keyframes pulseBacklight {
-  0% { transform: scale(0.92); opacity: 0.6; }
-  100% { transform: scale(1.08); opacity: 0.95; }
-}
-
-.helm-outer-compass-ring {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.compass-ticks-svg {
-  width: 100%;
-  height: 100%;
-}
-
-.pirate-helm-wheel {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-origin: center center;
-  will-change: transform;
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.75));
-  transition: none; /* STRICTLY NO CSS TRANSITIONS ON GSAP TRANSFORMED WHEEL */
-}
-
-.pirate-helm-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.sapphire-core-pulsar {
-  animation: sapphirePulse 3s ease-in-out infinite alternate;
-  transform-origin: center;
-}
-
-@keyframes sapphirePulse {
-  0% { filter: drop-shadow(0 0 4px #22d3ee); stroke-width: 1.5; }
-  100% { filter: drop-shadow(0 0 14px #38bdf8); stroke-width: 3.5; }
-}
-
-/* 14 Spoke Nodes Overlay */
-.helm-nodes-overlay {
+.z-ocean-starfield {
   position: absolute;
   inset: 0;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
   pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.helm-spoke-node {
+.z-tunnel-ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -18px;
-  margin-left: -18px;
-  width: 36px;
-  height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #78350f 0%, #451a03 100%);
-  border: 1.5px solid var(--pirate-gold);
-  color: var(--pirate-gold-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-  pointer-events: auto;
-  cursor: pointer;
-  transform-origin: center center;
-  will-change: transform;
-  /* NO transition: all or transform! Only background and border */
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.helm-spoke-node:hover {
-  border-color: #ffffff;
-  background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
-  box-shadow: 0 0 16px rgba(245, 158, 11, 0.8);
-}
-
-.helm-spoke-node.active {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  border-color: var(--sea-cyan);
-  color: #ffffff;
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.95);
-  z-index: 10;
-}
-
-/* Counter-Rotator Container targeted by GSAP: STRICTLY UPRIGHT AT ALL TIMES */
-.spoke-upright-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
   pointer-events: none;
-  transform-origin: center center;
   will-change: transform;
-  transition: none; /* GSAP controls the rotation angle continuously */
 }
 
-.node-roman-num {
-  font-family: var(--font-serif);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.ring-1 {
+  width: 800px;
+  height: 800px;
+  margin-top: -400px;
+  margin-left: -400px;
+  border: 1.5px dashed rgba(56, 189, 248, 0.16);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.08);
 }
 
-.node-spoke-idx {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  opacity: 0.85;
+.ring-2 {
+  width: 1300px;
+  height: 1300px;
+  margin-top: -650px;
+  margin-left: -650px;
+  border: 1.5px solid rgba(212, 175, 55, 0.12);
+  box-shadow: 0 0 60px rgba(212, 175, 55, 0.06);
 }
 
-.active-pulse-aura {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1.5px solid var(--sea-cyan);
-  opacity: 0.8;
-  animation: ringPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-  pointer-events: none;
-}
-
-@keyframes ringPulse {
-  0% { transform: scale(0.85); opacity: 0.9; }
-  100% { transform: scale(1.5); opacity: 0; }
-}
-
-/* Binnacle Stand */
-.helm-binnacle-stand {
-  margin-top: 0.4rem;
-  width: 100%;
-}
-
-.binnacle-gold-rim {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--pirate-gold), transparent);
-  margin-bottom: 0.4rem;
-}
-
-.binnacle-compass-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  letter-spacing: 0.12em;
-  padding: 0 1rem;
-}
-
-.binnacle-heading-deg {
-  color: var(--pirate-gold);
-  font-weight: 700;
-}
-
-/* Controls */
-.helm-controls-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  width: 100%;
-  margin-top: 0.6rem;
-}
-
-.steer-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  background: rgba(13, 40, 71, 0.7);
-  border: 1px solid var(--border-ocean-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  padding: 0.5rem 0.6rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.steer-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.steer-btn:not(:disabled):hover {
-  background: rgba(34, 211, 238, 0.15);
-  border-color: var(--sea-cyan);
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.3);
-}
-
-.sound-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: rgba(212, 175, 55, 0.1);
-  border: 1px solid var(--border-gold-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--pirate-gold-light);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 600;
-  padding: 0.5rem 0.7rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.sound-toggle-btn:hover {
-  background: rgba(212, 175, 55, 0.25);
-  border-color: var(--pirate-gold);
-}
-
-.sound-toggle-btn.muted {
-  color: var(--text-muted);
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-/* Telemetry Card */
-.helm-telemetry-card {
-  width: 100%;
-  margin-top: 0.8rem;
-  background: rgba(7, 24, 41, 0.85);
-  border: 1px solid var(--border-ocean-glow);
-  border-radius: var(--radius-md);
-  padding: 0.85rem 1rem;
-  text-align: left;
-  box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.06);
-}
-
-.telemetry-badge-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 0.4rem;
-}
-
-.telemetry-spoke-badge {
-  font-family: var(--font-serif);
-  font-size: 0.68rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--pirate-wood) 0%, var(--pirate-bronze) 100%);
-  color: #fef08a;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  border: 1px solid var(--pirate-gold);
-}
-
-.telemetry-z-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--sea-cyan);
-  background: rgba(34, 211, 238, 0.12);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.telemetry-coord {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--text-muted);
-}
-
-.telemetry-title {
-  font-family: var(--font-serif);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1.35;
-  margin-bottom: 0.45rem;
-}
-
-.telemetry-meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.telemetry-meta-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.72rem;
-  color: var(--text-secondary);
+.ring-3 {
+  width: 1800px;
+  height: 1800px;
+  margin-top: -900px;
+  margin-left: -900px;
+  border: 2px dashed rgba(34, 211, 238, 0.08);
 }
 
 /* ==========================================================================
-   RIGHT COLUMN: 3D Z-AXIS TUNNEL DEPTH STAGE
+   3D PERSPECTIVE STAGE & CAMERA RIG
    ========================================================================== */
-.timeline-z-stage-column {
-  position: relative;
+.z-world-perspective-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.z-world-camera {
+  position: absolute;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1200px;
-  perspective-origin: 50% 50%;
-  overflow: visible;
-}
-
-.z-axis-depth-viewport {
-  position: relative;
-  width: 100%;
-  height: 560px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transform-style: preserve-3d;
-}
-
-/* 3D Perspective Tunnel Grid in Background */
-.z-tunnel-perspective-grid {
-  position: absolute;
-  inset: -40px;
-  border: 1px dashed rgba(56, 189, 248, 0.12);
-  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
   pointer-events: none;
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.04) 0%, transparent 60%),
-    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
-  transform: translateZ(-800px);
 }
 
-/* Individual Milestone Layer in 3D Space (Manipulated strictly along Z-axis) */
-.z-milestone-layer {
+/* ==========================================================================
+   INDIVIDUAL MILESTONE CHECKPOINT PLANES IN 3D SPACE
+   ========================================================================== */
+.z-milestone-checkpoint-plane {
   position: absolute;
-  width: 480px;
-  max-width: 95%;
+  width: 520px;
+  max-width: 92vw;
   transform-style: preserve-3d;
   will-change: transform, opacity, filter;
   backface-visibility: hidden;
-  transition: none; /* STRICTLY NO CSS TRANSITION FIGHTING GSAP Z-AXIS ENGINE */
+  transition: opacity 0.25s ease-out;
 }
 
-/* Card Content Container */
-.voyage-card-inner.z-card-content {
-  background: linear-gradient(150deg, rgba(13, 40, 71, 0.9) 0%, rgba(5, 17, 31, 0.96) 100%);
+.z-checkpoint-card {
+  background: linear-gradient(155deg, rgba(13, 40, 71, 0.94) 0%, rgba(4, 15, 28, 0.98) 100%);
   border: 1px solid var(--border-ocean-subtle);
   border-radius: var(--radius-lg);
   padding: 1.8rem;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.z-milestone-layer.is-in-focus .voyage-card-inner.z-card-content {
+.z-milestone-checkpoint-plane.is-active-checkpoint .z-checkpoint-card {
   border-color: var(--sea-cyan);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(34, 211, 238, 0.4), inset 0 0 25px rgba(34, 211, 238, 0.08);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.92), 0 0 35px rgba(34, 211, 238, 0.4), inset 0 0 25px rgba(34, 211, 238, 0.08);
 }
 
-.z-milestone-layer.is-in-focus .voyage-card-inner.z-card-content::before {
+.z-milestone-checkpoint-plane.is-active-checkpoint .z-checkpoint-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -565,7 +173,7 @@
 /* Card Title */
 .card-milestone-title {
   font-family: var(--font-serif);
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.35;
@@ -712,54 +320,494 @@
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN FOR 3D Z-AXIS STAGE
+   HEADS-UP DISPLAY (HUD) OVERLAY
    ========================================================================== */
-@media (max-width: 1024px) {
-  .pirate-timeline-section {
-    height: auto;
-    min-height: 100vh;
-    padding: 3rem 1rem;
-  }
-
-  .pirate-timeline-container {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .timeline-helm-column {
-    max-width: 520px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .timeline-z-stage-column {
-    perspective: 800px;
-    min-height: 520px;
-  }
-
-  .z-milestone-layer {
-    width: 400px;
-  }
+.z-axis-hud-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
 }
 
-@media (max-width: 480px) {
+/* Top Floating HUD Bar */
+.z-hud-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(7, 24, 41, 0.85);
+  border: 1px solid var(--border-ocean-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 1.4rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+}
+
+.z-depth-gauge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.depth-icon {
+  color: var(--sea-cyan);
+}
+
+.gauge-label {
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.gauge-value {
+  color: var(--pirate-gold-light);
+  font-size: 0.85rem;
+}
+
+.gauge-checkpoint-tag {
+  color: var(--sea-cyan);
+  background: rgba(34, 211, 238, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+}
+
+.z-hud-instructions {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--sea-cyan);
+  animation: pulseHint 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseHint {
+  0% { opacity: 0.65; }
+  100% { opacity: 1; text-shadow: 0 0 12px rgba(34, 211, 238, 0.6); }
+}
+
+.z-hud-quick-links {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.z-hud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(13, 40, 71, 0.7);
+  border: 1px solid var(--border-ocean-subtle);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.z-hud-btn:hover {
+  background: rgba(34, 211, 238, 0.15);
+  border-color: var(--sea-cyan);
+  color: #ffffff;
+}
+
+.z-hud-btn-faq {
+  color: var(--pirate-gold-light);
+  border-color: var(--border-gold-subtle);
+}
+
+/* ==========================================================================
+   BOTTOM LEFT: PIRATE SHIP HELM DOCK
+   ========================================================================== */
+.z-hud-helm-dock {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  width: 280px;
+  background: rgba(5, 17, 31, 0.9);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1rem 0.8rem 1rem;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.helm-dock-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.dock-sub {
+  color: var(--pirate-gold);
+  font-weight: 700;
+}
+
+.helm-dock-wheel-wrap {
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Pirate Helm in Dock */
+.pirate-helm-wrapper {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.helm-ambient-backlight {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.22) 0%, rgba(212, 175, 55, 0.15) 50%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.helm-outer-compass-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.compass-ticks-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pirate-helm-wheel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.8));
+}
+
+.pirate-helm-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* 14 Spoke Nodes Overlay */
+.helm-nodes-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.helm-spoke-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -14px;
+  margin-left: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #78350f 0%, #451a03 100%);
+  border: 1.2px solid var(--pirate-gold);
+  color: var(--pirate-gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: center center;
+  will-change: transform;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.helm-spoke-node:hover {
+  border-color: #ffffff;
+  background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.8);
+}
+
+.helm-spoke-node.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border-color: var(--sea-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.95);
+  z-index: 10;
+}
+
+/* Counter-Rotator Container: STRICTLY UPRIGHT AT ALL TIMES */
+.spoke-upright-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.node-roman-num {
+  font-family: var(--font-serif);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.node-spoke-idx {
+  font-family: var(--font-mono);
+  font-size: 0.44rem;
+  opacity: 0.85;
+}
+
+.active-pulse-aura {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sea-cyan);
+  opacity: 0.8;
+  animation: ringPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(0.85); opacity: 0.9; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.helm-binnacle-stand {
+  display: none;
+}
+
+/* Helm Dock Controls */
+.helm-dock-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.dock-ctrl-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: rgba(13, 40, 71, 0.7);
+  border: 1px solid var(--border-ocean-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dock-ctrl-btn.sound-btn {
+  flex: 0 0 34px;
+  color: var(--pirate-gold-light);
+}
+
+.dock-ctrl-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.dock-ctrl-btn:not(:disabled):hover {
+  background: rgba(34, 211, 238, 0.15);
+  border-color: var(--sea-cyan);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   BOTTOM RIGHT: FLOATING ZOOM IN / OUT BUTTONS
+   ========================================================================== */
+.z-hud-zoom-controls {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  pointer-events: auto;
+}
+
+.zoom-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(7, 24, 41, 0.9);
+  border: 1px solid var(--border-ocean-glow);
+  border-radius: var(--radius-pill);
+  padding: 0.7rem 1.1rem;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
+}
+
+.zoom-action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.zoom-action-btn:not(:disabled):hover {
+  background: rgba(34, 211, 238, 0.2);
+  border-color: var(--sea-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
+}
+
+/* ==========================================================================
+   BOTTOM CENTER: VOYAGE STATUS & CHECKPOINT DOTS
+   ========================================================================== */
+.z-hud-bottom-bar {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(7, 24, 41, 0.85);
+  border: 1px solid var(--border-ocean-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0.55rem 1.4rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  pointer-events: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  max-width: 600px;
+}
+
+.voyage-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.status-chapter-badge {
+  color: var(--pirate-gold);
+  font-weight: 700;
+  font-family: var(--font-serif);
+}
+
+.status-milestone-title {
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+
+.z-checkpoint-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.checkpoint-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.checkpoint-dot:hover {
+  background: var(--sea-cyan);
+  transform: scale(1.3);
+}
+
+.checkpoint-dot.active {
+  background: var(--sea-cyan);
+  border-color: #ffffff;
+  transform: scale(1.4);
+  box-shadow: 0 0 12px var(--sea-cyan);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN FOR 3D Z-AXIS ZOOM ENGINE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .z-hud-top-bar {
+    flex-direction: column;
+    gap: 0.4rem;
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.8rem;
+  }
+
+  .z-hud-instructions {
+    display: none;
+  }
+
+  .z-hud-helm-dock {
+    width: 220px;
+    bottom: 5rem;
+    left: 1rem;
+    padding: 0.6rem;
+  }
+
+  .helm-dock-wheel-wrap {
+    width: 180px;
+    height: 180px;
+  }
+
   .pirate-helm-wrapper {
-    width: 280px;
-    height: 280px;
+    width: 180px;
+    height: 180px;
   }
 
-  .helm-spoke-node {
-    width: 32px;
-    height: 32px;
-    margin-top: -16px;
-    margin-left: -16px;
+  .z-hud-zoom-controls {
+    bottom: 5rem;
+    right: 1rem;
   }
 
-  .z-milestone-layer {
-    width: 320px;
+  .z-hud-bottom-bar {
+    width: calc(100% - 2rem);
   }
 
-  .voyage-card-inner.z-card-content {
-    padding: 1.2rem;
+  .status-milestone-title {
+    max-width: 180px;
   }
 }

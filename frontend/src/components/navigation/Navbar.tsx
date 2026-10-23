@@ -1,38 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Compass, Anchor, HelpCircle, Menu, X } from 'lucide-react';
 import { soundEngine } from '../../utils/soundEngine';
 
-export const Navbar: React.FC = () => {
-  const [scrolled, setScrolled] = useState<boolean>(false);
+interface NavbarProps {
+  onOpenFaq?: () => void;
+  onOpenTimeline?: () => void;
+  isFaqOpen?: boolean;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenFaq,
+  onOpenTimeline,
+  isFaqOpen = false
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navLinks = [
-    { label: '3D Z-Axis Timeline', href: '#timeline', icon: Compass },
-    { label: 'Festival FAQs', href: '#faq', icon: HelpCircle }
-  ];
-
-  const handleNavClick = (href: string) => {
+  const handleTimelineClick = () => {
     soundEngine.playDroplet();
     setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (onOpenTimeline) onOpenTimeline();
+  };
+
+  const handleFaqClick = () => {
+    soundEngine.playDroplet();
+    setMobileMenuOpen(false);
+    if (onOpenFaq) onOpenFaq();
   };
 
   return (
-    <header className={`nautical-navbar ${scrolled ? 'is-scrolled' : ''}`}>
+    <header className="nautical-navbar is-scrolled">
       <div className="navbar-container">
         {/* Brand */}
-        <a href="#hero" className="nav-brand interactive" onClick={() => soundEngine.playDroplet()}>
+        <div className="nav-brand interactive" onClick={handleTimelineClick}>
           <div className="brand-crest">
             <Anchor size={20} className="brand-anchor" />
           </div>
@@ -40,27 +39,27 @@ export const Navbar: React.FC = () => {
             <span className="brand-title">LITFEST 2.0</span>
             <span className="brand-subtitle">[NAVBAR PLACEHOLDER]</span>
           </div>
-        </a>
+        </div>
 
         {/* Links to Timeline & FAQ */}
         <nav className="desktop-nav" aria-label="Main Navigation">
-          {navLinks.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <a
-                key={idx}
-                href={item.href}
-                className="nav-link interactive"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(item.href);
-                }}
-              >
-                <Icon size={15} />
-                <span>{item.label}</span>
-              </a>
-            );
-          })}
+          <button
+            type="button"
+            className={`nav-link-btn interactive ${!isFaqOpen ? 'active' : ''}`}
+            onClick={handleTimelineClick}
+          >
+            <Compass size={15} />
+            <span>3D Z-Axis Timeline</span>
+          </button>
+
+          <button
+            type="button"
+            className={`nav-link-btn interactive ${isFaqOpen ? 'active' : ''}`}
+            onClick={handleFaqClick}
+          >
+            <HelpCircle size={15} />
+            <span>Festival FAQs</span>
+          </button>
         </nav>
 
         {/* Action button */}
@@ -68,9 +67,9 @@ export const Navbar: React.FC = () => {
           <button
             type="button"
             className="nav-cta-btn interactive"
-            onClick={() => handleNavClick('#timeline')}
+            onClick={isFaqOpen ? handleTimelineClick : handleFaqClick}
           >
-            <span>Timeline</span>
+            <span>{isFaqOpen ? 'Back to 3D Helm' : 'Open FAQs'}</span>
           </button>
 
           <button
@@ -87,23 +86,23 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="mobile-nav-drawer">
-          {navLinks.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <a
-                key={idx}
-                href={item.href}
-                className="mobile-nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(item.href);
-                }}
-              >
-                <Icon size={18} />
-                <span>{item.label}</span>
-              </a>
-            );
-          })}
+          <button
+            type="button"
+            className="mobile-nav-link"
+            onClick={handleTimelineClick}
+          >
+            <Compass size={18} />
+            <span>3D Z-Axis Timeline</span>
+          </button>
+
+          <button
+            type="button"
+            className="mobile-nav-link"
+            onClick={handleFaqClick}
+          >
+            <HelpCircle size={18} />
+            <span>Festival FAQs</span>
+          </button>
         </div>
       )}
     </header>

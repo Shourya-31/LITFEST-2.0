@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   Compass,
   Volume2,
@@ -13,204 +11,157 @@ import {
   ChevronRight,
   Sparkles,
   Award,
-  Layers
+  Layers,
+  ZoomIn,
+  ZoomOut,
+  HelpCircle,
+  RotateCcw
 } from 'lucide-react';
 import { PIRATE_WHEEL_MILESTONES } from './timelineData';
 import { PirateWheelSvg } from './PirateWheelSvg';
 import { soundEngine } from '../../utils/soundEngine';
 import { TimelineMilestone, PirateWheelTimelineProps } from '../../types/timeline';
 
-// Register GSAP ScrollTrigger plugin safely
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   milestones = PIRATE_WHEEL_MILESTONES,
   title = "3D Z-Axis Voyage Timeline",
-  subtitle = "Turn the pirate ship's 14-spoke helm to voyage along the Z-axis through the 14 milestone checkpoints.",
+  subtitle = "Scroll down to zoom into the screen — travel forward through the 14 milestone checkpoints in 3D space.",
   className = "",
   onMilestoneSelect
 }) => {
   const [activeIdx, setActiveIdx] = useState<number>(0);
+  const [rotationDeg, setRotationDeg] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(soundEngine.getMuted());
+  const [currentZ, setCurrentZ] = useState<number>(0);
 
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const wheelRef = useRef<HTMLDivElement | null>(null);
-  const zStageRef = useRef<HTMLDivElement | null>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const timelineMasterRef = useRef<gsap.core.Timeline | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const cameraRef = useRef<HTMLDivElement | null>(null);
+  const animFrameRef = useRef<number | null>(null);
 
+  // Z-spacing between milestone checkpoints in 3D world space
+  const SPACING_Z = 1200;
   const totalCards = milestones.length;
+  // Maximum camera Z depth covers all 14 milestones
+  const maxCameraZ = (totalCards - 1) * SPACING_Z;
+
+  // Target and current camera positions for smooth interpolation (lerp)
+  const targetZRef = useRef<number>(0);
+  const currentZRef = useRef<number>(0);
+  const touchStartYRef = useRef<number>(0);
+  const prevActiveIdxRef = useRef<number>(0);
+
   const selectedMilestone = milestones[activeIdx] || milestones[0];
 
-  // Initialize GSAP 3D Z-Axis ScrollTrigger Animation
+  // Smooth 60fps render loop for 3D Z-axis camera movement
   useEffect(() => {
-    const section = sectionRef.current;
-    const wheel = wheelRef.current;
-    const zStage = zStageRef.current;
+    const cameraEl = cameraRef.current;
+    if (!cameraEl) return;
 
-    if (!section || !wheel || !zStage) return;
+    let isRunning = true;
 
-    const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
-    const uprightTexts = wheel.querySelectorAll('.spoke-upright-content');
+    const renderLoop = () => {
+      if (!isRunning) return;
 
-    const ctx = gsap.context(() => {
-      // Total duration for the master timeline corresponds to the number of intervals (totalCards - 1)
-      const masterDuration = Math.max(totalCards - 1, 1);
+      // Smooth interpolation towards target depth
+      const diff = targetZRef.current - currentZRef.current;
+      currentZRef.current += diff * 0.085;
 
-      const timelineMaster = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          pin: true,
-          scrub: 1.1,
-          start: "top top",
-          end: () => `+=${masterDuration * 320}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const newIndex = Math.min(
-              Math.floor(progress * totalCards),
-              totalCards - 1
-            );
-            setActiveIdx(newIndex);
-          }
-        }
-      });
+      const zVal = currentZRef.current;
 
-      timelineMasterRef.current = timelineMaster;
+      // Apply 3D translate along Z-axis: As zVal increases, camera moves forward into the screen!
+      cameraEl.style.transform = `translate3d(0, 0, ${zVal}px)`;
 
-      // 1. ROTATE PIRATE SHIP WHEEL 360 DEGREES ON SCROLL
-      timelineMaster.to(
-        wheel,
-        {
-          rotation: 360,
-          ease: "none",
-          duration: masterDuration
-        },
-        0
-      );
+      // Calculate corresponding milestone index
+      const approxIdx = Math.max(0, Math.min(Math.round(zVal / SPACING_Z), totalCards - 1));
+      if (approxIdx !== prevActiveIdxRef.current) {
+        prevActiveIdxRef.current = approxIdx;
+        setActiveIdx(approxIdx);
+        soundEngine.playHelmClick(approxIdx);
+        soundEngine.playSeaBell(approxIdx);
+      }
 
-      // 2. COUNTER-ROTATE SPOKE TEXT BY -360 DEGREES TO KEEP NUMERALS/LABELS STRICTLY UPRIGHT
-      // By animating .spoke-upright-content, the outer spoke maintains its circular position,
-      // while the inner text counter-rotates seamlessly with zero glitch!
-      timelineMaster.to(
-        uprightTexts,
-        {
-          rotation: -360,
-          ease: "none",
-          duration: masterDuration
-        },
-        0
-      );
+      // Calculate proportional wheel rotation
+      const calcRotation = (zVal / Math.max(maxCameraZ, 1)) * 360;
+      setRotationDeg(calcRotation);
+      setCurrentZ(Math.round(zVal));
 
-      // 3. 3D Z-AXIS SCROLLING: Animate each milestone card forward through Z-space!
-      // Each card i reaches focus (z=0, scale=1, opacity=1) at time t = i.
-      cards.forEach((card, i) => {
-        const tFocus = i;
+      animFrameRef.current = requestAnimationFrame(renderLoop);
+    };
 
-        // Initial state before its entrance (deep in background Z)
-        gsap.set(card, {
-          z: i === 0 ? 0 : -1400,
-          opacity: i === 0 ? 1 : 0,
-          scale: i === 0 ? 1 : 0.6,
-          filter: i === 0 ? "blur(0px)" : "blur(8px)",
-          pointerEvents: i === 0 ? "auto" : "none"
-        });
-
-        // Entrance animation (from deep Z to focus plane z=0)
-        if (i > 0) {
-          const tEnterStart = Math.max(tFocus - 1.5, 0);
-
-          // Deep background to mid-depth (z: -1400 -> -650)
-          timelineMaster.fromTo(
-            card,
-            { z: -1400, opacity: 0, scale: 0.6, filter: "blur(8px)", pointerEvents: "none" },
-            {
-              z: -650,
-              opacity: 0.45,
-              scale: 0.85,
-              filter: "blur(3px)",
-              ease: "power1.in",
-              duration: tFocus - 0.7 - tEnterStart,
-              pointerEvents: "none"
-            },
-            tEnterStart
-          );
-
-          // Mid-depth into crisp foreground focus (z: -650 -> 0)
-          timelineMaster.to(
-            card,
-            {
-              z: 0,
-              opacity: 1,
-              scale: 1,
-              filter: "blur(0px)",
-              ease: "power1.out",
-              duration: 0.7,
-              pointerEvents: "auto"
-            },
-            tFocus - 0.7
-          );
-        }
-
-        // Exit animation (from focus plane z=0 forward past camera z: +500)
-        if (i < totalCards - 1) {
-          timelineMaster.to(
-            card,
-            {
-              z: 500,
-              opacity: 0,
-              scale: 1.25,
-              filter: "blur(4px)",
-              ease: "power1.in",
-              duration: 0.75,
-              pointerEvents: "none"
-            },
-            tFocus
-          );
-        }
-      });
-    }, section);
+    animFrameRef.current = requestAnimationFrame(renderLoop);
 
     return () => {
-      ctx.revert();
-      timelineMasterRef.current = null;
+      isRunning = false;
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
     };
-  }, [totalCards]);
+  }, [totalCards, maxCameraZ]);
 
-  // Navigate to a specific spoke / Z-depth checkpoint
-  const handleSpokeClick = useCallback((idx: number) => {
-    setActiveIdx(idx);
+  // Handle Wheel Scroll: Scrolling down ZOOMS IN (enters inside screen), scrolling up ZOOMS OUT
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    // Prevent default page scroll to ensure pure Z-axis zoom
+    e.stopPropagation();
 
+    // Positive deltaY (scroll down) moves camera forward into the screen (+Z)
+    // Negative deltaY (scroll up) moves camera backward (-Z)
+    const zoomDelta = e.deltaY * 1.6;
+    targetZRef.current = Math.max(0, Math.min(targetZRef.current + zoomDelta, maxCameraZ));
+  }, [maxCameraZ]);
+
+  // Handle Touch gestures for mobile: Swipe up zooms forward into screen
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const currentY = e.touches[0].clientY;
+    const deltaY = (touchStartYRef.current - currentY) * 2.2;
+    touchStartYRef.current = currentY;
+    targetZRef.current = Math.max(0, Math.min(targetZRef.current + deltaY, maxCameraZ));
+  };
+
+  // Keyboard navigation: ArrowDown/PageDown zooms in, ArrowUp/PageUp zooms out
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        targetZRef.current = Math.min(targetZRef.current + SPACING_Z, maxCameraZ);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        targetZRef.current = Math.max(targetZRef.current - SPACING_Z, 0);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [maxCameraZ]);
+
+  // Navigate directly to a specific milestone spoke
+  const zoomToMilestone = useCallback((idx: number) => {
+    targetZRef.current = idx * SPACING_Z;
     soundEngine.playHelmClick(idx);
     soundEngine.playSeaBell(idx);
 
     if (onMilestoneSelect) {
       onMilestoneSelect(milestones[idx]);
     }
+  }, [milestones, onMilestoneSelect]);
 
-    if (timelineMasterRef.current && timelineMasterRef.current.scrollTrigger) {
-      const st = timelineMasterRef.current.scrollTrigger;
-      const targetProgress = idx / (totalCards - 1);
-      const scrollPos = st.start + targetProgress * (st.end - st.start);
-      window.scrollTo({
-        top: scrollPos,
-        behavior: 'smooth'
-      });
-    }
-  }, [totalCards, milestones, onMilestoneSelect]);
-
-  // Steer Port (Previous Z checkpoint)
-  const steerPort = () => {
-    const nextIdx = Math.max(activeIdx - 1, 0);
-    handleSpokeClick(nextIdx);
+  // Step Controls (Port = Zoom Out / Starboard = Zoom In)
+  const stepZoomOut = () => {
+    const targetIdx = Math.max(0, activeIdx - 1);
+    zoomToMilestone(targetIdx);
   };
 
-  // Steer Starboard (Next Z checkpoint)
-  const steerStarboard = () => {
-    const nextIdx = Math.min(activeIdx + 1, totalCards - 1);
-    handleSpokeClick(nextIdx);
+  const stepZoomIn = () => {
+    const targetIdx = Math.min(totalCards - 1, activeIdx + 1);
+    zoomToMilestone(targetIdx);
+  };
+
+  const resetToStart = () => {
+    targetZRef.current = 0;
+    soundEngine.playSeaBell(0);
   };
 
   // Toggle Mute
@@ -225,212 +176,295 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   return (
     <section
       id="timeline"
-      className={`pirate-timeline-section z-axis-timeline-stage ${className}`}
-      ref={sectionRef}
-      aria-label="LitFest 2.0 3D Z-Axis Timeline"
+      ref={containerRef}
+      className={`z-axis-interactive-viewport ${className}`}
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      aria-label="LitFest 2.0 3D Z-Axis Zoom Timeline"
     >
-      {/* Oceanic Ambient Light Canvas */}
-      <div className="ocean-ambient-canvas" aria-hidden="true">
-        <div className="ocean-wave-glow glow-1" />
-        <div className="ocean-wave-glow glow-2" />
+      {/* Background 3D Oceanic Starfield / Water Tunnel */}
+      <div className="z-ocean-starfield" aria-hidden="true">
+        {/* Floating depth rings expanding outward into screen */}
+        <div className="z-tunnel-ring ring-1" style={{ transform: `translateZ(${-(currentZ * 0.4) % 1800}px)` }} />
+        <div className="z-tunnel-ring ring-2" style={{ transform: `translateZ(${-(currentZ * 0.7) % 2400}px)` }} />
+        <div className="z-tunnel-ring ring-3" style={{ transform: `translateZ(${-(currentZ * 1.0) % 3000}px)` }} />
       </div>
 
-      <div className="pirate-timeline-container z-axis-container">
+      {/* 3D WORLD STAGE: perspective container */}
+      <div className="z-world-perspective-stage">
+        {/* CAMERA RIG: Translates along Z-axis */}
+        <div ref={cameraRef} className="z-world-camera">
+          {milestones.map((milestone, idx) => {
+            // Milestone world position in Z
+            const milestoneWorldZ = -idx * SPACING_Z;
+            // Distance relative to camera
+            const relDist = milestoneWorldZ + currentZ;
 
-        {/* LEFT COLUMN: THE PIRATE SHIP STEERING WHEEL */}
-        <div className="timeline-helm-column">
-          <div className="helm-header">
-            <div className="nautical-eyebrow">
-              <Compass className="eyebrow-icon spin-slow" size={14} />
-              <span>3D Z-AXIS VOYAGE • 14 SPOKES</span>
-            </div>
-            <h2 className="helm-title">{title}</h2>
-            <p className="helm-subtitle">{subtitle}</p>
+            // Visibility culling: hide cards too far ahead or behind to optimize rendering
+            const isVisible = relDist > -3600 && relDist < 900;
+            if (!isVisible) return null;
+
+            // Calculate card opacity and blur based on distance to camera plane (relDist = 0 is focus)
+            let opacity = 1;
+            let blurPx = 0;
+            if (relDist < 0) {
+              // Approaching from distance: fades in from 0 to 1
+              opacity = Math.max(0, Math.min(1, 1 - Math.abs(relDist) / 2200));
+              blurPx = Math.min(6, Math.abs(relDist) / 400);
+            } else {
+              // Zooming past camera: fades out from 1 to 0
+              opacity = Math.max(0, Math.min(1, 1 - relDist / 500));
+              blurPx = Math.min(8, relDist / 80);
+            }
+
+            const isInFocus = activeIdx === idx;
+
+            return (
+              <div
+                key={milestone.id}
+                className={`z-milestone-checkpoint-plane ${isInFocus ? 'is-active-checkpoint' : ''}`}
+                style={{
+                  transform: `translate3d(0, 0, ${milestoneWorldZ}px)`,
+                  opacity,
+                  filter: `blur(${blurPx.toFixed(1)}px)`,
+                  pointerEvents: isInFocus ? 'auto' : 'none'
+                }}
+                onClick={() => zoomToMilestone(idx)}
+              >
+                <article className="voyage-card-inner z-checkpoint-card interactive">
+                  {/* Card Header */}
+                  <div className="card-header-row">
+                    <div className="card-spoke-crest">
+                      <Anchor size={14} className="crest-anchor" />
+                      <span>SPOKE {milestone.spokeNumber}</span>
+                      <strong className="crest-roman">[{milestone.romanNumeral}]</strong>
+                    </div>
+                    <span className="card-z-depth-pill">
+                      CHECKPOINT {idx + 1} OF 14
+                    </span>
+                  </div>
+
+                  {/* Title & Theme Placeholders */}
+                  <h3 className="card-milestone-title">{milestone.title}</h3>
+
+                  <div className="card-theme-tag">
+                    <Compass size={13} />
+                    <span>{milestone.nauticalTheme}</span>
+                  </div>
+
+                  {/* Meta Grid */}
+                  <div className="card-voyage-meta">
+                    <div className="meta-tile">
+                      <span className="meta-tile-label">
+                        <Calendar size={12} /> DATE
+                      </span>
+                      <strong className="meta-tile-value">{milestone.date}</strong>
+                    </div>
+                    <div className="meta-tile">
+                      <span className="meta-tile-label">
+                        <Clock size={12} /> TIME
+                      </span>
+                      <strong className="meta-tile-value">{milestone.time}</strong>
+                    </div>
+                    <div className="meta-tile meta-tile-full">
+                      <span className="meta-tile-label">
+                        <MapPin size={12} /> LOCATION DECK
+                      </span>
+                      <strong className="meta-tile-value">{milestone.venue}</strong>
+                    </div>
+                  </div>
+
+                  {/* Captain's Log Placeholder */}
+                  <div className="card-captains-log">
+                    <div className="log-feather-icon">📜 Captain's Logbook Placeholder:</div>
+                    <p className="log-text">"{milestone.captainLog}"</p>
+                  </div>
+
+                  {/* Highlights Placeholder */}
+                  <div className="card-highlights-box">
+                    <div className="highlights-header">
+                      <Sparkles size={13} />
+                      <span>Highlights Placeholder:</span>
+                    </div>
+                    <p className="highlights-desc">{milestone.highlights}</p>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="card-footer-row">
+                    <div className="card-bounty-badge">
+                      <Award size={15} />
+                      <span>{milestone.bountyOrPrize}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="card-chart-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        zoomToMilestone(idx);
+                      }}
+                    >
+                      Lock Checkpoint
+                    </button>
+                  </div>
+                </article>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          HEADS-UP DISPLAY (HUD): HELM, CONTROLS & DEPTH TELEMETRY
+          ========================================================================== */}
+      <div className="z-axis-hud-overlay">
+        {/* Top Floating HUD Bar */}
+        <div className="z-hud-top-bar">
+          <div className="z-depth-gauge">
+            <Layers size={15} className="depth-icon" />
+            <span className="gauge-label">Z-AXIS DEPTH:</span>
+            <strong className="gauge-value">{currentZ}m</strong>
+            <span className="gauge-checkpoint-tag">
+              [CHECKPOINT {activeIdx + 1} / 14]
+            </span>
           </div>
 
-          {/* 14-Spoke Pirate Ship Wheel with clean upright text */}
-          <div className="helm-interactive-stage">
+          <div className="z-hud-instructions">
+            <span className="hud-scroll-hint">
+              ▼ SCROLL DOWN TO ENTER INSIDE SCREEN • SCROLL UP TO ZOOM OUT ▲
+            </span>
+          </div>
+
+          <div className="z-hud-quick-links">
+            <button
+              type="button"
+              className="z-hud-btn interactive"
+              onClick={resetToStart}
+              title="Reset to Surface (Milestone 1)"
+            >
+              <RotateCcw size={14} />
+              <span>Reset</span>
+            </button>
+
+            <a
+              href="#faq"
+              className="z-hud-btn z-hud-btn-faq interactive"
+              onClick={() => soundEngine.playDroplet()}
+            >
+              <HelpCircle size={14} />
+              <span>Jump to FAQs</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom Left: The 14-Spoke Pirate Ship Steering Wheel */}
+        <div className="z-hud-helm-dock">
+          <div className="helm-dock-header">
+            <span className="dock-title">PIRATE SHIP HELM</span>
+            <span className="dock-sub">{Math.round((rotationDeg % 360 + 360) % 360)}° ROTATION</span>
+          </div>
+
+          <div className="helm-dock-wheel-wrap">
             <PirateWheelSvg
-              ref={wheelRef}
               milestones={milestones}
               activeIdx={activeIdx}
-              onSpokeClick={handleSpokeClick}
+              rotationDeg={rotationDeg}
+              onSpokeClick={zoomToMilestone}
               onCenterClick={() => soundEngine.playSeaBell(activeIdx + 1)}
             />
           </div>
 
-          {/* Helmsman Controls */}
-          <div className="helm-controls-bar">
+          {/* Steer Port / Sound / Starboard Buttons */}
+          <div className="helm-dock-controls">
             <button
               type="button"
-              className="steer-btn steer-port interactive"
-              onClick={steerPort}
+              className="dock-ctrl-btn interactive"
+              onClick={stepZoomOut}
               disabled={activeIdx === 0}
-              title="Steer Port (Previous Z Depth)"
+              title="Zoom Out (Previous Milestone)"
               aria-label="Previous milestone"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={16} />
               <span>PORT</span>
             </button>
 
             <button
               type="button"
-              className={`sound-toggle-btn interactive ${isMuted ? 'muted' : ''}`}
+              className={`dock-ctrl-btn sound-btn interactive ${isMuted ? 'muted' : ''}`}
               onClick={toggleSound}
-              title={isMuted ? "Unmute Nautical Audio" : "Mute Audio"}
+              title={isMuted ? "Unmute Sound" : "Mute Sound"}
               aria-label={isMuted ? "Unmute sound" : "Mute sound"}
             >
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-              <span className="sound-lbl">{isMuted ? "BELL OFF" : "BELL ON"}</span>
+              {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
 
             <button
               type="button"
-              className="steer-btn steer-starboard interactive"
-              onClick={steerStarboard}
+              className="dock-ctrl-btn interactive"
+              onClick={stepZoomIn}
               disabled={activeIdx === totalCards - 1}
-              title="Steer Starboard (Next Z Depth)"
+              title="Zoom In (Next Milestone)"
               aria-label="Next milestone"
             >
-              <span>STARBOARD</span>
-              <ChevronRight size={18} />
+              <span>STBD</span>
+              <ChevronRight size={16} />
             </button>
           </div>
-
-          {/* Active Spoke Telemetry & Z-Depth Indicator */}
-          <div className="helm-telemetry-card">
-            <div className="telemetry-badge-row">
-              <span className="telemetry-spoke-badge">
-                SPOKE {selectedMilestone.spokeNumber} • {selectedMilestone.romanNumeral}
-              </span>
-              <span className="telemetry-z-indicator">
-                <Layers size={12} />
-                DEPTH Z: {(activeIdx * 100).toFixed(0)}m
-              </span>
-              <span className="telemetry-coord">
-                {selectedMilestone.coordinates}
-              </span>
-            </div>
-
-            <h3 className="telemetry-title">{selectedMilestone.title}</h3>
-
-            <div className="telemetry-meta-row">
-              <span className="telemetry-meta-item">
-                <Calendar size={13} />
-                {selectedMilestone.date}
-              </span>
-              <span className="telemetry-meta-item">
-                <Clock size={13} />
-                {selectedMilestone.time}
-              </span>
-              <span className="telemetry-meta-item">
-                <MapPin size={13} />
-                {selectedMilestone.venue}
-              </span>
-            </div>
-          </div>
         </div>
 
-        {/* RIGHT COLUMN: 3D Z-AXIS TUNNEL STAGE */}
-        <div className="timeline-z-stage-column" ref={zStageRef}>
-          <div className="z-axis-depth-viewport">
-            {/* Visual 3D Tunnel Grid Lines */}
-            <div className="z-tunnel-perspective-grid" aria-hidden="true" />
+        {/* Bottom Right: Quick Zoom In / Zoom Out Floating Controls */}
+        <div className="z-hud-zoom-controls">
+          <button
+            type="button"
+            className="zoom-action-btn interactive"
+            onClick={stepZoomIn}
+            disabled={activeIdx === totalCards - 1}
+            title="Zoom In Into Screen (Scroll Down)"
+            aria-label="Zoom in"
+          >
+            <ZoomIn size={18} />
+            <span>ENTER</span>
+          </button>
 
-            {/* 14 3D Z-Depth Milestone Cards */}
-            {milestones.map((milestone, idx) => {
-              const isActive = activeIdx === idx;
-              return (
-                <div
-                  key={milestone.id}
-                  ref={(el) => (cardsRef.current[idx] = el)}
-                  className={`z-milestone-layer ${isActive ? 'is-in-focus' : ''}`}
-                  onClick={() => handleSpokeClick(idx)}
-                >
-                  <article className="voyage-card-inner z-card-content interactive">
-                    {/* Header */}
-                    <div className="card-header-row">
-                      <div className="card-spoke-crest">
-                        <Anchor size={14} className="crest-anchor" />
-                        <span>SPOKE {milestone.spokeNumber}</span>
-                        <strong className="crest-roman">[{milestone.romanNumeral}]</strong>
-                      </div>
-                      <span className="card-z-depth-pill">
-                        Z-CHECKPOINT {idx + 1}/14
-                      </span>
-                    </div>
-
-                    {/* Milestone Placeholder Title */}
-                    <h3 className="card-milestone-title">{milestone.title}</h3>
-
-                    {/* Category & Theme Placeholders */}
-                    <div className="card-theme-tag">
-                      <Compass size={13} />
-                      <span>{milestone.nauticalTheme}</span>
-                    </div>
-
-                    {/* Metadata Grid */}
-                    <div className="card-voyage-meta">
-                      <div className="meta-tile">
-                        <span className="meta-tile-label">
-                          <Calendar size={12} /> DATE
-                        </span>
-                        <strong className="meta-tile-value">{milestone.date}</strong>
-                      </div>
-                      <div className="meta-tile">
-                        <span className="meta-tile-label">
-                          <Clock size={12} /> TIME
-                        </span>
-                        <strong className="meta-tile-value">{milestone.time}</strong>
-                      </div>
-                      <div className="meta-tile meta-tile-full">
-                        <span className="meta-tile-label">
-                          <MapPin size={12} /> LOCATION DECK
-                        </span>
-                        <strong className="meta-tile-value">{milestone.venue}</strong>
-                      </div>
-                    </div>
-
-                    {/* Captain's Logbook Placeholder */}
-                    <div className="card-captains-log">
-                      <div className="log-feather-icon">📜 Captain's Logbook:</div>
-                      <p className="log-text">"{milestone.captainLog}"</p>
-                    </div>
-
-                    {/* Highlights Placeholder */}
-                    <div className="card-highlights-box">
-                      <div className="highlights-header">
-                        <Sparkles size={13} />
-                        <span>Highlights Placeholder:</span>
-                      </div>
-                      <p className="highlights-desc">{milestone.highlights}</p>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="card-footer-row">
-                      <div className="card-bounty-badge">
-                        <Award size={15} />
-                        <span>{milestone.bountyOrPrize}</span>
-                      </div>
-
-                      <button
-                        type="button"
-                        className="card-chart-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSpokeClick(idx);
-                        }}
-                      >
-                        Select Milestone
-                      </button>
-                    </div>
-                  </article>
-                </div>
-              );
-            })}
-          </div>
+          <button
+            type="button"
+            className="zoom-action-btn interactive"
+            onClick={stepZoomOut}
+            disabled={activeIdx === 0}
+            title="Zoom Out Out of Screen (Scroll Up)"
+            aria-label="Zoom out"
+          >
+            <ZoomOut size={18} />
+            <span>EXIT</span>
+          </button>
         </div>
 
+        {/* Bottom Center: Voyage Horizon Status Bar */}
+        <div className="z-hud-bottom-bar">
+          <div className="voyage-status-indicator">
+            <span className="status-chapter-badge">
+              CHECKPOINT {selectedMilestone.spokeNumber} [{selectedMilestone.romanNumeral}]
+            </span>
+            <span className="status-milestone-title">
+              {selectedMilestone.title}
+            </span>
+          </div>
+
+          {/* Checkpoint Dots Bar */}
+          <div className="z-checkpoint-dots" aria-label="Milestone Checkpoints">
+            {milestones.map((m, idx) => (
+              <button
+                key={m.id}
+                type="button"
+                className={`checkpoint-dot interactive ${activeIdx === idx ? 'active' : ''}`}
+                onClick={() => zoomToMilestone(idx)}
+                title={`Zoom to Spoke ${idx + 1}: ${m.romanNumeral}`}
+                aria-label={`Go to checkpoint ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

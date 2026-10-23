@@ -1,6 +1,6 @@
 /* ==========================================================================
    APP & NAVIGATION STYLES
-   Navbar, Oceanic Hero Banner & High-Seas Footer
+   Navbar & 3D Z-Axis Shell with FAQ Chamber Modal
    ========================================================================== */
 
 /* Navbar */
@@ -10,13 +10,9 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 1.2rem 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.nautical-navbar.is-scrolled {
   padding: 0.8rem 1.5rem;
-  background: rgba(3, 11, 20, 0.85);
+  transition: all 0.3s ease;
+  background: rgba(3, 11, 20, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-ocean-subtle);
@@ -35,12 +31,12 @@
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  text-decoration: none;
+  cursor: pointer;
 }
 
 .brand-crest {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   background: linear-gradient(135deg, var(--pirate-gold) 0%, var(--pirate-wood) 100%);
   display: flex;
@@ -58,7 +54,7 @@
 
 .brand-title {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 900;
   color: #ffffff;
   letter-spacing: 0.08em;
@@ -67,7 +63,7 @@
 
 .brand-subtitle {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--sea-cyan);
   letter-spacing: 0.15em;
 }
@@ -75,45 +71,54 @@
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 1.8rem;
+  gap: 1.2rem;
 }
 
-.nav-link {
+.nav-link-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  text-decoration: none;
+  background: none;
+  border: none;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   transition: all 0.2s ease;
-  padding: 0.4rem 0.6rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--radius-sm);
+  cursor: pointer;
 }
 
-.nav-link:hover {
+.nav-link-btn:hover {
   color: var(--sea-cyan);
   background: rgba(34, 211, 238, 0.08);
+}
+
+.nav-link-btn.active {
+  color: #ffffff;
+  background: rgba(34, 211, 238, 0.15);
+  border: 1px solid rgba(34, 211, 238, 0.3);
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .nav-cta-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  text-decoration: none;
+  background: linear-gradient(135deg, var(--pirate-gold) 0%, var(--pirate-bronze) 100%);
+  color: #1a0800;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
-  color: #1a0800;
-  background: linear-gradient(135deg, var(--pirate-gold) 0%, var(--pirate-bronze) 100%);
-  padding: 0.55rem 1.1rem;
+  padding: 0.5rem 1.1rem;
   border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
   box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
   transition: all 0.25s ease;
 }
@@ -136,182 +141,142 @@
   display: none;
 }
 
-/* Hero Section */
-.hero-ocean-section {
-  position: relative;
-  min-height: 85vh;
+/* Main 3D Viewport: Full screen lock without vertical scroll */
+.main-3d-z-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Floating FAQ Trigger */
+.floating-faq-trigger-btn {
+  position: fixed;
+  top: 1rem;
+  right: 11rem;
+  z-index: 102;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(7, 24, 41, 0.9);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0.48rem 1rem;
+  color: var(--pirate-gold-light);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s ease;
+}
+
+.floating-faq-trigger-btn:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: var(--pirate-gold);
+  transform: translateY(-2px);
+}
+
+/* FAQ Chamber Backdrop & Modal */
+.faq-chamber-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 12, 0.88);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  z-index: 150;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 8rem 1.5rem 4rem 1.5rem;
-  background: radial-gradient(circle at 50% 30%, rgba(13, 40, 71, 0.65) 0%, #030b14 75%);
+  padding: 2rem 1.5rem;
+  animation: fadeInBackdrop 0.25s ease;
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.faq-chamber-modal {
+  width: 100%;
+  max-width: 1240px;
+  height: 88vh;
+  background: #040e1b;
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-}
-
-.hero-content {
-  max-width: 860px;
+  animation: zoomModalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  z-index: 2;
 }
 
-.hero-ship-crest {
-  display: inline-flex;
+@keyframes zoomModalIn {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.faq-chamber-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.8rem;
+  background: rgba(7, 24, 41, 0.95);
+  border-bottom: 1px solid var(--border-ocean-subtle);
+  flex-shrink: 0;
+}
+
+.modal-title-wrap {
+  display: flex;
   align-items: center;
   gap: 0.6rem;
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  letter-spacing: 0.25em;
-  color: var(--pirate-gold-glow);
-  background: rgba(245, 158, 11, 0.12);
-  padding: 0.35rem 1.1rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-gold-subtle);
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--pirate-gold-light);
 }
 
-.hero-main-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 6.5vw, 4.8rem);
-  font-weight: 900;
-  color: #ffffff;
-  letter-spacing: 0.04em;
-  line-height: 1.15;
-  margin-bottom: 1.2rem;
-  background: linear-gradient(135deg, #ffffff 30%, var(--pirate-gold-light) 65%, var(--pirate-gold) 90%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.8));
-}
-
-.hero-description {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 680px;
-  margin: 0 auto 2.4rem auto;
-}
-
-.hero-cta-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  flex-wrap: wrap;
-}
-
-.hero-primary-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.85rem 1.8rem;
-  background: linear-gradient(135deg, var(--pirate-gold) 0%, var(--pirate-bronze) 100%);
-  color: #1a0800;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  border-radius: var(--radius-pill);
-  text-decoration: none;
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-  transition: all 0.25s ease;
-}
-
-.hero-primary-btn:hover {
-  transform: translateY(-3px);
-  background: linear-gradient(135deg, #fef08a 0%, var(--pirate-gold) 100%);
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6);
-}
-
-.hero-secondary-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.85rem 1.8rem;
-  background: rgba(13, 40, 71, 0.6);
-  border: 1px solid var(--border-ocean-glow);
-  color: #ffffff;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 600;
-  border-radius: var(--radius-pill);
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-
-.hero-secondary-btn:hover {
-  background: rgba(34, 211, 238, 0.15);
-  border-color: var(--sea-cyan);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
-}
-
-/* Footer */
-.high-seas-footer {
-  border-top: 1px solid var(--border-ocean-subtle);
-  background: #02060b;
-  padding: 3.5rem 1.5rem 2rem 1.5rem;
-  position: relative;
-  z-index: 2;
-}
-
-.footer-container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 3rem;
-  margin-bottom: 2.5rem;
-}
-
-.footer-brand p {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  max-width: 360px;
-  line-height: 1.6;
-  margin-top: 0.8rem;
-}
-
-.footer-col h4 {
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  color: var(--pirate-gold);
-  margin-bottom: 1rem;
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.footer-links a {
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  transition: color 0.2s;
-}
-
-.footer-links a:hover {
+.modal-compass {
   color: var(--sea-cyan);
 }
 
-.footer-bottom {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 1.5rem;
-  display: flex;
-  justify-content: space-between;
+.faq-modal-close-btn {
+  display: inline-flex;
   align-items: center;
-  font-size: 0.76rem;
-  color: var(--text-muted);
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-pill);
   font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-@media (max-width: 768px) {
+.faq-modal-close-btn:hover {
+  background: var(--sea-cyan);
+  color: #02070e;
+  border-color: var(--sea-cyan);
+}
+
+.faq-chamber-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 900px) {
   .desktop-nav {
+    display: none;
+  }
+
+  .floating-faq-trigger-btn {
     display: none;
   }
 
@@ -322,31 +287,28 @@
   .mobile-nav-drawer {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
+    padding: 1.2rem;
     background: rgba(3, 11, 20, 0.95);
     border-bottom: 1px solid var(--border-ocean-subtle);
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   .mobile-nav-link {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    text-decoration: none;
+    background: none;
+    border: none;
     color: var(--text-secondary);
     font-family: var(--font-mono);
-    font-size: 0.95rem;
-    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+    cursor: pointer;
+    text-align: left;
   }
 
-  .footer-container {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    gap: 0.8rem;
-    text-align: center;
+  .faq-chamber-modal {
+    height: 94vh;
+    padding: 0;
   }
 }

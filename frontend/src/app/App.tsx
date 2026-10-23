@@ -1,107 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar } from '../components/navigation/Navbar';
 import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
-import { Compass, HelpCircle, Sparkles } from 'lucide-react';
+import { HelpCircle, X, Compass, Sparkles } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export const App: React.FC = () => {
-  const scrollToSection = (id: string) => {
+  const [faqOpen, setFaqOpen] = useState<boolean>(false);
+
+  const toggleFaq = (open: boolean) => {
     soundEngine.playDroplet();
-    const el = document.querySelector(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    setFaqOpen(open);
   };
 
   return (
     <div className="litfest-app-root">
-      {/* Navigation Header */}
-      <Navbar />
+      {/* Top Navbar */}
+      <Navbar
+        onOpenFaq={() => toggleFaq(true)}
+        onOpenTimeline={() => toggleFaq(false)}
+        isFaqOpen={faqOpen}
+      />
 
-      {/* Hero Section Placeholder (Other team's domain) */}
-      <section className="hero-ocean-section" id="hero">
-        <div className="ocean-ambient-canvas" aria-hidden="true">
-          <div className="ocean-wave-glow glow-1" />
-          <div className="ocean-wave-glow glow-2" />
-        </div>
+      {/* PRIMARY COMPONENT: 3D Z-Axis Zoom-In / Zoom-Out Timeline */}
+      <main className="main-3d-z-viewport">
+        <PirateWheelTimeline />
+      </main>
 
-        <div className="hero-content">
-          <div className="hero-ship-crest">
-            <Compass size={15} className="spin-slow" />
-            <span>[HERO COMPONENT PLACEHOLDER — OTHER TEAM DOMAIN]</span>
-          </div>
+      {/* Floating FAQ Chamber Trigger Button */}
+      {!faqOpen && (
+        <button
+          type="button"
+          className="floating-faq-trigger-btn interactive"
+          onClick={() => toggleFaq(true)}
+          title="Open Festival FAQs"
+          aria-label="Open FAQs"
+        >
+          <HelpCircle size={18} />
+          <span>FESTIVAL FAQS</span>
+        </button>
+      )}
 
-          <h1 className="hero-main-title">
-            LITFEST 2.0<br />
-            <span style={{ fontSize: '0.62em', color: 'var(--pirate-gold)' }}>
-              [High-Seas Literary Odyssey Placeholder]
-            </span>
-          </h1>
-
-          <p className="hero-description">
-            [Placeholder banner for landing screen / hero introduction. Team members working on the landing/hero component can replace this container directly.]
-          </p>
-
-          <div className="hero-cta-group">
-            <button
-              type="button"
-              className="hero-primary-btn interactive"
-              onClick={() => scrollToSection('#timeline')}
-            >
-              <Compass size={18} />
-              <span>Jump to 3D Z-Axis Timeline</span>
-            </button>
-
-            <button
-              type="button"
-              className="hero-secondary-btn interactive"
-              onClick={() => scrollToSection('#faq')}
-            >
-              <HelpCircle size={18} />
-              <span>Jump to FAQs</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ASSIGNED COMPONENT 1: 3D Z-Axis Timeline with 14-Spoke Pirate Ship Wheel */}
-      <PirateWheelTimeline />
-
-      {/* ASSIGNED COMPONENT 2: Official LitFest FAQ Section */}
-      <FaqSection />
-
-      {/* Footer Placeholder (Other team's domain) */}
-      <footer className="high-seas-footer" id="footer">
-        <div className="footer-container">
-          <div className="footer-brand">
-            <div className="brand-text">
-              <span className="brand-title">LITFEST 2.0</span>
-              <span className="brand-subtitle">[FOOTER PLACEHOLDER — OTHER TEAM DOMAIN]</span>
+      {/* FAQ Chamber Modal Overlay (Opens on demand so timeline maintains pure Z-axis scroll) */}
+      {faqOpen && (
+        <div className="faq-chamber-backdrop" onClick={() => toggleFaq(false)}>
+          <div
+            className="faq-chamber-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Frequently Asked Questions"
+          >
+            <div className="faq-chamber-modal-header">
+              <div className="modal-title-wrap">
+                <Compass size={18} className="modal-compass" />
+                <span>CAPTAIN'S DESK • OFFICIAL FESTIVAL FAQS</span>
+              </div>
+              <button
+                type="button"
+                className="faq-modal-close-btn interactive"
+                onClick={() => toggleFaq(false)}
+                title="Return to 3D Timeline"
+                aria-label="Close FAQs"
+              >
+                <X size={20} />
+                <span>RETURN TO HELM</span>
+              </button>
             </div>
-            <p>
-              [Footer component placeholder. Social links, sponsors, and institutional copyright blocks to be integrated by the respective team.]
-            </p>
-          </div>
 
-          <div className="footer-col">
-            <h4>Quick Section Jump</h4>
-            <ul className="footer-links">
-              <li><a href="#hero" onClick={() => scrollToSection('#hero')}>Top / Hero Placeholder</a></li>
-              <li><a href="#timeline" onClick={() => scrollToSection('#timeline')}>3D Z-Axis Timeline</a></li>
-              <li><a href="#faq" onClick={() => scrollToSection('#faq')}>Frequently Asked Questions</a></li>
-            </ul>
+            <div className="faq-chamber-scroll-body">
+              <FaqSection />
+            </div>
           </div>
         </div>
-
-        <div className="footer-bottom">
-          <span>[NIT Raipur Literati 2.0 Website Scaffold]</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Sparkles size={14} style={{ color: 'var(--pirate-gold)' }} />
-            Timeline & FAQ Modules Ready for Integration
-          </span>
-        </div>
-      </footer>
+      )}
     </div>
   );
 };
