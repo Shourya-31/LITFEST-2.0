@@ -19,6 +19,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
   const totalSpokes = 14;
 
   const spokes = Array.from({ length: totalSpokes }, (_, i) => {
+    // Spoke 0 starts at 0 deg (12 o'clock / top)
     const angleDeg = (i * 360) / totalSpokes;
     const milestone = milestones[i] || milestones[0];
     const isActive = activeIdx === i;
@@ -35,65 +36,62 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
       {/* Ambient Seafoam Backlight */}
       <div className="helm-ambient-backlight" />
 
-      {/* Compass Ring */}
-      <div className="helm-outer-compass-ring">
-        <svg viewBox="0 0 500 500" className="compass-ticks-svg">
-          <circle cx="250" cy="250" r="242" fill="none" stroke="rgba(56, 189, 248, 0.2)" strokeWidth="1" strokeDasharray="3 5" />
-          <circle cx="250" cy="250" r="246" fill="none" stroke="rgba(212, 175, 55, 0.35)" strokeWidth="1.5" />
-        </svg>
-      </div>
-
-      {/* The Rotating Ship's Wheel (Rotates by rotationDeg) */}
-      <div
-        className="pirate-helm-wheel"
-        style={{
-          transform: `rotate(${rotationDeg}deg)`
-        }}
+      {/* Main Vector Ship's Wheel SVG with comfortable padding (viewBox -240 to +240) */}
+      <svg
+        viewBox="-240 -240 480 480"
+        className="pirate-helm-svg"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          viewBox="-240 -240 480 480"
-          className="pirate-helm-svg"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <radialGradient id="timberRimGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#451a03" />
-              <stop offset="65%" stopColor="#78350f" />
-              <stop offset="85%" stopColor="#92400e" />
-              <stop offset="100%" stopColor="#290e02" />
-            </radialGradient>
+        <defs>
+          <radialGradient id="timberRimGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#451a03" />
+            <stop offset="65%" stopColor="#78350f" />
+            <stop offset="85%" stopColor="#92400e" />
+            <stop offset="100%" stopColor="#290e02" />
+          </radialGradient>
 
-            <linearGradient id="spokeWoodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#351402" />
-              <stop offset="30%" stopColor="#854d0e" />
-              <stop offset="50%" stopColor="#b45309" />
-              <stop offset="70%" stopColor="#854d0e" />
-              <stop offset="100%" stopColor="#290e02" />
-            </linearGradient>
+          <linearGradient id="spokeWoodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#351402" />
+            <stop offset="30%" stopColor="#854d0e" />
+            <stop offset="50%" stopColor="#b45309" />
+            <stop offset="70%" stopColor="#854d0e" />
+            <stop offset="100%" stopColor="#290e02" />
+          </linearGradient>
 
-            <linearGradient id="brassGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#fef08a" />
-              <stop offset="25%" stopColor="#eab308" />
-              <stop offset="55%" stopColor="#b45309" />
-              <stop offset="80%" stopColor="#d4af37" />
-              <stop offset="100%" stopColor="#78350f" />
-            </linearGradient>
+          <linearGradient id="brassGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="25%" stopColor="#eab308" />
+            <stop offset="55%" stopColor="#b45309" />
+            <stop offset="80%" stopColor="#d4af37" />
+            <stop offset="100%" stopColor="#78350f" />
+          </linearGradient>
 
-            <radialGradient id="sapphireCoreGrad" cx="40%" cy="35%" r="60%">
-              <stop offset="0%" stopColor="#e0f2fe" />
-              <stop offset="25%" stopColor="#38bdf8" />
-              <stop offset="65%" stopColor="#0284c7" />
-              <stop offset="90%" stopColor="#082f49" />
-              <stop offset="100%" stopColor="#031525" />
-            </radialGradient>
+          <radialGradient id="sapphireCoreGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stopColor="#e0f2fe" />
+            <stop offset="25%" stopColor="#38bdf8" />
+            <stop offset="65%" stopColor="#0284c7" />
+            <stop offset="90%" stopColor="#082f49" />
+            <stop offset="100%" stopColor="#031525" />
+          </radialGradient>
 
-            <filter id="cyanGlow" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
+          <filter id="cyanGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
 
-          {/* 1. LAYER: 14 Spoke Shafts & Handles */}
+          <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        {/* Outer Compass Tick Rings (Static reference) */}
+        <circle cx="0" cy="0" r="224" fill="none" stroke="rgba(56, 189, 248, 0.15)" strokeWidth="1" strokeDasharray="3 5" />
+        <circle cx="0" cy="0" r="228" fill="none" stroke="rgba(212, 175, 55, 0.25)" strokeWidth="1.2" />
+
+        {/* ROTATING GROUP: Rotates smoothly by rotationDeg */}
+        <g transform={`rotate(${rotationDeg})`}>
+          {/* 1. 14 Spoke Shafts & Outer Handles */}
           <g className="wheel-spokes-group">
             {spokes.map(({ index, angleDeg, isActive }) => (
               <g
@@ -101,13 +99,14 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                 transform={`rotate(${angleDeg})`}
                 className={`helm-spoke-element ${isActive ? 'is-active-spoke' : ''}`}
                 onClick={() => onSpokeClick(index)}
+                style={{ cursor: 'pointer' }}
               >
-                {/* Spoke shaft */}
+                {/* Spoke Shaft from hub (r=42) to rim (r=152) */}
                 <rect
-                  x="-5"
-                  y="-165"
-                  width="10"
-                  height="120"
+                  x="-4.5"
+                  y="-152"
+                  width="9"
+                  height="110"
                   fill="url(#spokeWoodGrad)"
                   stroke="#1c0a00"
                   strokeWidth="0.8"
@@ -115,166 +114,191 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
                 />
 
                 {/* Brass ferrule sleeve near hub */}
-                <rect x="-6" y="-58" width="12" height="7" fill="url(#brassGoldGrad)" rx="1" />
+                <rect x="-5.5" y="-55" width="11" height="6.5" fill="url(#brassGoldGrad)" rx="1" />
 
-                {/* Turned ornamental baluster ring */}
-                <ellipse cx="0" cy="-86" rx="6.5" ry="3.5" fill="url(#brassGoldGrad)" />
+                {/* Turned baluster ring on spoke */}
+                <ellipse cx="0" cy="-80" rx="6" ry="3" fill="url(#brassGoldGrad)" />
 
-                {/* Outer Handle extending beyond Outer Rim */}
+                {/* Outer Ergonomic Handle extending beyond Outer Rim (r=152 to r=206) */}
                 <path
-                  d="M -4 -165 
-                     L -3.5 -180 
-                     Q -7 -196 -5 -206
-                     Q 0 -214 5 -206
-                     Q 7 -196 3.5 -180
-                     L 4 -165 Z"
+                  d="M -3.8 -152 
+                     L -3.2 -166 
+                     Q -6.5 -182 -4.5 -194
+                     Q 0 -201 4.5 -194
+                     Q 6.5 -182 3.2 -166
+                     L 3.8 -152 Z"
                   fill="url(#spokeWoodGrad)"
                   stroke="#290e02"
                   strokeWidth="0.8"
                 />
 
-                <ellipse cx="0" cy="-182" rx="5.5" ry="2.5" fill="url(#brassGoldGrad)" />
-                <circle cx="0" cy="-213" r="5.5" fill="url(#brassGoldGrad)" stroke="#451a03" strokeWidth="0.8" />
-                <circle cx="0" cy="-213" r="2.5" fill="#fef08a" opacity="0.85" />
+                {/* Handle pommel brass ring */}
+                <ellipse cx="0" cy="-168" rx="5" ry="2.2" fill="url(#brassGoldGrad)" />
+
+                {/* Handle brass crown knob (well within boundary at r=200) */}
+                <circle cx="0" cy="-198" r="5" fill="url(#brassGoldGrad)" stroke="#451a03" strokeWidth="0.8" />
+                <circle cx="0" cy="-198" r="2.2" fill="#fef08a" opacity="0.85" />
               </g>
             ))}
           </g>
 
-          {/* 2. LAYER: Heavy Timber Felloe / Double Ring Rim */}
+          {/* 2. Heavy Timber Felloe / Double Ring Rim (r=98 to r=154) */}
           <g className="wheel-felloe-rim">
             <path
-              d="M 0 -166 
-                 A 166 166 0 1 1 0 166 
-                 A 166 166 0 1 1 0 -166 
-                 M 0 -106 
-                 A 106 106 0 1 0 0 106 
-                 A 106 106 0 1 0 0 -106 Z"
+              d="M 0 -154 
+                 A 154 154 0 1 1 0 154 
+                 A 154 154 0 1 1 0 -154 
+                 M 0 -98 
+                 A 98 98 0 1 0 0 98 
+                 A 98 98 0 1 0 0 -98 Z"
               fill="url(#timberRimGrad)"
               stroke="#1c0a00"
-              strokeWidth="2.5"
+              strokeWidth="2.2"
               fillRule="evenodd"
             />
 
-            <circle cx="0" cy="0" r="166" fill="none" stroke="url(#brassGoldGrad)" strokeWidth="3" />
-            <circle cx="0" cy="0" r="162" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="1" />
-            <circle cx="0" cy="0" r="106" fill="none" stroke="url(#brassGoldGrad)" strokeWidth="3" />
-            <circle cx="0" cy="0" r="110" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="1" />
+            {/* Outer and Inner Brass Bands */}
+            <circle cx="0" cy="0" r="154" fill="none" stroke="url(#brassGoldGrad)" strokeWidth="2.8" />
+            <circle cx="0" cy="0" r="150" fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="1" />
+            <circle cx="0" cy="0" r="98" fill="none" stroke="url(#brassGoldGrad)" strokeWidth="2.8" />
+            <circle cx="0" cy="0" r="102" fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="1" />
 
-            {/* 14 Brass Felloe Joint Straps */}
+            {/* Brass joint straps */}
             {spokes.map(({ index, angleDeg }) => (
-              <g key={`felloe-joint-${index}`} transform={`rotate(${angleDeg + (360 / 28)})`}>
-                <line x1="0" y1="-106" x2="0" y2="-166" stroke="#1f0a01" strokeWidth="1.5" />
-                <circle cx="0" cy="-155" r="2.8" fill="url(#brassGoldGrad)" stroke="#3f1c04" strokeWidth="0.6" />
-                <circle cx="-0.8" cy="-155.8" r="0.9" fill="#fff" opacity="0.75" />
-                <circle cx="0" cy="-117" r="2.8" fill="url(#brassGoldGrad)" stroke="#3f1c04" strokeWidth="0.6" />
-                <circle cx="-0.8" cy="-117.8" r="0.9" fill="#fff" opacity="0.75" />
+              <g key={`joint-${index}`} transform={`rotate(${angleDeg + (360 / 28)})`}>
+                <line x1="0" y1="-98" x2="0" y2="-154" stroke="#1f0a01" strokeWidth="1.2" />
+                <circle cx="0" cy="-144" r="2.4" fill="url(#brassGoldGrad)" stroke="#3f1c04" strokeWidth="0.5" />
+                <circle cx="0" cy="-108" r="2.4" fill="url(#brassGoldGrad)" stroke="#3f1c04" strokeWidth="0.5" />
               </g>
             ))}
 
+            {/* Wave rope inlay */}
             <circle
               cx="0"
               cy="0"
-              r="136"
+              r="126"
               fill="none"
-              stroke="rgba(212, 175, 55, 0.45)"
-              strokeWidth="1.5"
-              strokeDasharray="4 6"
+              stroke="rgba(212, 175, 55, 0.35)"
+              strokeWidth="1.2"
+              strokeDasharray="3 5"
             />
           </g>
 
-          {/* 3. LAYER: Center Brass Hub */}
+          {/* 3. 14 SPOKE BADGES & UPRIGHT NUMERALS (Vector SVG elements)
+              Positioned at radius r=126 along the rim.
+              The text group is counter-rotated by -(angleDeg + rotationDeg)
+              so EVERY numeral is ALWAYS 100% STRICTLY UPRIGHT at all times! */}
+          <g className="wheel-spoke-badges-layer">
+            {spokes.map(({ index, angleDeg, milestone, isActive }) => {
+              return (
+                <g
+                  key={`spoke-badge-${index}`}
+                  transform={`rotate(${angleDeg}) translate(0, -126)`}
+                  onClick={() => onSpokeClick(index)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {/* Active Spoke Glow Aura */}
+                  {isActive && (
+                    <circle
+                      cx="0"
+                      cy="0"
+                      r="19"
+                      fill="none"
+                      stroke="#22d3ee"
+                      strokeWidth="2.5"
+                      filter="url(#cyanGlow)"
+                      className="active-pulse-aura"
+                    />
+                  )}
+
+                  {/* Badge Circle Coin */}
+                  <circle
+                    cx="0"
+                    cy="0"
+                    r="15"
+                    fill={isActive ? '#0284c7' : '#5c2406'}
+                    stroke={isActive ? '#22d3ee' : '#d4af37'}
+                    strokeWidth={isActive ? '2' : '1.2'}
+                  />
+
+                  {/* Counter-Rotate Text: -angleDeg cancels spoke angle, -rotationDeg cancels wheel angle!
+                      Result: Net world rotation = 0 deg (Strictly Upright) */}
+                  <g transform={`rotate(${-angleDeg - rotationDeg})`}>
+                    <text
+                      x="0"
+                      y="-1"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill={isActive ? '#ffffff' : '#fef08a'}
+                      fontFamily="var(--font-serif)"
+                      fontSize="9.5"
+                      fontWeight="800"
+                      letterSpacing="-0.02em"
+                    >
+                      {milestone.romanNumeral}
+                    </text>
+                    <text
+                      x="0"
+                      y="7.5"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill={isActive ? '#e0f2fe' : 'rgba(254, 240, 138, 0.75)'}
+                      fontFamily="var(--font-mono)"
+                      fontSize="5.5"
+                      fontWeight="600"
+                    >
+                      {index + 1}
+                    </text>
+                  </g>
+                </g>
+              );
+            })}
+          </g>
+
+          {/* 4. Center Brass Hub (r=44) */}
           <g className="wheel-center-hub" onClick={onCenterClick} style={{ cursor: 'pointer' }}>
-            <circle cx="0" cy="0" r="50" fill="url(#brassGoldGrad)" stroke="#260f02" strokeWidth="2.5" />
-            <circle cx="0" cy="0" r="46" fill="#451a03" stroke="#d4af37" strokeWidth="1" />
+            <circle cx="0" cy="0" r="46" fill="url(#brassGoldGrad)" stroke="#260f02" strokeWidth="2.2" />
+            <circle cx="0" cy="0" r="42" fill="#451a03" stroke="#d4af37" strokeWidth="1" />
 
             {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, bIdx) => (
-              <g key={`hub-bolt-${bIdx}`} transform={`rotate(${deg})`}>
-                <circle cx="0" cy="-40" r="2.4" fill="url(#brassGoldGrad)" stroke="#1a0700" strokeWidth="0.5" />
+              <g key={`bolt-${bIdx}`} transform={`rotate(${deg})`}>
+                <circle cx="0" cy="-36" r="2.2" fill="url(#brassGoldGrad)" stroke="#1a0700" strokeWidth="0.5" />
               </g>
             ))}
 
             <g className="hub-compass-rose">
-              <polygon points="0,-36 4,-12 0,-8 -4,-12" fill="#fef08a" />
-              <polygon points="0,-36 0,-8 -4,-12" fill="#ca8a04" />
-              <polygon points="0,36 4,12 0,8 -4,12" fill="#fef08a" />
-              <polygon points="0,36 0,8 4,12" fill="#ca8a04" />
-              <polygon points="36,0 12,4 8,0 12,-4" fill="#fef08a" />
-              <polygon points="36,0 8,0 12,4" fill="#ca8a04" />
-              <polygon points="-36,0 -12,4 -8,0 -12,-4" fill="#fef08a" />
-              <polygon points="-36,0 -8,0 -12,-4" fill="#ca8a04" />
-              <polygon points="22,-22 9,-5 6,-6 5,-9" fill="#d4af37" />
-              <polygon points="-22,-22 -9,-5 -6,-6 -5,-9" fill="#d4af37" />
-              <polygon points="22,22 9,5 6,6 5,9" fill="#d4af37" />
-              <polygon points="-22,22 -9,5 -6,6 -5,9" fill="#d4af37" />
+              <polygon points="0,-32 3.5,-10 0,-7 -3.5,-10" fill="#fef08a" />
+              <polygon points="0,-32 0,-7 -3.5,-10" fill="#ca8a04" />
+              <polygon points="0,32 3.5,10 0,7 -3.5,10" fill="#fef08a" />
+              <polygon points="0,32 0,7 3.5,10" fill="#ca8a04" />
+              <polygon points="32,0 10,3.5 7,0 10,-3.5" fill="#fef08a" />
+              <polygon points="32,0 7,0 10,3.5" fill="#ca8a04" />
+              <polygon points="-32,0 -10,3.5 -7,0 -10,-3.5" fill="#fef08a" />
+              <polygon points="-32,0 -7,0 -10,-3.5" fill="#ca8a04" />
             </g>
 
             <circle
               cx="0"
               cy="0"
-              r="18"
+              r="16"
               fill="url(#sapphireCoreGrad)"
               stroke="#22d3ee"
               strokeWidth="2"
-              className="sapphire-core-pulsar"
             />
-            <ellipse cx="-4" cy="-5" rx="5" ry="3" fill="#ffffff" opacity="0.65" />
-            <circle cx="0" cy="0" r="5" fill="#38bdf8" filter="url(#cyanGlow)" />
+            <ellipse cx="-3.5" cy="-4" rx="4" ry="2.5" fill="#ffffff" opacity="0.65" />
           </g>
-        </svg>
+        </g>
 
-        {/* 4. LAYER: 14 HTML Spoke Badges
-            Positioned along the wheel rim at radius r=136.
-            Each inner .spoke-upright-content is counter-rotated by -rotationDeg
-            so all Roman numerals and text stay STRICTLY UPRIGHT without tilting! */}
-        <div className="helm-nodes-overlay">
-          {spokes.map(({ index, angleDeg, milestone, isActive }) => {
-            const rad = ((angleDeg - 90) * Math.PI) / 180;
-            const rDist = 136;
-            const x = Math.round(Math.cos(rad) * rDist);
-            const y = Math.round(Math.sin(rad) * rDist);
-
-            return (
-              <button
-                key={`badge-${index}`}
-                type="button"
-                className={`helm-spoke-node interactive ${isActive ? 'active' : ''}`}
-                style={{
-                  transform: `translate3d(${x}px, ${y}px, 0)`
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSpokeClick(index);
-                }}
-                title={`Spoke ${index + 1}: ${milestone.romanNumeral} — ${milestone.title}`}
-                aria-label={`Select Spoke ${index + 1}: ${milestone.title}`}
-              >
-                {/* Counter-rotate inner content by exactly -rotationDeg to maintain upright position */}
-                <div
-                  className="spoke-upright-content"
-                  style={{
-                    transform: `rotate(${-rotationDeg}deg)`
-                  }}
-                >
-                  <span className="node-roman-num">{milestone.romanNumeral}</span>
-                  <span className="node-spoke-idx">{index + 1}</span>
-                </div>
-
-                {isActive && <span className="active-pulse-aura" />}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Decorative Binnacle Stand */}
-      <div className="helm-binnacle-stand">
-        <div className="binnacle-gold-rim" />
-        <div className="binnacle-compass-label">
-          <span>PORT ◄</span>
-          <span className="binnacle-heading-deg">3D VOYAGE HELM</span>
-          <span>► STARBOARD</span>
-        </div>
-      </div>
+        {/* FIXED 12 O'CLOCK ACTIVE SPOKE POINTER (Always marks the top selected spoke position) */}
+        <g className="fixed-active-spoke-pointer">
+          {/* Golden pointer needle pointing down at the top active spoke */}
+          <polygon points="0,-146 -7,-159 7,-159" fill="#f59e0b" filter="url(#goldGlow)" />
+          <polygon points="0,-146 0,-159 7,-159" fill="#d97706" />
+          <circle cx="0,-163" r="3.5" fill="#fef08a" stroke="#78350f" strokeWidth="1" />
+        </g>
+      </svg>
     </div>
   );
 };
+
+PirateWheelSvg.displayName = 'PirateWheelSvg';

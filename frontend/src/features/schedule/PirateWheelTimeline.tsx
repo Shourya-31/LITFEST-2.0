@@ -13,9 +13,7 @@ import {
   Award,
   Layers,
   ZoomIn,
-  ZoomOut,
-  HelpCircle,
-  RotateCcw
+  ZoomOut
 } from 'lucide-react';
 import { PIRATE_WHEEL_MILESTONES } from './timelineData';
 import { PirateWheelSvg } from './PirateWheelSvg';
@@ -41,7 +39,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   // Z-spacing between milestone checkpoints in 3D world space
   const SPACING_Z = 1200;
   const totalCards = milestones.length;
-  // Maximum camera Z depth covers all 14 milestones
   const maxCameraZ = (totalCards - 1) * SPACING_Z;
 
   // Target and current camera positions for smooth interpolation (lerp)
@@ -52,7 +49,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
   const selectedMilestone = milestones[activeIdx] || milestones[0];
 
-  // Smooth 60fps render loop for 3D Z-axis camera movement
+  // Smooth 60fps render loop for 3D Z-axis camera movement & wheel rotation
   useEffect(() => {
     const cameraEl = cameraRef.current;
     if (!cameraEl) return;
@@ -68,11 +65,13 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
       const zVal = currentZRef.current;
 
-      // Apply 3D translate along Z-axis: As zVal increases, camera moves forward into the screen!
+      // Move camera forward into the screen (+Z)
       cameraEl.style.transform = `translate3d(0, 0, ${zVal}px)`;
 
-      // Calculate corresponding milestone index
-      const approxIdx = Math.max(0, Math.min(Math.round(zVal / SPACING_Z), totalCards - 1));
+      // Continuous milestone index (float)
+      const continuousIdx = zVal / SPACING_Z;
+      const approxIdx = Math.max(0, Math.min(Math.round(continuousIdx), totalCards - 1));
+
       if (approxIdx !== prevActiveIdxRef.current) {
         prevActiveIdxRef.current = approxIdx;
         setActiveIdx(approxIdx);
@@ -80,14 +79,17 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         soundEngine.playSeaBell(approxIdx);
       }
 
-      // Calculate proportional wheel rotation
-      const calcRotation = (zVal / Math.max(maxCameraZ, 1)) * 360;
-      setRotationDeg(calcRotation);
+      // To keep the selected spoke at the SAME SINGLE PLACE (12 o'clock top pointer),
+      // the wheel rotates counter-clockwise by -continuousIdx * (360 / 14).
+      // Whichever spoke is active is always brought to the 12 o'clock top position!
+      const targetWheelRotation = -continuousIdx * (360 / totalSpokes);
+      setRotationDeg(targetWheelRotation);
       setCurrentZ(Math.round(zVal));
 
       animFrameRef.current = requestAnimationFrame(renderLoop);
     };
 
+    const totalSpokes = 14;
     animFrameRef.current = requestAnimationFrame(renderLoop);
 
     return () => {
@@ -100,16 +102,12 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
 
   // Handle Wheel Scroll: Scrolling down ZOOMS IN (enters inside screen), scrolling up ZOOMS OUT
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    // Prevent default page scroll to ensure pure Z-axis zoom
     e.stopPropagation();
-
-    // Positive deltaY (scroll down) moves camera forward into the screen (+Z)
-    // Negative deltaY (scroll up) moves camera backward (-Z)
     const zoomDelta = e.deltaY * 1.6;
     targetZRef.current = Math.max(0, Math.min(targetZRef.current + zoomDelta, maxCameraZ));
   }, [maxCameraZ]);
 
-  // Handle Touch gestures for mobile: Swipe up zooms forward into screen
+  // Touch navigation for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartYRef.current = e.touches[0].clientY;
   };
@@ -121,7 +119,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     targetZRef.current = Math.max(0, Math.min(targetZRef.current + deltaY, maxCameraZ));
   };
 
-  // Keyboard navigation: ArrowDown/PageDown zooms in, ArrowUp/PageUp zooms out
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
@@ -148,7 +146,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     }
   }, [milestones, onMilestoneSelect]);
 
-  // Step Controls (Port = Zoom Out / Starboard = Zoom In)
   const stepZoomOut = () => {
     const targetIdx = Math.max(0, activeIdx - 1);
     zoomToMilestone(targetIdx);
@@ -159,12 +156,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
     zoomToMilestone(targetIdx);
   };
 
-  const resetToStart = () => {
-    targetZRef.current = 0;
-    soundEngine.playSeaBell(0);
-  };
-
-  // Toggle Mute
   const toggleSound = () => {
     const newMuted = soundEngine.toggleMute();
     setIsMuted(newMuted);
@@ -183,9 +174,8 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       onTouchMove={handleTouchMove}
       aria-label="LitFest 2.0 3D Z-Axis Zoom Timeline"
     >
-      {/* Background 3D Oceanic Starfield / Water Tunnel */}
+      {/* 3D Oceanic Starfield / Water Tunnel */}
       <div className="z-ocean-starfield" aria-hidden="true">
-        {/* Floating depth rings expanding outward into screen */}
         <div className="z-tunnel-ring ring-1" style={{ transform: `translateZ(${-(currentZ * 0.4) % 1800}px)` }} />
         <div className="z-tunnel-ring ring-2" style={{ transform: `translateZ(${-(currentZ * 0.7) % 2400}px)` }} />
         <div className="z-tunnel-ring ring-3" style={{ transform: `translateZ(${-(currentZ * 1.0) % 3000}px)` }} />
@@ -196,24 +186,18 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         {/* CAMERA RIG: Translates along Z-axis */}
         <div ref={cameraRef} className="z-world-camera">
           {milestones.map((milestone, idx) => {
-            // Milestone world position in Z
             const milestoneWorldZ = -idx * SPACING_Z;
-            // Distance relative to camera
             const relDist = milestoneWorldZ + currentZ;
 
-            // Visibility culling: hide cards too far ahead or behind to optimize rendering
             const isVisible = relDist > -3600 && relDist < 900;
             if (!isVisible) return null;
 
-            // Calculate card opacity and blur based on distance to camera plane (relDist = 0 is focus)
             let opacity = 1;
             let blurPx = 0;
             if (relDist < 0) {
-              // Approaching from distance: fades in from 0 to 1
               opacity = Math.max(0, Math.min(1, 1 - Math.abs(relDist) / 2200));
               blurPx = Math.min(6, Math.abs(relDist) / 400);
             } else {
-              // Zooming past camera: fades out from 1 to 0
               opacity = Math.max(0, Math.min(1, 1 - relDist / 500));
               blurPx = Math.min(8, relDist / 80);
             }
@@ -233,7 +217,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                 onClick={() => zoomToMilestone(idx)}
               >
                 <article className="voyage-card-inner z-checkpoint-card interactive">
-                  {/* Card Header */}
                   <div className="card-header-row">
                     <div className="card-spoke-crest">
                       <Anchor size={14} className="crest-anchor" />
@@ -245,7 +228,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                     </span>
                   </div>
 
-                  {/* Title & Theme Placeholders */}
                   <h3 className="card-milestone-title">{milestone.title}</h3>
 
                   <div className="card-theme-tag">
@@ -253,7 +235,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                     <span>{milestone.nauticalTheme}</span>
                   </div>
 
-                  {/* Meta Grid */}
                   <div className="card-voyage-meta">
                     <div className="meta-tile">
                       <span className="meta-tile-label">
@@ -275,13 +256,11 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                     </div>
                   </div>
 
-                  {/* Captain's Log Placeholder */}
                   <div className="card-captains-log">
                     <div className="log-feather-icon">📜 Captain's Logbook Placeholder:</div>
                     <p className="log-text">"{milestone.captainLog}"</p>
                   </div>
 
-                  {/* Highlights Placeholder */}
                   <div className="card-highlights-box">
                     <div className="highlights-header">
                       <Sparkles size={13} />
@@ -290,7 +269,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                     <p className="highlights-desc">{milestone.highlights}</p>
                   </div>
 
-                  {/* Footer */}
                   <div className="card-footer-row">
                     <div className="card-bounty-badge">
                       <Award size={15} />
@@ -305,7 +283,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                         zoomToMilestone(idx);
                       }}
                     >
-                      Lock Checkpoint
+                      Select Checkpoint
                     </button>
                   </div>
                 </article>
@@ -315,11 +293,9 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         </div>
       </div>
 
-      {/* ==========================================================================
-          HEADS-UP DISPLAY (HUD): HELM, CONTROLS & DEPTH TELEMETRY
-          ========================================================================== */}
+      {/* HEADS-UP DISPLAY (HUD) */}
       <div className="z-axis-hud-overlay">
-        {/* Top Floating HUD Bar */}
+        {/* Top Floating HUD Bar (Reset & Jump to FAQ removed as requested) */}
         <div className="z-hud-top-bar">
           <div className="z-depth-gauge">
             <Layers size={15} className="depth-icon" />
@@ -335,34 +311,14 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
               ▼ SCROLL DOWN TO ENTER INSIDE SCREEN • SCROLL UP TO ZOOM OUT ▲
             </span>
           </div>
-
-          <div className="z-hud-quick-links">
-            <button
-              type="button"
-              className="z-hud-btn interactive"
-              onClick={resetToStart}
-              title="Reset to Surface (Milestone 1)"
-            >
-              <RotateCcw size={14} />
-              <span>Reset</span>
-            </button>
-
-            <a
-              href="#faq"
-              className="z-hud-btn z-hud-btn-faq interactive"
-              onClick={() => soundEngine.playDroplet()}
-            >
-              <HelpCircle size={14} />
-              <span>Jump to FAQs</span>
-            </a>
-          </div>
         </div>
 
-        {/* Bottom Left: The 14-Spoke Pirate Ship Steering Wheel */}
+        {/* Bottom Left: The 14-Spoke Pirate Ship Steering Wheel
+            Selected spoke remains at the exact same 12 o'clock top pointer position at all times! */}
         <div className="z-hud-helm-dock">
           <div className="helm-dock-header">
             <span className="dock-title">PIRATE SHIP HELM</span>
-            <span className="dock-sub">{Math.round((rotationDeg % 360 + 360) % 360)}° ROTATION</span>
+            <span className="dock-sub">SPOKE {activeIdx + 1} AT TOP</span>
           </div>
 
           <div className="helm-dock-wheel-wrap">
@@ -413,7 +369,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
           </div>
         </div>
 
-        {/* Bottom Right: Quick Zoom In / Zoom Out Floating Controls */}
+        {/* Bottom Right: Floating Zoom In / Zoom Out Controls */}
         <div className="z-hud-zoom-controls">
           <button
             type="button"
@@ -451,7 +407,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
             </span>
           </div>
 
-          {/* Checkpoint Dots Bar */}
           <div className="z-checkpoint-dots" aria-label="Milestone Checkpoints">
             {milestones.map((m, idx) => (
               <button

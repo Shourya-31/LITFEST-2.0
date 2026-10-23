@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, Anchor, HelpCircle, Menu, X } from 'lucide-react';
+import { Compass, HelpCircle, Menu, X } from 'lucide-react';
 import { soundEngine } from '../../utils/soundEngine';
 
 interface NavbarProps {
@@ -30,14 +30,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="nautical-navbar is-scrolled">
       <div className="navbar-container">
-        {/* Brand */}
+        {/* Brand: Clean Typography (No fest logo for now as requested) */}
         <div className="nav-brand interactive" onClick={handleTimelineClick}>
-          <div className="brand-crest">
-            <Anchor size={20} className="brand-anchor" />
-          </div>
           <div className="brand-text">
             <span className="brand-title">LITFEST 2.0</span>
-            <span className="brand-subtitle">[NAVBAR PLACEHOLDER]</span>
+            <span className="brand-subtitle">[OFFICIAL FESTIVAL PORTAL]</span>
           </div>
         </div>
 
@@ -69,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="nav-cta-btn interactive"
             onClick={isFaqOpen ? handleTimelineClick : handleFaqClick}
           >
-            <span>{isFaqOpen ? 'Back to 3D Helm' : 'Open FAQs'}</span>
+            <span>{isFaqOpen ? 'Back to 3D Helm' : 'Festival FAQs'}</span>
           </button>
 
           <button
