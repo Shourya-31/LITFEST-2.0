@@ -525,7 +525,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
         {/* BOTTOM LEFT: Floating Ship Helm */}
         <div className={`z-hud-helm-dock ${isSteering ? 'is-steering' : ''}`}>
           <div className="helm-dock-header">
-            <span>HELM • LITFEST ODYSSEY</span>
+            <span>LITFEST</span>
             <span className="dock-sub">EVENT #{activeIdx + 1} OF 14</span>
           </div>
 
@@ -590,14 +590,8 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
           </div>
         </div>
 
-        {/* BOTTOM CENTER: Minimal Event Progress Bar */}
+        {/* BOTTOM CENTER: Minimal Loading Bar (No text) */}
         <div className="z-minimal-progress-dock" aria-label="Event Timeline Progress">
-          <div className="minimal-progress-meta">
-            <span className="meta-event-badge">EVENT {selectedMilestone.romanNumeral}</span>
-            <span className="meta-event-title">{selectedMilestone.title}</span>
-            <span className="meta-event-pct">{Math.round((activeIdx / (totalCards - 1)) * 100)}%</span>
-          </div>
-
           <div
             className="minimal-progress-track interactive"
             onClick={handleProgressBarClick}
