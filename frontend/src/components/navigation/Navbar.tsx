@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Compass, HelpCircle, Sparkles, Menu, X, Waves } from 'lucide-react';
 import { soundEngine } from '../../utils/soundEngine';
 
 interface NavbarProps {
@@ -78,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="brand-secondary">NIT RAIPUR</span>
         </a>
 
-        {/* Center Navigation Links */}
+        {/* Center Navigation Links (Pure Floating Text) */}
         <nav className="desktop-nav nav-links-menu" aria-label="Main Navigation">
           <button
             type="button"
@@ -86,7 +85,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleHomeClick}
             id="nav-link-home"
           >
-            <Waves size={14} className="nav-icon" />
             <span>Home</span>
           </button>
 
@@ -96,7 +94,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleTimelineClick}
             id="nav-link-timeline"
           >
-            <Compass size={14} className="nav-icon" />
             <span>Timeline</span>
           </button>
 
@@ -106,7 +103,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleFaqClick}
             id="nav-link-faqs"
           >
-            <HelpCircle size={14} className="nav-icon" />
             <span>Festival FAQs</span>
           </button>
 
@@ -116,7 +112,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleArenasClick}
             id="nav-link-events"
           >
-            <Sparkles size={14} className="nav-icon" />
             <span>Events</span>
           </button>
         </nav>
@@ -155,7 +150,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="mobile-nav-link"
             onClick={handleHomeClick}
           >
-            <Waves size={18} />
             <span>Home</span>
           </button>
 
@@ -164,7 +158,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="mobile-nav-link"
             onClick={handleTimelineClick}
           >
-            <Compass size={18} />
             <span>Timeline</span>
           </button>
 
@@ -173,7 +166,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="mobile-nav-link"
             onClick={handleFaqClick}
           >
-            <HelpCircle size={18} />
             <span>Festival FAQs</span>
           </button>
 
@@ -182,7 +174,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="mobile-nav-link"
             onClick={handleArenasClick}
           >
-            <Sparkles size={18} />
             <span>Events</span>
           </button>
 
