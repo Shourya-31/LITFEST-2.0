@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Underwater 4-Layer Cinematic Scene + Props + Click Bubbles</title>
+  <link rel="stylesheet" href="./Underwater.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #031326;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="underwater-scene" aria-hidden="true">
+    <!-- Layer 1: Deep Water (With illuminated lower depths) -->
+    <div class="underwater-layer-deep-water"></div>
+
+    <!-- Layer 2: Light Rays -->
+    <div class="underwater-layer-light-rays">
+      <div class="underwater-ray underwater-ray-1"></div>
+      <div class="underwater-ray underwater-ray-2"></div>
+      <div class="underwater-ray underwater-ray-3"></div>
+      <div class="underwater-ray underwater-ray-4"></div>
+      <div class="underwater-ray underwater-ray-5"></div>
+      <div class="underwater-ray underwater-ray-6"></div>
+    </div>
+
+    <!-- Layer 3: Water Haze -->
+    <div class="underwater-layer-water-haze">
+      <div class="underwater-haze-gradient"></div>
+      <div class="underwater-haze-cloud underwater-haze-cloud-1"></div>
+      <div class="underwater-haze-cloud underwater-haze-cloud-2"></div>
+      <div class="underwater-haze-cloud underwater-haze-cloud-3"></div>
+    </div>
+
+    <!-- Layer 4: Particles -->
+    <canvas id="underwaterCanvas" class="underwater-layer-particles"></canvas>
+
+    <!-- Underwater Props (Corals along seabed & swimming turtle) -->
+    <div class="underwater-props-layer">
+      <!-- Corals -->
+      <div class="underwater-corals-container">
+        <div class="coral-prop coral-prop-left">
+          <img src="../../assets/media/coral1.png" alt="" class="coral-img coral-img-primary" />
+        </div>
+        <div class="coral-prop coral-prop-left-deep">
+          <img src="../../assets/media/coral1.png" alt="" class="coral-img coral-img-deep" />
+        </div>
+        <div class="coral-prop coral-prop-right">
+          <img src="../../assets/media/coral1.png" alt="" class="coral-img coral-img-right" />
+        </div>
+      </div>
+
+      <!-- Bioluminescent Jellyfish -->
+      <div class="jellyfish-prop-track">
+        <div class="jellyfish-prop">
+          <img src="../../assets/media/jellyfish.png" alt="" class="jellyfish-img" />
+        </div>
+      </div>
+
+      <!-- Swimming Sea Turtle -->
+      <div class="turtle-prop-track">
+        <div class="turtle-prop">
+          <img src="../../assets/media/turtle.png" alt="" class="turtle-img" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Click Bubble Overlay Canvas -->
+    <canvas id="bubbleCanvas" class="underwater-layer-bubbles"></canvas>
+  </div>
+
+  <script>
+    // Layer 4 Particles Canvas
+    (function initParticles() {
+      const canvas = document.getElementById('underwaterCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      const count = 45;
+      const particles = [];
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function createParticle(initY) {
+        const radius = 0.8 + Math.random() * 1.8;
+        const baseAlpha = 0.2 + Math.random() * 0.55;
+        return {
+          x: Math.random() * (width || window.innerWidth),
+          y: initY !== undefined ? initY : Math.random() * (height || window.innerHeight),
+          radius: radius,
+          alpha: baseAlpha,
+          baseAlpha: baseAlpha,
+          glowRadius: radius * (2.5 + Math.random() * 2),
+          vx: (Math.random() - 0.5) * 0.18,
+          vy: -(0.15 + Math.random() * 0.35),
+          phase: Math.random() * Math.PI * 2,
+          phaseSpeed: 0.015 + Math.random() * 0.02
+        };
+      }
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+
+        if (particles.length === 0) {
+          for (let i = 0; i < count; i++) {
+            particles.push(createParticle());
+          }
+        }
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      let isDocumentVisible = !document.hidden;
+      document.addEventListener('visibilitychange', () => {
+        isDocumentVisible = !document.hidden;
+      });
+
+      function render() {
+        if (!isDocumentVisible) {
+          requestAnimationFrame(render);
+          return;
+        }
+
+        ctx.clearRect(0, 0, width, height);
+        const motionFactor = prefersReducedMotion ? 0.2 : 1;
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.phase += p.phaseSpeed * motionFactor;
+          p.x += (p.vx + Math.sin(p.phase) * 0.22) * motionFactor;
+          p.y += p.vy * motionFactor;
+          p.alpha = p.baseAlpha * (0.75 + Math.sin(p.phase) * 0.25);
+
+          if (p.y < -10) {
+            p.y = height + 10;
+            p.x = Math.random() * width;
+          } else if (p.y > height + 10) {
+            p.y = -10;
+          }
+          if (p.x < -10) p.x = width + 10;
+          else if (p.x > width + 10) p.x = -10;
+
+          const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glowRadius);
+          gradient.addColorStop(0, `rgba(180, 240, 255, ${p.alpha * 0.95})`);
+          gradient.addColorStop(0.35, `rgba(100, 210, 255, ${p.alpha * 0.55})`);
+          gradient.addColorStop(1, 'rgba(40, 150, 255, 0)');
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.glowRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = `rgba(235, 250, 255, ${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
+    })();
+
+    // Click Bubble Overlay Canvas
+    (function initBubbles() {
+      const canvas = document.getElementById('bubbleCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      const bubbles = [];
+      const maxBubbles = 80;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      function spawnBurst(originX, originY) {
+        const count = 6 + Math.floor(Math.random() * 7);
+        for (let i = 0; i < count; i++) {
+          if (bubbles.length >= maxBubbles) bubbles.shift();
+
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 0.8 + Math.random() * 2.6;
+          const targetRadius = 3 + Math.random() * 8.5;
+
+          bubbles.push({
+            x: originX + (Math.random() - 0.5) * 12,
+            y: originY + (Math.random() - 0.5) * 12,
+            radius: 1.5,
+            targetRadius: targetRadius,
+            vx: Math.cos(angle) * speed,
+            vy: -Math.abs(Math.sin(angle) * speed * 0.75) - 0.5,
+            wobblePhase: Math.random() * Math.PI * 2,
+            wobbleSpeed: 0.04 + Math.random() * 0.05,
+            wobbleAmp: 0.6 + Math.random() * 1.2,
+            alpha: 0.85,
+            life: 0,
+            maxLife: 160 + Math.random() * 140,
+            sheenAngle: -Math.PI / 4 + (Math.random() - 0.5) * 0.4
+          });
+        }
+      }
+
+      window.addEventListener('pointerdown', (e) => {
+        spawnBurst(e.clientX, e.clientY);
+      }, { passive: true });
+
+      function renderBubbles() {
+        ctx.clearRect(0, 0, width, height);
+        const motionFactor = prefersReducedMotion ? 0.3 : 1;
+
+        for (let i = bubbles.length - 1; i >= 0; i--) {
+          const b = bubbles[i];
+          b.life += 1;
+
+          if (b.radius < b.targetRadius) {
+            b.radius += (b.targetRadius - b.radius) * 0.15;
+          }
+
+          b.vx *= 0.94;
+          b.vy -= 0.045 * motionFactor;
+          if (b.vy < -3.2) b.vy = -3.2;
+
+          b.wobblePhase += b.wobbleSpeed * motionFactor;
+          const wobbleX = Math.sin(b.wobblePhase) * b.wobbleAmp;
+
+          b.x += (b.vx + wobbleX) * motionFactor;
+          b.y += b.vy * motionFactor;
+
+          const lifeRatio = b.life / b.maxLife;
+          let fade = 1;
+          if (lifeRatio > 0.75) {
+            fade = 1 - (lifeRatio - 0.75) / 0.25;
+          }
+          if (b.y < 40) {
+            fade *= Math.max(0, b.y / 40);
+          }
+
+          const currentAlpha = b.alpha * fade;
+
+          if (b.y < -b.radius || currentAlpha <= 0.02 || b.life >= b.maxLife) {
+            bubbles.splice(i, 1);
+            continue;
+          }
+
+          const bodyGrad = ctx.createRadialGradient(
+            b.x - b.radius * 0.2,
+            b.y - b.radius * 0.2,
+            b.radius * 0.1,
+            b.x,
+            b.y,
+            b.radius
+          );
+          bodyGrad.addColorStop(0, `rgba(225, 245, 255, ${currentAlpha * 0.15})`);
+          bodyGrad.addColorStop(0.7, `rgba(130, 215, 255, ${currentAlpha * 0.25})`);
+          bodyGrad.addColorStop(1, `rgba(50, 175, 240, ${currentAlpha * 0.55})`);
+
+          ctx.fillStyle = bodyGrad;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = `rgba(200, 242, 255, ${currentAlpha * 0.75})`;
+          ctx.lineWidth = Math.max(0.75, b.radius * 0.1);
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          const glintOffset = b.radius * 0.45;
+          const glintX = b.x + Math.cos(b.sheenAngle) * glintOffset;
+          const glintY = b.y + Math.sin(b.sheenAngle) * glintOffset;
+          const glintRadius = Math.max(0.8, b.radius * 0.26);
+
+          ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha * 0.9})`;
+          ctx.beginPath();
+          ctx.arc(glintX, glintY, glintRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          const secGlintX = b.x - Math.cos(b.sheenAngle) * (glintOffset * 0.75);
+          const secGlintY = b.y - Math.sin(b.sheenAngle) * (glintOffset * 0.75);
+          ctx.fillStyle = `rgba(165, 235, 255, ${currentAlpha * 0.4})`;
+          ctx.beginPath();
+          ctx.arc(secGlintX, secGlintY, glintRadius * 0.65, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(renderBubbles);
+      }
+
+      requestAnimationFrame(renderBubbles);
+    })();
+  </script>
+</body>
+</html>
