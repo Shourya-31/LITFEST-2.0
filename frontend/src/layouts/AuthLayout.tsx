@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ParticleText from './ParticleText';
 import SlingButton from './SlingButton';
+import '../styles/tokens.css';
+import '../styles/auth.css';
 
 export interface AuthLayoutProps {
   stepLabel?: string;

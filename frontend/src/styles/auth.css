@@ -166,7 +166,7 @@
 }
 
 .litfest-art-tagline {
-  font-family: var(--font-display);
+  font-family: var(--font-auth-display, 'Cormorant Garamond', serif);
   font-size: 17px;
   font-style: italic;
   color: var(--color-peach);
@@ -184,7 +184,7 @@
 }
 
 .litfest-art-quote {
-  font-family: var(--font-display);
+  font-family: var(--font-auth-display, 'Cormorant Garamond', serif);
   font-size: 17px;
   line-height: 1.5;
   color: var(--color-ivory);
@@ -219,7 +219,7 @@
 }
 
 .litfest-heading {
-  font-family: var(--font-display);
+  font-family: var(--font-auth-display, 'Cormorant Garamond', serif);
   font-size: 46px;
   font-weight: 600;
   line-height: 1.12;
