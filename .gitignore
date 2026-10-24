@@ -6,5 +6,11 @@ node_modules/
 dist/
 coverage/
 *.log
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db

@@ -1,0 +1,483 @@
+/* ==========================================================================
+   LitFest 2.0 - Auth Layout & Components CSS
+   Complies with LitFest_Frontend_Guide.pdf (Sections 2, 3, 4, 5, 7, 10)
+   ========================================================================== */
+
+/* Page Wrapper */
+.litfest-auth-wrapper {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+  box-sizing: border-box;
+}
+
+/* Two-Column Card Container */
+.litfest-auth-card {
+  width: 100%;
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  background-color: var(--color-ivory);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(8, 37, 103, 0.08);
+}
+
+/* Left Art Panel */
+.litfest-art-panel {
+  position: relative;
+  background: linear-gradient(160deg, var(--color-violet) 0%, var(--color-midnight) 62%, var(--color-ink) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-7) var(--space-6);
+  overflow: hidden;
+  user-select: none;
+  min-height: 520px;
+}
+
+/* Top-Right Dusty Rose Glow */
+.litfest-art-glow-rose {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 138, 158, 0.45) 0%, transparent 70%);
+  filter: blur(25px);
+  pointer-events: none;
+}
+
+/* Low-Left Ocean Cyan Water Glow */
+.litfest-art-glow-coral {
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.22) 0%, transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+/* Peach Sun and Scenery Container */
+.litfest-art-scene {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  margin: var(--space-2) 0 var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.litfest-art-sun {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  overflow: visible;
+}
+
+.litfest-art-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 125px;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Header in Art Panel */
+.litfest-art-brand {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.litfest-particle-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.litfest-particle-box {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+.litfest-particle-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: calc(-1 * var(--space-2));
+  margin-bottom: var(--space-2);
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(249, 203, 184, 0.2);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-peach);
+  opacity: 0.85;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.litfest-particle-hint-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #00f0ff;
+  box-shadow: 0 0 6px #00f0ff;
+  animation: pulseHint 2s infinite ease-in-out;
+}
+
+@keyframes pulseHint {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.litfest-art-wordmark {
+  font-family: var(--font-accent);
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  color: var(--color-ivory);
+  margin-bottom: var(--space-2);
+}
+
+.litfest-art-tagline {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--color-peach);
+  letter-spacing: 0.02em;
+  opacity: 0.92;
+  text-align: center;
+}
+
+.litfest-art-quote-container {
+  position: relative;
+  z-index: 3;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(249, 203, 184, 0.2);
+}
+
+.litfest-art-quote {
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--color-ivory);
+  opacity: 0.9;
+}
+
+/* Right Form Side */
+.litfest-form-panel {
+  background-color: var(--color-ivory);
+  padding: var(--space-7) var(--space-7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.litfest-form-inner {
+  width: 100%;
+  max-width: var(--form-column-max-width);
+}
+
+/* Header Block */
+.litfest-step-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-violet);
+  margin-bottom: var(--space-2);
+}
+
+.litfest-heading {
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--color-midnight);
+  margin-bottom: var(--space-2);
+}
+
+.litfest-intro {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--color-slate);
+  margin-bottom: var(--space-6);
+}
+
+/* Stepper Tracker */
+.litfest-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid rgba(32, 36, 58, 0.08);
+}
+
+.litfest-stepper-track {
+  position: absolute;
+  top: 16px;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  background-color: rgba(32, 36, 58, 0.12);
+  z-index: 0;
+}
+
+.litfest-stepper-progress {
+  height: 100%;
+  background-color: var(--color-midnight);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.litfest-step-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.litfest-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.25s ease;
+}
+
+.litfest-step-circle--active {
+  background-color: var(--color-midnight);
+  color: var(--color-white);
+  box-shadow: 0 0 0 4px rgba(8, 37, 103, 0.15);
+  border: 2px solid var(--color-midnight);
+}
+
+.litfest-step-circle--completed {
+  background-color: var(--color-violet);
+  color: var(--color-white);
+  border: 2px solid var(--color-violet);
+}
+
+.litfest-step-circle--upcoming {
+  background-color: var(--color-ivory);
+  color: var(--color-slate);
+  border: 2px solid rgba(32, 36, 58, 0.2);
+}
+
+.litfest-step-title {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.litfest-step-title--active {
+  color: var(--color-midnight);
+  font-weight: 700;
+}
+
+.litfest-step-title--completed {
+  color: var(--color-violet);
+  font-weight: 600;
+}
+
+.litfest-step-title--upcoming {
+  color: var(--color-slate);
+}
+
+/* Inputs & Interactive Controls */
+.litfest-input {
+  box-sizing: border-box;
+}
+
+.litfest-input:focus {
+  border-color: var(--color-midnight) !important;
+  box-shadow: var(--shadow-focus) !important;
+  background-color: var(--color-white) !important;
+}
+
+.litfest-input::placeholder {
+  color: var(--color-slate);
+  opacity: 0.85;
+}
+
+.litfest-input--error {
+  border-color: var(--color-error) !important;
+}
+
+.litfest-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(242, 56, 80, 0.18) !important;
+}
+
+/* Button Interactive States */
+.litfest-button--primary:hover:not(:disabled) {
+  background-color: var(--color-midnight-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-button);
+}
+
+.litfest-button--primary:focus-visible {
+  outline: 2px solid var(--color-coral) !important;
+  outline-offset: 2px !important;
+}
+
+.litfest-button--secondary:hover:not(:disabled) {
+  background-color: rgba(8, 37, 103, 0.05) !important;
+  border-color: var(--color-midnight) !important;
+}
+
+.litfest-button--secondary:focus-visible {
+  outline: 2px solid var(--color-midnight) !important;
+  outline-offset: 2px !important;
+}
+
+.litfest-toggle-btn:hover {
+  color: var(--color-midnight) !important;
+  background-color: rgba(8, 37, 103, 0.06) !important;
+}
+
+.litfest-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-midnight) !important;
+}
+
+/* Footer Link Area */
+.litfest-auth-footer {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(32, 36, 58, 0.08);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-slate);
+}
+
+.litfest-auth-link {
+  color: var(--color-midnight);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.litfest-auth-link:hover {
+  color: var(--color-coral);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints: Mobile (<= 800px) & Small (<= 480px)
+   ========================================================================== */
+@media (max-width: 800px) {
+  .litfest-auth-wrapper {
+    padding: var(--space-4) var(--space-2) var(--space-6);
+  }
+
+  .litfest-auth-card {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+
+  .litfest-art-panel {
+    min-height: 280px;
+    max-height: 320px;
+    padding: var(--space-5) var(--space-5);
+  }
+
+  .litfest-particle-box {
+    height: 110px;
+  }
+
+  .litfest-art-scene {
+    height: 120px;
+    margin: var(--space-1) 0;
+  }
+
+  .litfest-art-sun {
+    width: 76px;
+    height: 76px;
+  }
+
+  .litfest-art-quote-container {
+    display: none; /* Hide long quotes on mobile art panel to maintain compact 280px height */
+  }
+
+  .litfest-form-panel {
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .litfest-heading {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .litfest-form-panel {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .litfest-heading {
+    font-size: 32px;
+  }
+
+  .litfest-stepper-track {
+    left: 16px;
+    right: 16px;
+  }
+
+  .litfest-step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .litfest-step-title {
+    font-size: 11px;
+  }
+}
+
+/* Reduced Motion Support (Section 7) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
