@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "rootDir": ".",
+    "outDir": ".test-build"
+  },
+  "include": ["tests/**/*.ts", "src/features/game/**/*.ts", "src/features/atlantis/**/*.ts", "src/services/**/*.ts", "src/types/game.ts"]
+}

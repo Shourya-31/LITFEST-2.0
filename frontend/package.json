@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "tsc -p tsconfig.test.json && node --test .test-build/tests",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
+    "happy-dom": "^20.14.6",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.2",
     "vite": "^8.3.4"
