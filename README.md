@@ -1,10 +1,12 @@
 # LITFEST-2.0
 
-Root architecture scaffold for the next LitFest website for Literati, NIT Raipur.
+Root architecture scaffold for the next LitFest website for Literati, NIT Raipur,
+with initial sponsors and contact pages in the frontend.
 
-> **Scaffold only:** directories and empty `.gitkeep` files reserve the planned
-> structure. Application features, dependencies, workspace tooling, database
-> schemas, and deployment configuration have not been implemented.
+> **Early development:** most directories remain architectural placeholders.
+> The frontend currently contains runnable sponsors and contact pages; other planned
+> application features, backend dependencies, database schemas, and deployment
+> configuration have not been implemented.
 
 ## Repository structure
 
@@ -45,7 +47,8 @@ Root architecture scaffold for the next LitFest website for Literati, NIT Raipur
 └── shared/                   # Cross-application contracts, types, and constants
 ```
 
-All planned directories are tracked using empty `.gitkeep` placeholders.
+Most planned directories are tracked using empty `.gitkeep` placeholders;
+the frontend's sponsors page is an initial working feature.
 
 ## Planned feature areas
 
@@ -67,20 +70,21 @@ validation, persistence, media storage, observability, and tests.
 
 ## Architecture and technology notes
 
-The previous LITERATI project uses React, Vite, and React Router on the
-frontend, and Express with Mongoose on the backend. This scaffold is organized
-to accommodate those existing technologies; it does not select or configure
-frameworks, dependencies, workspace tooling, a database schema, or a deployment
-strategy. Existing legacy paths and APIs have not been copied into this
-repository. Compatibility should be considered when those are designed and
-implemented in future work.
+The frontend currently uses React, TypeScript, and Vite for the sponsors and
+contact pages. The contact page is available at `/contact`.
+The previous LITERATI project also uses React Router on the frontend, and
+Express with Mongoose on the backend. The backend, shared workspace tooling,
+database schema, and deployment strategy are not configured yet. Existing
+legacy paths and APIs have not been copied into this repository. Compatibility
+should be considered when those are designed and implemented in future work.
 
 See `docs/architecture/` for future architecture documentation and
 `docs/development/` for future development setup guidance.
 
 ## Development status
 
-There is no runnable application or test suite configured yet. This repository
-currently provides the planned directory structure only. Implement features
+The frontend pages are runnable from `frontend/` using `npm install` and
+`npm run dev`. The rest of this repository primarily provides the planned
+directory structure, and no test suite is configured yet. Implement features
 incrementally in their designated areas, and add the necessary project
-configuration when the implementation approach is agreed.
+configuration as implementation proceeds.
