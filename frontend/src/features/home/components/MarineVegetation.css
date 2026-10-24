@@ -1,0 +1,374 @@
+.marine-vegetation-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 5;
+}
+
+/* =========================================
+   1. TALL KELP FORESTS (Left and Right Flanks)
+   ========================================= */
+.kelp-forest {
+  position: absolute;
+  bottom: -40px; /* Extends below bottom edge to eliminate flat ground line */
+  pointer-events: none;
+  width: clamp(220px, 26vw, 420px);
+  height: clamp(520px, 80vh, 920px);
+}
+
+.kelp-left-group {
+  left: -25px;
+}
+
+.kelp-right-group {
+  right: -25px;
+}
+
+.kelp-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible; /* Prevents rectangular clipping of fronds */
+}
+
+/* Staggered organic sway animations for kelp fronds */
+.kelp-sway-slow {
+  transform-origin: 40px 850px;
+  animation: kelpSwayLeftSlow 14.5s ease-in-out infinite alternate;
+}
+
+.kelp-sway-mid {
+  transform-origin: 90px 850px;
+  animation: kelpSwayLeftMid 11.2s ease-in-out infinite alternate;
+  animation-delay: -3.8s;
+}
+
+.kelp-sway-fore {
+  transform-origin: 140px 850px;
+  animation: kelpSwayLeftFore 8.8s ease-in-out infinite alternate;
+  animation-delay: -5.4s;
+}
+
+.kelp-sway-slow-alt {
+  transform-origin: 290px 850px;
+  animation: kelpSwayRightSlow 15.2s ease-in-out infinite alternate;
+  animation-delay: -2.1s;
+}
+
+.kelp-sway-mid-alt {
+  transform-origin: 240px 850px;
+  animation: kelpSwayRightMid 12.0s ease-in-out infinite alternate;
+  animation-delay: -4.6s;
+}
+
+.kelp-sway-fore-alt {
+  transform-origin: 190px 850px;
+  animation: kelpSwayRightFore 9.4s ease-in-out infinite alternate;
+  animation-delay: -2.9s;
+}
+
+@keyframes kelpSwayLeftSlow {
+  0% { transform: rotate(-1.2deg); }
+  50% { transform: rotate(1.8deg); }
+  100% { transform: rotate(-0.4deg); }
+}
+
+@keyframes kelpSwayLeftMid {
+  0% { transform: rotate(-1.6deg); }
+  50% { transform: rotate(2.4deg); }
+  100% { transform: rotate(-0.6deg); }
+}
+
+@keyframes kelpSwayLeftFore {
+  0% { transform: rotate(-1.4deg); }
+  50% { transform: rotate(2.2deg); }
+  100% { transform: rotate(-0.8deg); }
+}
+
+@keyframes kelpSwayRightSlow {
+  0% { transform: rotate(1.2deg); }
+  50% { transform: rotate(-1.8deg); }
+  100% { transform: rotate(0.4deg); }
+}
+
+@keyframes kelpSwayRightMid {
+  0% { transform: rotate(1.6deg); }
+  50% { transform: rotate(-2.4deg); }
+  100% { transform: rotate(0.6deg); }
+}
+
+@keyframes kelpSwayRightFore {
+  0% { transform: rotate(1.4deg); }
+  50% { transform: rotate(-2.2deg); }
+  100% { transform: rotate(0.8deg); }
+}
+
+/* =========================================
+   2. REEF CORAL FORMATIONS (Sub-viewport Anchored)
+   ========================================= */
+.reef-corals-container {
+  position: absolute;
+  bottom: -45px; /* Extends below viewport - no horizontal ground line */
+  left: 0;
+  width: 100%;
+  height: clamp(180px, 34vh, 340px);
+  pointer-events: none;
+}
+
+.reef-corals-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible; /* Prevents harsh clipping edges or film overlays */
+}
+
+/* Corals are predominantly stationary for botanical realism */
+.coral-formation {
+  transform-origin: bottom center;
+}
+
+/* Delicate sea-fan micro-drift under deep currents */
+.gorgonian-fan-left {
+  transform-origin: 220px 420px;
+  animation: seaFanMicroSway 16s ease-in-out infinite alternate;
+}
+
+.gorgonian-fan-right {
+  transform-origin: 1360px 420px;
+  animation: seaFanMicroSway 18s ease-in-out infinite alternate;
+  animation-delay: -5s;
+}
+
+@keyframes seaFanMicroSway {
+  0% { transform: rotate(-0.6deg); }
+  50% { transform: rotate(0.6deg); }
+  100% { transform: rotate(-0.3deg); }
+}
+
+/* =========================================
+   3. DESYNCHRONIZED NATURAL BIOLUMINESCENT PARTICLES
+   ========================================= */
+
+/* Static node: gentle, calm deep-sea glow without any pulsing */
+.bio-static {
+  opacity: 0.72;
+  filter: drop-shadow(0 0 5px #38bdf8);
+}
+
+/* Gentle undulating bioluminescent breathing: varied durations and curves */
+.bio-gentle-a {
+  animation: bioGentleKeyA 9.6s ease-in-out infinite alternate;
+  will-change: opacity, filter;
+}
+
+.bio-gentle-b {
+  animation: bioGentleKeyB 13.4s ease-in-out infinite alternate;
+  will-change: opacity, filter;
+}
+
+.bio-gentle-c {
+  animation: bioGentleKeyC 16.8s ease-in-out infinite alternate;
+  will-change: opacity, filter;
+}
+
+/* Soft, irregular shimmer without rapid flashing */
+.bio-shimmer-a {
+  animation: bioShimmerKeyA 7.4s ease-in-out infinite alternate;
+  will-change: opacity, filter;
+}
+
+.bio-shimmer-b {
+  animation: bioShimmerKeyB 10.8s ease-in-out infinite alternate;
+  will-change: opacity, filter;
+}
+
+@keyframes bioGentleKeyA {
+  0% {
+    opacity: 0.42;
+    filter: drop-shadow(0 0 3px #0284c7);
+  }
+  50% {
+    opacity: 0.88;
+    filter: drop-shadow(0 0 8px #38bdf8);
+  }
+  100% {
+    opacity: 0.52;
+    filter: drop-shadow(0 0 4px #0ea5e9);
+  }
+}
+
+@keyframes bioGentleKeyB {
+  0% {
+    opacity: 0.62;
+    filter: drop-shadow(0 0 5px #0ea5e9);
+  }
+  40% {
+    opacity: 0.32;
+    filter: drop-shadow(0 0 2px #0369a1);
+  }
+  85% {
+    opacity: 0.92;
+    filter: drop-shadow(0 0 10px #7dd3fc);
+  }
+  100% {
+    opacity: 0.68;
+    filter: drop-shadow(0 0 6px #38bdf8);
+  }
+}
+
+@keyframes bioGentleKeyC {
+  0% {
+    opacity: 0.72;
+    filter: drop-shadow(0 0 6px #38bdf8);
+  }
+  45% {
+    opacity: 0.38;
+    filter: drop-shadow(0 0 3px #0284c7);
+  }
+  100% {
+    opacity: 0.86;
+    filter: drop-shadow(0 0 9px #22d3ee);
+  }
+}
+
+@keyframes bioShimmerKeyA {
+  0% {
+    opacity: 0.48;
+    filter: drop-shadow(0 0 3px #0ea5e9);
+  }
+  28% {
+    opacity: 0.78;
+    filter: drop-shadow(0 0 7px #38bdf8);
+  }
+  65% {
+    opacity: 0.39;
+    filter: drop-shadow(0 0 2px #0369a1);
+  }
+  100% {
+    opacity: 0.82;
+    filter: drop-shadow(0 0 8px #7dd3fc);
+  }
+}
+
+@keyframes bioShimmerKeyB {
+  0% {
+    opacity: 0.64;
+    filter: drop-shadow(0 0 5px #22d3ee);
+  }
+  32% {
+    opacity: 0.36;
+    filter: drop-shadow(0 0 3px #0284c7);
+  }
+  78% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 8px #a5f3fc);
+  }
+  100% {
+    opacity: 0.56;
+    filter: drop-shadow(0 0 4px #38bdf8);
+  }
+}
+
+/* =========================================
+   4. SUSPENDED BIOLUMINESCENT DRIFT MICRO-PARTICLES
+   ========================================= */
+.bio-suspension-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bio-drift-node {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.drift-motion-a {
+  animation: bioDriftSlowA 22s ease-in-out infinite alternate;
+}
+
+.drift-motion-b {
+  animation: bioDriftSlowB 26s ease-in-out infinite alternate;
+}
+
+.drift-motion-c {
+  animation: bioDriftSlowC 19s ease-in-out infinite alternate;
+}
+
+@keyframes bioDriftSlowA {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(8px, -14px, 0);
+  }
+  100% {
+    transform: translate3d(-6px, 10px, 0);
+  }
+}
+
+@keyframes bioDriftSlowB {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-10px, -18px, 0);
+  }
+  100% {
+    transform: translate3d(8px, 6px, 0);
+  }
+}
+
+@keyframes bioDriftSlowC {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(12px, -8px, 0);
+  }
+  100% {
+    transform: translate3d(-10px, 12px, 0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .kelp-forest {
+    width: clamp(160px, 32vw, 260px);
+    height: clamp(400px, 65vh, 600px);
+    bottom: -30px;
+  }
+
+  .reef-corals-container {
+    height: clamp(150px, 26vh, 240px);
+    bottom: -30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kelp-sway-slow,
+  .kelp-sway-mid,
+  .kelp-sway-fore,
+  .kelp-sway-slow-alt,
+  .kelp-sway-mid-alt,
+  .kelp-sway-fore-alt,
+  .gorgonian-fan-left,
+  .gorgonian-fan-right,
+  .bio-gentle-a,
+  .bio-gentle-b,
+  .bio-gentle-c,
+  .bio-shimmer-a,
+  .bio-shimmer-b,
+  .drift-motion-a,
+  .drift-motion-b,
+  .drift-motion-c {
+    animation: none !important;
+  }
+}
