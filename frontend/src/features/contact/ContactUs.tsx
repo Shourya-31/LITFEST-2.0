@@ -34,7 +34,11 @@ export default function ContactUs() {
     <main className="contact-page">
       <WarpBackground />
       <form className="contact-form" onSubmit={handleSubmit}>
-        <h1>Contact Us</h1>
+        <header className="contact-form__header">
+          <span className="contact-form__eyebrow">LITFEST 2.0</span>
+          <h1>Contact Us</h1>
+          <p>Have a question or feedback? We’d love to hear from you.</p>
+        </header>
 
         <label htmlFor="contact-name">Your Name</label>
         <input
