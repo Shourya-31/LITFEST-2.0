@@ -1,0 +1,419 @@
+.marine-life-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+}
+
+.creature-track {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* =========================================
+   1. OCCASIONAL MAJESTIC WHALE
+   ========================================= */
+.whale-track {
+  top: 50%;
+  left: 0;
+  opacity: 0.23;
+  filter: blur(1.5px) drop-shadow(0 15px 35px rgba(0, 0, 0, 0.7));
+  animation: whaleCruise 56s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  z-index: 2;
+}
+
+.whale-body {
+  animation: whaleUndulate 8s ease-in-out infinite alternate;
+  transform-origin: 270px 90px;
+}
+
+@keyframes whaleCruise {
+  0% {
+    transform: translate3d(-120%, 0, 0) scale(1.1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.23;
+  }
+  50% {
+    transform: translate3d(50vw, -30px, 0) scale(1.15);
+    opacity: 0.27;
+  }
+  90% {
+    opacity: 0.23;
+  }
+  100% {
+    transform: translate3d(125vw, -10px, 0) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes whaleUndulate {
+  0% {
+    transform: rotate(-1.5deg) translateY(0);
+  }
+  50% {
+    transform: rotate(1deg) translateY(6px);
+  }
+  100% {
+    transform: rotate(-1deg) translateY(-4px);
+  }
+}
+
+/* =========================================
+   2. SCHOOL OF SMALL FISH (Angled shoal)
+   ========================================= */
+.fish-school-track {
+  top: 26%;
+  right: -250px;
+  animation: fishShoalSwim 17s linear infinite;
+  z-index: 4;
+  opacity: 0.62;
+}
+
+.fish-school-cluster {
+  position: relative;
+  width: 180px;
+  height: 90px;
+}
+
+.single-fish {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: drop-shadow(0 2px 4px rgba(1, 8, 16, 0.5));
+}
+
+.fish-tail-wag {
+  animation: tailWag 0.65s ease-in-out infinite alternate;
+  transform-origin: 2px 8px;
+}
+
+@keyframes tailWag {
+  0% {
+    transform: rotate(-22deg);
+  }
+  100% {
+    transform: rotate(22deg);
+  }
+}
+
+@keyframes fishShoalSwim {
+  0% {
+    transform: translate3d(15vw, 0, 0) rotate(-6deg);
+  }
+  30% {
+    transform: translate3d(-35vw, -25px, 0) rotate(-8deg);
+  }
+  70% {
+    transform: translate3d(-75vw, -5px, 0) rotate(-4deg);
+  }
+  100% {
+    transform: translate3d(-125vw, -35px, 0) rotate(-7deg);
+  }
+}
+
+/* =========================================
+   3. SHARK (Deep background cruiser)
+   ========================================= */
+.shark-track {
+  top: 38%;
+  left: -350px;
+  opacity: 0.31;
+  filter: drop-shadow(0 10px 24px rgba(0, 5, 14, 0.6));
+  animation: sharkGliding 28s linear infinite;
+  animation-delay: 2s;
+  z-index: 3;
+}
+
+.shark-svg {
+  animation: sharkPitch 6s ease-in-out infinite alternate;
+}
+
+@keyframes sharkGliding {
+  0% {
+    transform: translate3d(-10vw, 0, 0);
+  }
+  40% {
+    transform: translate3d(45vw, -20px, 0);
+  }
+  80% {
+    transform: translate3d(95vw, 15px, 0);
+  }
+  100% {
+    transform: translate3d(135vw, 0, 0);
+  }
+}
+
+@keyframes sharkPitch {
+  0% {
+    transform: rotate(-1.5deg) translateY(-3px);
+  }
+  50% {
+    transform: rotate(1deg) translateY(4px);
+  }
+  100% {
+    transform: rotate(-1.2deg) translateY(-2px);
+  }
+}
+
+/* =========================================
+   4. OCTOPUS (Top-right drifting)
+   ========================================= */
+.octopus-track {
+  top: 9%;
+  right: 12%;
+  opacity: 0.43;
+  filter: drop-shadow(0 8px 20px rgba(1, 8, 18, 0.55));
+  animation: octopusSway 14s ease-in-out infinite alternate;
+  z-index: 3;
+}
+
+.octopus-head {
+  animation: headBreathe 4s ease-in-out infinite alternate;
+  transform-origin: 90px 45px;
+}
+
+@keyframes headBreathe {
+  0% {
+    transform: scale(0.96, 0.98);
+  }
+  100% {
+    transform: scale(1.04, 1.02);
+  }
+}
+
+.tentacle-arm {
+  transform-origin: top center;
+  animation: tentacleCurl 5.5s ease-in-out infinite alternate;
+}
+
+.t-arm-1 { animation-delay: 0s; }
+.t-arm-2 { animation-delay: 0.5s; }
+.t-arm-3 { animation-delay: 1.1s; }
+.t-arm-4 { animation-delay: 1.7s; }
+.t-arm-5 { animation-delay: 2.2s; }
+.t-arm-6 { animation-delay: 2.8s; }
+.t-arm-7 { animation-delay: 3.3s; }
+.t-arm-8 { animation-delay: 3.8s; }
+
+@keyframes tentacleCurl {
+  0% {
+    transform: rotate(-5deg) skewX(-3deg);
+  }
+  50% {
+    transform: rotate(5deg) skewX(3deg);
+  }
+  100% {
+    transform: rotate(-4deg) skewX(-2deg);
+  }
+}
+
+@keyframes octopusSway {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(24px, -18px, 0) rotate(3deg);
+  }
+  100% {
+    transform: translate3d(-16px, 14px, 0) rotate(-1deg);
+  }
+}
+
+/* =========================================
+   5. TRANSLUCENT BIOLUMINESCENT JELLYFISHES
+   ========================================= */
+.jellyfish-track {
+  bottom: -240px;
+  animation: jellyAscend linear infinite;
+  z-index: 6;
+  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.45));
+}
+
+.jelly-main {
+  right: 14%;
+  animation-duration: 22s;
+  animation-delay: 0.5s;
+}
+
+.jelly-distant {
+  right: 28%;
+  opacity: 0.33;
+  animation-duration: 28s;
+  animation-delay: 8s;
+}
+
+.jelly-bell {
+  animation: jellyPulse 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: 60px 40px;
+}
+
+@keyframes jellyPulse {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  20% {
+    /* Propulsion stroke */
+    transform: scale(0.85, 1.18) translateY(-12px);
+  }
+  45% {
+    /* Glide expansion */
+    transform: scale(1.1, 0.92) translateY(-16px);
+  }
+  75% {
+    transform: scale(1.02, 0.98) translateY(-8px);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+.jelly-filament {
+  animation: filamentTrail 3.8s ease-in-out infinite alternate;
+  transform-origin: 60px 70px;
+}
+
+.f1 { animation-delay: 0.2s; }
+.f2 { animation-delay: 0.4s; }
+.f3 { animation-delay: 0.3s; }
+.f4 { animation-delay: 0.5s; }
+
+@keyframes filamentTrail {
+  0% {
+    transform: scaleY(1) rotate(-3deg);
+  }
+  50% {
+    transform: scaleY(0.9) rotate(4deg);
+  }
+  100% {
+    transform: scaleY(1.08) rotate(-2deg);
+  }
+}
+
+@keyframes jellyAscend {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.82;
+  }
+  50% {
+    transform: translate3d(28px, -55vh, 0);
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(-20px, -125vh, 0);
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   6. MANTA RAYS
+   ========================================= */
+.manta-track {
+  z-index: 3;
+  opacity: 0.26;
+  filter: drop-shadow(0 6px 14px rgba(0, 4, 10, 0.7));
+}
+
+.manta-1 {
+  bottom: 24%;
+  left: 32%;
+  animation: mantaGlide1 22s ease-in-out infinite alternate;
+}
+
+.manta-2 {
+  bottom: 18%;
+  left: 44%;
+  opacity: 0.18;
+  animation: mantaGlide2 26s ease-in-out infinite alternate;
+  animation-delay: -5s;
+}
+
+.manta-wings {
+  animation: mantaFlap 4.5s ease-in-out infinite alternate;
+  transform-origin: 70px 50px;
+}
+
+@keyframes mantaFlap {
+  0% {
+    transform: scale(0.95, 1.05) rotate(-2deg);
+  }
+  50% {
+    transform: scale(1.04, 0.94) rotate(2deg);
+  }
+  100% {
+    transform: scale(0.96, 1.03) rotate(-1deg);
+  }
+}
+
+@keyframes mantaGlide1 {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(4deg);
+  }
+  50% {
+    transform: translate3d(40px, -18px, 0) rotate(8deg);
+  }
+  100% {
+    transform: translate3d(85px, 12px, 0) rotate(5deg);
+  }
+}
+
+@keyframes mantaGlide2 {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(6deg);
+  }
+  50% {
+    transform: translate3d(-35px, 15px, 0) rotate(2deg);
+  }
+  100% {
+    transform: translate3d(40px, -20px, 0) rotate(7deg);
+  }
+}
+
+/* =========================================
+   REDUCED MOTION OVERRIDE
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  .whale-track,
+  .whale-body,
+  .fish-school-track,
+  .fish-tail-wag,
+  .shark-track,
+  .shark-svg,
+  .octopus-track,
+  .octopus-head,
+  .tentacle-arm,
+  .jellyfish-track,
+  .jelly-bell,
+  .jelly-filament,
+  .manta-track,
+  .manta-wings {
+    animation: none !important;
+  }
+
+  .whale-track {
+    transform: translate3d(15vw, 0, 0) scale(1.1) !important;
+    opacity: 0.25 !important;
+  }
+  .fish-school-track {
+    transform: translate3d(-40vw, 0, 0) !important;
+  }
+  .shark-track {
+    transform: translate3d(20vw, 0, 0) !important;
+  }
+  .jelly-main {
+    bottom: 35% !important;
+    opacity: 0.8 !important;
+  }
+}

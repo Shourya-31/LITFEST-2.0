@@ -1,0 +1,199 @@
+.ocean-atmosphere-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+/* 1. Abyss gradient */
+.abyss-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse 110% 70% at 50% 0%,
+      rgba(14, 66, 110, 0.82) 0%,
+      rgba(7, 36, 68, 0.78) 30%,
+      rgba(2, 16, 36, 0.94) 65%,
+      #010610 100%
+    ),
+    linear-gradient(180deg, #092c4f 0%, #041a33 35%, #020f21 70%, #01060e 100%);
+}
+
+/* 2. Surface light bloom */
+.surface-light-bloom {
+  position: absolute;
+  top: -50px;
+  left: 20%;
+  width: 60%;
+  height: 220px;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgba(186, 230, 253, 0.35) 0%,
+    rgba(56, 189, 248, 0.18) 45%,
+    transparent 80%
+  );
+  filter: blur(35px);
+  pointer-events: none;
+  animation: surfacePulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes surfacePulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* 3. Sunbeams (God rays) */
+.sunbeams-container {
+  position: absolute;
+  top: 0;
+  left: -5%;
+  width: 110%;
+  height: 100%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.sunbeams-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sunbeam {
+  transform-origin: top center;
+  animation: beamSway 14s ease-in-out infinite alternate;
+}
+
+.beam-center {
+  animation-duration: 12s;
+}
+
+.beam-left-1 {
+  animation-duration: 15s;
+  animation-delay: -3s;
+}
+
+.beam-left-2 {
+  animation-duration: 18s;
+  animation-delay: -6s;
+}
+
+.beam-right-1 {
+  animation-duration: 16s;
+  animation-delay: -4s;
+}
+
+.beam-right-2 {
+  animation-duration: 13s;
+  animation-delay: -2s;
+}
+
+@keyframes beamSway {
+  0% {
+    transform: rotate(-1.2deg) skewX(-1.2deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(1.4deg) skewX(1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-0.6deg) skewX(-0.5deg);
+    opacity: 0.85;
+  }
+}
+
+/* 4. Ambient marine particles */
+.particles-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.marine-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(224, 242, 254, 0.9) 0%,
+    rgba(56, 189, 248, 0.5) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+  animation: particleDrift ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes particleDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(18px, -24px, 0);
+  }
+  100% {
+    transform: translate3d(-14px, 16px, 0);
+  }
+}
+
+/* 5. Sparse ambient bubbles */
+.bubbles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ambient-bubble {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(125, 211, 252, 0.3) 40%,
+    rgba(14, 165, 233, 0.08) 75%
+  );
+  border: 1px solid rgba(224, 242, 254, 0.4);
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+  animation: bubbleAscend linear infinite;
+  will-change: transform;
+}
+
+@keyframes bubbleAscend {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.9);
+  }
+  50% {
+    transform: translate3d(8px, -50vh, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-6px, -105vh, 0) scale(1);
+  }
+}
+
+/* 6. Ocean Vignette */
+.ocean-vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 160px 40px rgba(0, 3, 10, 0.85);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface-light-bloom,
+  .sunbeam,
+  .marine-particle,
+  .ambient-bubble {
+    animation: none !important;
+  }
+}

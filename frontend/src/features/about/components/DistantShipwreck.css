@@ -1,0 +1,68 @@
+/* Distant Shipwreck positioned in the middle-left background behind the centered content */
+.distant-shipwreck-container {
+  position: absolute;
+  top: clamp(160px, 30vh, 330px);
+  left: clamp(10px, 4vw, 80px);
+  width: clamp(250px, 25vw, 360px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  opacity: 0.42; /* Softened contrast to remain a distant environmental discovery */
+  filter: drop-shadow(0 0 25px rgba(2, 16, 36, 0.9));
+  animation: shipwreckCurrentDrift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.shipwreck-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* Atmospheric water haze surrounding the wreck and its distant seabed contour */
+.shipwreck-ambient-haze {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  width: 90%;
+  height: 75%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 40% 45%,
+    rgba(14, 165, 233, 0.08) 0%,
+    rgba(3, 24, 48, 0.15) 45%,
+    transparent 80%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* Ultra-slow sub-surface current sway */
+@keyframes shipwreckCurrentDrift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-0.3deg);
+  }
+  50% {
+    transform: translate3d(5px, -7px, 0) rotate(0.3deg);
+  }
+  100% {
+    transform: translate3d(-4px, 5px, 0) rotate(-0.2deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .distant-shipwreck-container {
+    left: 4px;
+    top: 200px;
+    width: clamp(180px, 40vw, 260px);
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .distant-shipwreck-container {
+    animation: none !important;
+  }
+}

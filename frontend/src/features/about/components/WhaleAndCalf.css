@@ -1,0 +1,192 @@
+/* =========================================
+   WHALE AND CALF ANIMATED BACKGROUND LAYER
+   ========================================= */
+
+.about-whale-pod-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2; /* Behind centered content (z-index: 10), in front of deepest gradient */
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------
+   WHALE POD TRACK (Slow, majestic oceanic glide)
+   ---------------------------------------------------- */
+.whale-pod-track {
+  position: absolute;
+  top: clamp(140px, 26vh, 320px);
+  left: 100%;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.15));
+  animation: whalePodOceanicSwim 46s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: transform;
+}
+
+/* 1. Adult Whale */
+.whale-adult-wrapper {
+  position: relative;
+  width: clamp(340px, 32vw, 470px);
+  opacity: 0.44;
+  animation: adultWhalePitch 7s ease-in-out infinite alternate;
+}
+
+.whale-adult-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 2. Calf (Noticeably smaller, swimming alongside in the mother's wake) */
+.whale-calf-wrapper {
+  position: absolute;
+  width: clamp(160px, 15vw, 220px);
+  top: -32px;
+  right: clamp(40px, 6vw, 90px);
+  opacity: 0.46;
+  animation: calfSwimmingDrift 5.2s ease-in-out infinite alternate;
+}
+
+.whale-calf-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Pectoral Fin Fluid Sway */
+.whale-pectoral-fin {
+  transform-origin: 165px 105px;
+  animation: finGentleSway 6.5s ease-in-out infinite alternate;
+}
+
+.calf-pectoral-fin {
+  transform-origin: 165px 105px;
+  animation: finGentleSway 4.8s ease-in-out infinite alternate;
+}
+
+/* Tail Fluke Flexion */
+.whale-tail-group {
+  transform-origin: 435px 88px;
+  animation: flukeFlex 5.8s ease-in-out infinite alternate;
+}
+
+.calf-tail-group {
+  transform-origin: 435px 88px;
+  animation: flukeFlex 4.2s ease-in-out infinite alternate;
+}
+
+/* ----------------------------------------------------
+   ANIMATION KEYFRAMES
+   ---------------------------------------------------- */
+
+/* Primary horizontal crossing from right to left across the ocean column */
+@keyframes whalePodOceanicSwim {
+  0% {
+    transform: translate3d(60px, 0, 0);
+    opacity: 0;
+  }
+  4% {
+    opacity: 0.95;
+  }
+  25% {
+    transform: translate3d(-35vw, -18px, 0);
+  }
+  50% {
+    transform: translate3d(-70vw, 14px, 0);
+  }
+  75% {
+    transform: translate3d(-105vw, -12px, 0);
+  }
+  94% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(-145vw, 6px, 0);
+    opacity: 0;
+  }
+}
+
+/* Gentle adult body pitch & vertical buoyancy */
+@keyframes adultWhalePitch {
+  0% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1.2deg);
+  }
+  100% {
+    transform: translateY(10px) rotate(-0.5deg);
+  }
+}
+
+/* Calf independent companion drift */
+@keyframes calfSwimmingDrift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0.5deg);
+  }
+  50% {
+    transform: translate3d(-10px, -18px, 0) rotate(-1.5deg);
+  }
+  100% {
+    transform: translate3d(8px, 12px, 0) rotate(1deg);
+  }
+}
+
+/* Tail fluke undulation */
+@keyframes flukeFlex {
+  0% {
+    transform: rotate(-3deg) scaleY(0.96);
+  }
+  100% {
+    transform: rotate(3.5deg) scaleY(1.04);
+  }
+}
+
+/* Flipper / fin movement */
+@keyframes finGentleSway {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-4deg);
+  }
+}
+
+/* Mobile & Tablet adjustments */
+@media (max-width: 768px) {
+  .whale-pod-track {
+    top: clamp(100px, 18vh, 220px);
+    animation-duration: 38s;
+  }
+
+  .whale-adult-wrapper {
+    width: clamp(240px, 50vw, 320px);
+  }
+
+  .whale-calf-wrapper {
+    width: clamp(110px, 24vw, 150px);
+    top: -20px;
+    right: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whale-pod-track {
+    animation: none !important;
+    left: 8%;
+    transform: none !important;
+    opacity: 0.44;
+  }
+  .whale-adult-wrapper,
+  .whale-calf-wrapper,
+  .whale-pectoral-fin,
+  .calf-pectoral-fin,
+  .whale-tail-group,
+  .calf-tail-group {
+    animation: none !important;
+  }
+}

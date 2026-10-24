@@ -1,12 +1,12 @@
 # LITFEST-2.0
 
 Root architecture scaffold for the next LitFest website for Literati, NIT Raipur,
-with initial sponsors and contact pages in the frontend.
+with an underwater homepage, sponsors page, and contact page in the frontend.
 
 > **Early development:** most directories remain architectural placeholders.
-> The frontend currently contains runnable sponsors and contact pages; other planned
-> application features, backend dependencies, database schemas, and deployment
-> configuration have not been implemented.
+> The frontend currently contains a runnable underwater homepage, sponsors page,
+> and contact page; other planned application features, backend dependencies,
+> database schemas, and deployment configuration have not been implemented.
 
 ## Repository structure
 
@@ -47,8 +47,8 @@ with initial sponsors and contact pages in the frontend.
 └── shared/                   # Cross-application contracts, types, and constants
 ```
 
-Most planned directories are tracked using empty `.gitkeep` placeholders;
-the frontend's sponsors page is an initial working feature.
+Most planned directories are tracked using empty `.gitkeep` placeholders; the
+frontend contains the initial working homepage, sponsors, and contact pages.
 
 ## Planned feature areas
 
@@ -70,8 +70,9 @@ validation, persistence, media storage, observability, and tests.
 
 ## Architecture and technology notes
 
-The frontend currently uses React, TypeScript, and Vite for the sponsors and
-contact pages. The contact page is available at `/contact`.
+The frontend currently uses React, TypeScript, and Vite for the homepage,
+sponsors, and contact pages. The contact page is available at `/contact`, and
+the sponsors page is available at `/sponsors`.
 The previous LITERATI project also uses React Router on the frontend, and
 Express with Mongoose on the backend. The backend, shared workspace tooling,
 database schema, and deployment strategy are not configured yet. Existing
