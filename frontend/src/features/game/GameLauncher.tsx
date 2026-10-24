@@ -66,9 +66,9 @@ export function GameLauncher() {
         <button type="button" className="ocean-game-card" aria-haspopup="dialog"
           aria-labelledby="ocean-game-2-title" aria-describedby="ocean-game-2-status"
           onClick={event => { void atlantisRef.current?.open(event.currentTarget); }}>
-          <span className="ocean-game-eyebrow">CODEBREAKER ADVENTURE</span>
+          <span className="ocean-game-eyebrow">LITERARY QUIZ ADVENTURE</span>
           <span id="ocean-game-2-title" className="ocean-game-title">The Sunken City of Atlantis</span>
-          <span id="ocean-game-2-status" className="ocean-game-tagline">Ten lost chambers. Decipher the secrets beneath the sea.</span>
+          <span id="ocean-game-2-status" className="ocean-game-tagline">Ten lost chambers. Test your literary knowledge and awaken Atlantis.</span>
         </button>
       </h2>
       {[3].map(number => (
