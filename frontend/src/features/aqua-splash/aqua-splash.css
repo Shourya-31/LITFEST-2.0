@@ -1,0 +1,756 @@
+/* Aqua Splash — Water-themed Tetris Retro Arcade Dialog */
+.game-dialog.aq-dialog {
+  --paper: #020f1c;
+  --navy: #e3faf8;
+  --hud-bg: #041c2c;
+  --hud-ink: #dffff8;
+  --cyan-glow: #00e5ff;
+  --cyan-border: #38bdf866;
+  width: min(1200px, calc(100vw - 20px));
+  height: min(840px, calc(100dvh - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow: hidden;
+  border: 1px solid #38bdf855;
+  border-radius: 16px;
+  background: #020f1c;
+  color: #e3faf8;
+  box-shadow: 0 0 60px rgba(0, 229, 255, 0.25), 0 30px 80px rgba(0, 0, 0, 0.9);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+.aq-dialog .aq-shell {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 0%, #0a5b8a3d, transparent 65%), linear-gradient(#020f1c, #042131 65%, #020f1b);
+}
+
+/* === Toolbar === */
+.aq-dialog .aq-toolbar {
+  position: relative;
+  z-index: 5;
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  min-height: 54px;
+  padding: 8px 20px;
+  border-bottom: 1px solid #38bdf822;
+  background: #020f1ccc;
+  backdrop-filter: blur(12px);
+}
+
+.aq-dialog .aq-toolbar-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.aq-dialog .aq-brand {
+  color: #00e5ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.4;
+  text-shadow: 0 0 16px rgba(0, 229, 255, 0.5);
+}
+
+.aq-dialog .aq-brand small {
+  display: block;
+  font-size: 8.5px;
+  font-weight: 500;
+  color: #7dd3fc;
+  letter-spacing: 1.8px;
+}
+
+.aq-dialog .aq-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Scene / Toolbar Buttons */
+.aq-dialog .scene-button {
+  background: #0a3348cc;
+  color: #d9fff5;
+  border: 1px solid #38bdf855;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all .2s ease;
+}
+
+.aq-dialog .scene-button:hover {
+  background: #0e4c6c;
+  border-color: #00e5ff;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.aq-dialog .aq-pause-btn,
+.aq-dialog .aq-lb-btn,
+.aq-dialog .aq-rules-btn,
+.aq-dialog .aq-sound,
+.aq-dialog .aq-fullscreen,
+.aq-dialog .scene-button[data-action="close"] {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  font-size: 15px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a405c, #06263a);
+  border-color: #38bdf888;
+}
+
+.aq-dialog .aq-sound[aria-pressed="false"] {
+  opacity: 0.65;
+  color: #94a3b8;
+}
+
+/* === Lucide Icons === */
+.aq-dialog .aq-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.aq-dialog .scene-button .aq-icon,
+.aq-dialog .aq-touch-btn .aq-icon {
+  pointer-events: none;
+}
+
+/* === Panel === */
+.aq-dialog .aq-panel {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* === Intro / Auth View === */
+.aq-dialog .aq-intro {
+  max-width: 680px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.aq-dialog .aq-kicker {
+  color: #38bdf8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.6;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.aq-dialog .aq-intro h2 {
+  font-family: 'Press Start 2P', var(--font-serif, Georgia, serif);
+  font-size: clamp(22px, 3.5vw, 36px);
+  line-height: 1.3;
+  color: #00e5ff;
+  text-shadow: 0 0 25px rgba(0, 229, 255, 0.5), 0 0 50px rgba(0, 229, 255, 0.2);
+  margin: 6px 0 12px;
+}
+
+.aq-dialog .aq-story {
+  max-width: 520px;
+  margin: 0 0 14px;
+  color: #a5f3fc;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.aq-dialog .aq-welcome-facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 4px 0 12px;
+  color: #7dd3fc;
+  font-size: 11px;
+}
+
+.aq-dialog .aq-welcome-facts strong {
+  color: #00e5ff;
+  font-size: 13px;
+}
+
+.aq-dialog .aq-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+/* Buttons */
+.aq-dialog .aq-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px solid #00e5ffb3;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #00e5ff, #0284c7);
+  color: #020f1c;
+  padding: 10px 24px;
+  font: 700 12px/1.4 var(--font-sans, system-ui, sans-serif);
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all .2s ease;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+.aq-dialog .aq-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #38bdf8, #00e5ff);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+}
+
+.aq-dialog .aq-button.aq-secondary {
+  background: rgba(6, 44, 66, 0.85);
+  color: #bae6fd;
+  border-color: #38bdf866;
+  box-shadow: none;
+}
+
+.aq-dialog .aq-button.aq-secondary:hover {
+  background: #0c4a6e;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+.aq-dialog .aq-fine {
+  font-size: 10.5px;
+  color: #64748b;
+  margin: 6px 0;
+}
+
+.aq-dialog .aq-auth-message {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.aq-dialog .aq-session {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 8px 16px;
+  background: #020a13ee;
+  color: #7dd3fc;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-top: 1px solid #38bdf818;
+}
+
+/* === Game Layout (Arcade Stage) === */
+.aq-dialog .aq-game-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.aq-dialog .aq-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.aq-dialog .aq-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aq-dialog .aq-canvas {
+  display: block;
+  width: 100%;
+  max-width: 1024px;
+  aspect-ratio: 1024 / 571;
+  max-height: calc(100dvh - 130px);
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  box-shadow: 0 0 50px rgba(0, 229, 255, 0.2), 0 20px 60px rgba(0, 0, 0, 0.85);
+  touch-action: none;
+  outline: none !important;
+}
+
+.aq-dialog .aq-canvas:focus,
+.aq-dialog .aq-canvas:focus-visible,
+.game-dialog.aq-dialog canvas:focus-visible {
+  outline: 2px solid rgba(0, 229, 255, 0.35) !important;
+  outline-offset: -2px !important;
+}
+
+/* === In-Game Overlay (Ready, Paused, Game Over) === */
+.aq-dialog .aq-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: radial-gradient(ellipse at center, rgba(2, 15, 28, 0.88) 35%, rgba(2, 15, 28, 0.72) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-align: center;
+  gap: 12px;
+  border-radius: 12px;
+  transition: opacity .25s ease, visibility .25s ease;
+}
+
+.aq-dialog .aq-overlay[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.aq-dialog .aq-overlay-title {
+  font-family: 'Press Start 2P', system-ui, sans-serif;
+  font-size: clamp(18px, 2.8vw, 28px);
+  line-height: 1.4;
+  color: #00e5ff;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+  margin: 4px 0;
+}
+
+.aq-dialog .aq-overlay-desc {
+  color: #bae6fd;
+  font-size: 13.5px;
+  max-width: 440px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.aq-dialog .aq-overlay-desc strong {
+  color: #ffd740;
+}
+
+/* === Rules & Controls Page Overlay === */
+.aq-dialog .aq-rules-page {
+  max-width: 780px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 6px 14px;
+}
+
+.aq-dialog .aq-rules-page::-webkit-scrollbar {
+  width: 6px;
+}
+
+.aq-dialog .aq-rules-page::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.4);
+  border-radius: 3px;
+}
+
+.aq-dialog .aq-rules-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  margin: 6px 0 10px;
+}
+
+@media (max-width: 660px) {
+  .aq-dialog .aq-rules-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.aq-dialog .aq-rules-col {
+  background: rgba(3, 23, 38, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 12px;
+  padding: 14px 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.aq-dialog .aq-rules-col-title {
+  font-family: 'Press Start 2P', system-ui, sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: #00e5ff;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+
+.aq-dialog .aq-rules-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aq-dialog .aq-rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #c7f0ff;
+}
+
+.aq-dialog .aq-rules-list strong {
+  color: #ffd740;
+}
+
+.aq-dialog .aq-rule-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Controls Grid */
+.aq-dialog .aq-controls-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.aq-dialog .aq-ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.12);
+  font-size: 11px;
+}
+
+.aq-dialog .aq-ctrl-keys {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.aq-dialog .aq-key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #164e63, #082f49);
+  border: 1px solid #38bdf8aa;
+  color: #e0f7fa;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: monospace, system-ui;
+  box-shadow: 0 2px 0 #021727;
+}
+
+.aq-dialog .aq-key-sep {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 600;
+  margin: 0 2px;
+}
+
+.aq-dialog .aq-ctrl-desc {
+  color: #7dd3fc;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.aq-dialog .aq-touch-hint {
+  margin: 10px 0 0;
+  font-size: 10px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.aq-dialog .aq-btn-large {
+  font-size: 13px !important;
+  padding: 12px 30px !important;
+  min-height: 48px !important;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.45) !important;
+}
+
+/* === Leaderboard Sliding Drawer === */
+.aq-dialog .aq-leaderboard-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(340px, 90vw);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: rgba(3, 19, 34, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-left: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: -15px 0 40px rgba(0, 0, 0, 0.75);
+  transform: translateX(110%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+.aq-dialog .aq-leaderboard-drawer[data-open="true"] {
+  transform: translateX(0);
+}
+
+.aq-dialog .aq-lb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  padding-bottom: 12px;
+}
+
+.aq-dialog .aq-lb-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aq-dialog .aq-lb-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #00e5ff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.aq-dialog .aq-lb-badge {
+  font-size: 8px;
+  letter-spacing: 0.8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #7dd3fc;
+}
+
+.aq-dialog .aq-lb-close {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #94a3b8;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.aq-dialog .aq-lb-close:hover {
+  color: #ffffff;
+}
+
+.aq-dialog .aq-lb-body {
+  flex: 1;
+}
+
+.aq-dialog .aq-lb-status {
+  color: #7dd3fc;
+  font-size: 12px;
+  text-align: center;
+  padding: 30px 0;
+}
+
+.aq-dialog .aq-lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.aq-dialog .aq-lb-table th {
+  padding: 8px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: #7dd3fc;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+  text-align: left;
+}
+
+.aq-dialog .aq-lb-table td {
+  border-top: 1px solid rgba(56, 189, 248, 0.1);
+  padding: 10px 6px;
+  color: #bae6fd;
+}
+
+.aq-dialog .aq-lb-table td:first-child {
+  color: #7dd3fc;
+  font-family: monospace;
+  font-weight: 700;
+  width: 15%;
+}
+
+.aq-dialog .aq-lb-table td:nth-child(3),
+.aq-dialog .aq-lb-table td:nth-child(4) {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  text-align: right;
+}
+
+.aq-dialog .aq-lb-table th:nth-child(3),
+.aq-dialog .aq-lb-table th:nth-child(4) {
+  text-align: right;
+}
+
+.aq-dialog .aq-lb-table .aq-current td {
+  color: #00e5ff;
+  font-weight: 700;
+  background: rgba(0, 229, 255, 0.1);
+}
+
+.aq-dialog .aq-game-message {
+  font-size: 11px;
+  color: #38bdf8;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* === Touch Controls for Mobile === */
+.aq-dialog .aq-touch-controls {
+  display: none;
+  position: absolute;
+  z-index: 5;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 10px;
+  align-items: center;
+  background: rgba(2, 15, 28, 0.75);
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.aq-dialog .aq-touch-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(56, 189, 248, 0.6);
+  background: rgba(3, 24, 42, 0.85);
+  color: #38bdf8;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .12s, transform .1s;
+}
+
+.aq-dialog .aq-touch-btn:active {
+  background: rgba(14, 165, 233, 0.4);
+  transform: scale(0.92);
+}
+
+.aq-dialog .aq-drop-btn {
+  width: 50px;
+  height: 50px;
+  background: rgba(14, 165, 233, 0.3);
+  border-color: #00e5ff;
+  color: #00e5ff;
+  font-size: 22px;
+}
+
+/* Fullscreen expanded */
+.game-dialog.aq-dialog.is-expanded,
+.aq-dialog .aq-shell:fullscreen {
+  width: 100dvw;
+  height: 100dvh;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .game-dialog.aq-dialog {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .aq-dialog .aq-toolbar { padding: 6px 12px; min-height: 48px; }
+  .aq-dialog .aq-brand { font-size: 9px; letter-spacing: 1px; }
+  .aq-dialog .aq-brand small { display: none; }
+  .aq-dialog .aq-panel { padding: 4px; }
+  .aq-dialog .aq-touch-controls { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aq-dialog *,
+  .aq-dialog *::before,
+  .aq-dialog *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

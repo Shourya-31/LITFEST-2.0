@@ -5,6 +5,7 @@ import { MarineVegetation } from './components/MarineVegetation';
 import { UnderwaterTitle } from './components/UnderwaterTitle';
 import { FestivalNav } from './components/FestivalNav';
 import { LitfestAboutSection } from '../about';
+import { GameLauncher } from '../game/GameLauncher';
 import './LitfestUnderwaterHome.css';
 
 interface LitfestUnderwaterHomeProps {
@@ -154,6 +155,8 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
           onDescendClick={() => scrollToSection('about')}
         />
       </section>
+
+      <GameLauncher />
 
       {/* 3. Deeper Ocean Descent & Litfest 2.0 About Experience */}
       <LitfestAboutSection
