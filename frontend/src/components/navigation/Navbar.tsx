@@ -2,27 +2,27 @@ import React, { useState } from 'react';
 import { soundEngine } from '../../utils/soundEngine';
 
 interface NavbarProps {
-  currentSection?: 'home' | 'timeline' | 'faq';
+  currentSection?: 'home' | 'timeline' | 'about' | 'arcade';
   onNavigateHome?: () => void;
   onNavigateTimeline?: () => void;
+  onNavigateAbout?: () => void;
+  onNavigateArcade?: () => void;
   onOpenFaq?: () => void;
   onOpenArenas?: () => void;
   onOpenRegister?: () => void;
   isFaqOpen?: boolean;
-  isAudioPlaying?: boolean;
-  onToggleAudio?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentSection = 'home',
   onNavigateHome,
   onNavigateTimeline,
+  onNavigateAbout,
+  onNavigateArcade,
   onOpenFaq,
   onOpenArenas,
   onOpenRegister,
   isFaqOpen = false,
-  isAudioPlaying = false,
-  onToggleAudio,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -38,6 +38,20 @@ export const Navbar: React.FC<NavbarProps> = ({
     soundEngine.playDroplet();
     setMobileMenuOpen(false);
     if (onNavigateTimeline) onNavigateTimeline();
+  };
+
+  const handleAboutClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    soundEngine.playDroplet();
+    setMobileMenuOpen(false);
+    if (onNavigateAbout) onNavigateAbout();
+  };
+
+  const handleArcadeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    soundEngine.playDroplet();
+    setMobileMenuOpen(false);
+    if (onNavigateArcade) onNavigateArcade();
   };
 
   const handleFaqClick = (e: React.MouseEvent) => {
@@ -95,6 +109,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             id="nav-link-timeline"
           >
             <span>Timeline</span>
+          </button>
+
+          <button
+            type="button"
+            className={`nav-item nav-link-btn interactive ${currentSection === 'about' ? 'active' : ''}`}
+            onClick={handleAboutClick}
+            id="nav-link-about"
+          >
+            <span>About</span>
+          </button>
+
+          <button
+            type="button"
+            className={`nav-item nav-link-btn interactive ${currentSection === 'arcade' ? 'active' : ''}`}
+            onClick={handleArcadeClick}
+            id="nav-link-arcade"
+          >
+            <span>Arcade</span>
           </button>
 
           <button
@@ -159,6 +191,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleTimelineClick}
           >
             <span>Timeline</span>
+          </button>
+
+          <button
+            type="button"
+            className="mobile-nav-link"
+            onClick={handleAboutClick}
+          >
+            <span>About</span>
+          </button>
+
+          <button
+            type="button"
+            className="mobile-nav-link"
+            onClick={handleArcadeClick}
+          >
+            <span>Arcade</span>
           </button>
 
           <button

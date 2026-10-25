@@ -6,6 +6,8 @@ import { LitfestUnderwaterHome } from '../features/home/LitfestUnderwaterHome';
 import { BubblesTransition } from '../features/home/components/BubblesTransition';
 import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
+import { LitfestAboutSection } from '../features/about';
+import { GameLauncher } from '../features/game/GameLauncher';
 import { X, Compass, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
@@ -13,7 +15,9 @@ export const App: React.FC = () => {
   const [faqOpen, setFaqOpen] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<'register' | 'arenas' | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-  const [currentNavSection, setCurrentNavSection] = useState<'home' | 'timeline'>('home');
+  const [currentNavSection, setCurrentNavSection] = useState<
+    'home' | 'timeline' | 'about' | 'arcade'
+  >('home');
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [transitionDirection, setTransitionDirection] = useState<'dive' | 'surface'>('dive');
   const lenisInstanceRef = useRef<Lenis | null>(null);
@@ -25,6 +29,13 @@ export const App: React.FC = () => {
 
   const handleNavigateTimeline = () => {
     if (currentNavSection === 'timeline' || isTransitioning) return;
+    if (currentNavSection !== 'home') {
+      setCurrentNavSection('timeline');
+      setFaqOpen(false);
+      setActiveModal(null);
+      lenisInstanceRef.current?.scrollTo(0, { immediate: true });
+      return;
+    }
     setIsTransitioning(true);
     setTransitionDirection('dive');
 
@@ -43,8 +54,28 @@ export const App: React.FC = () => {
 
   const handleNavigateHome = () => {
     if (currentNavSection === 'home' || isTransitioning) return;
+    if (currentNavSection !== 'timeline') {
+      setCurrentNavSection('home');
+      setFaqOpen(false);
+      setActiveModal(null);
+      return;
+    }
     setIsTransitioning(true);
     setTransitionDirection('surface');
+  };
+
+  const handleNavigateAbout = () => {
+    if (isTransitioning) return;
+    setCurrentNavSection('about');
+    setFaqOpen(false);
+    setActiveModal(null);
+  };
+
+  const handleNavigateArcade = () => {
+    if (isTransitioning) return;
+    setCurrentNavSection('arcade');
+    setFaqOpen(false);
+    setActiveModal(null);
   };
 
   // Switch views at peak bubble surge density (300ms)
@@ -84,12 +115,12 @@ export const App: React.FC = () => {
         currentSection={currentNavSection}
         onNavigateHome={handleNavigateHome}
         onNavigateTimeline={handleNavigateTimeline}
+        onNavigateAbout={handleNavigateAbout}
+        onNavigateArcade={handleNavigateArcade}
         onOpenFaq={() => toggleFaq(true)}
         onOpenArenas={() => setActiveModal('arenas')}
         onOpenRegister={() => setActiveModal('register')}
         isFaqOpen={faqOpen}
-        isAudioPlaying={isAudioPlaying}
-        onToggleAudio={toggleAudio}
       />
 
       {/* 2. Sleek Floating Bottom-Left Mute Button - Only visible on Home */}
@@ -116,11 +147,21 @@ export const App: React.FC = () => {
       {/* 4. Surface & Abyssal Underwater Homepage */}
       <LitfestUnderwaterHome
         onExploreClick={handleNavigateTimeline}
-        onRegisterClick={() => setActiveModal('register')}
-        isAudioPlaying={isAudioPlaying}
-        onToggleAudio={toggleAudio}
-        isTimelineActive={currentNavSection === 'timeline'}
+        isTimelineActive={currentNavSection !== 'home'}
       />
+
+      {(currentNavSection === 'about' || currentNavSection === 'arcade') && (
+        <section
+          className="secondary-content-view"
+          aria-label={currentNavSection === 'about' ? 'About Litfest 2.0' : 'Blue Pulse Arcade'}
+        >
+          {currentNavSection === 'about' ? (
+            <LitfestAboutSection onAscendClick={handleNavigateHome} />
+          ) : (
+            <GameLauncher />
+          )}
+        </section>
+      )}
 
       {/* 4. Cinematic Oceanic Bubbles Transition Layer */}
       <BubblesTransition
@@ -195,6 +236,9 @@ export const App: React.FC = () => {
                 </div>
               </div>
               <div className="modal-cta-group">
+                <a className="modal-secondary-btn" href="/contact">
+                  Contact Organizing Committee
+                </a>
                 <button
                   type="button"
                   className="modal-primary-btn"

@@ -1,10 +1,12 @@
 # LITFEST-2.0
 
-Root architecture scaffold for the next LitFest website for Literati, NIT Raipur.
+Root architecture scaffold for the next LitFest website for Literati, NIT Raipur,
+with an underwater homepage, sponsors page, and contact page in the frontend.
 
-> **Scaffold only:** directories and empty `.gitkeep` files reserve the planned
-> structure. Application features, dependencies, workspace tooling, database
-> schemas, and deployment configuration have not been implemented.
+> **Early development:** most directories remain architectural placeholders.
+> The frontend currently contains a runnable underwater homepage, sponsors page,
+> and contact page; other planned application features, backend dependencies,
+> database schemas, and deployment configuration have not been implemented.
 
 ## Repository structure
 
@@ -45,7 +47,8 @@ Root architecture scaffold for the next LitFest website for Literati, NIT Raipur
 └── shared/                   # Cross-application contracts, types, and constants
 ```
 
-All planned directories are tracked using empty `.gitkeep` placeholders.
+Most planned directories are tracked using empty `.gitkeep` placeholders; the
+frontend contains the initial working homepage, sponsors, and contact pages.
 
 ## Planned feature areas
 
@@ -67,20 +70,28 @@ validation, persistence, media storage, observability, and tests.
 
 ## Architecture and technology notes
 
-The previous LITERATI project uses React, Vite, and React Router on the
-frontend, and Express with Mongoose on the backend. This scaffold is organized
-to accommodate those existing technologies; it does not select or configure
-frameworks, dependencies, workspace tooling, a database schema, or a deployment
-strategy. Existing legacy paths and APIs have not been copied into this
-repository. Compatibility should be considered when those are designed and
-implemented in future work.
+The frontend currently uses React, TypeScript, and Vite for the homepage,
+sponsors, and contact pages. The contact page is available at `/contact`, and
+the sponsors page is available at `/sponsors`.
+The previous LITERATI project also uses React Router on the frontend, and
+Express with Mongoose on the backend. The backend, shared workspace tooling,
+database schema, and deployment strategy are not configured yet. Existing
+legacy paths and APIs have not been copied into this repository. Compatibility
+should be considered when those are designed and implemented in future work.
 
 See `docs/architecture/` for future architecture documentation and
 `docs/development/` for future development setup guidance.
 
 ## Development status
 
-There is no runnable application or test suite configured yet. This repository
-currently provides the planned directory structure only. Implement features
-incrementally in their designated areas, and add the necessary project
-configuration when the implementation approach is agreed.
+The frontend pages are runnable from `frontend/` using `npm install` and
+`npm run dev`. The rest of this repository primarily provides the planned
+directory structure. Blue Pulse: Ocean Rush is available through its clickable card
+directly below the homepage hero. Run `npm test` for the game checks and
+`npm run build` for the complete React frontend. See
+[game development notes](docs/development/blue-pulse.md) for controls and adapters.
+Game 2 opens **The Sunken City of Atlantis — The Lost Literary Trials**, a ten-chamber literary quiz adventure
+with independent progress and leaderboard adapters. See
+[Atlantis development notes](docs/development/atlantis.md) for setup, scoring, and integration.
+Implement features incrementally in their designated areas, and add the necessary project
+configuration as implementation proceeds.

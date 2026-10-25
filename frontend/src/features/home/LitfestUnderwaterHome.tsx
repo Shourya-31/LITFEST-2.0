@@ -1,76 +1,66 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { OceanAtmosphere } from './components/OceanAtmosphere';
 import { MarineLife } from './components/MarineLife';
+import { MarineVegetation } from './components/MarineVegetation';
 import { UnderwaterTitle } from './components/UnderwaterTitle';
 import './LitfestUnderwaterHome.css';
 
 interface LitfestUnderwaterHomeProps {
   onExploreClick?: () => void;
-  onRegisterClick?: () => void;
-  isAudioPlaying?: boolean;
-  onToggleAudio?: () => void;
   isTimelineActive?: boolean;
 }
 
 export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   onExploreClick,
-  onRegisterClick,
-  isAudioPlaying = false,
-  onToggleAudio,
   isTimelineActive = false,
 }) => {
   const touchStartY = useRef<number | null>(null);
   const isTriggeredRef = useRef<boolean>(false);
 
-  // Reset trigger lock whenever returning to home
   useEffect(() => {
     if (!isTimelineActive) {
       isTriggeredRef.current = false;
     }
   }, [isTimelineActive]);
 
-  const triggerDive = () => {
+  const triggerDive = useCallback(() => {
     if (isTriggeredRef.current || isTimelineActive) return;
     isTriggeredRef.current = true;
-    if (onExploreClick) {
-      onExploreClick();
-    }
-  };
+    onExploreClick?.();
+  }, [isTimelineActive, onExploreClick]);
 
-  const handleHomeWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    if (e.deltaY > 15) {
+  const handleHomeWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (event.deltaY > 15) {
       triggerDive();
     }
   };
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    touchStartY.current = e.touches[0].clientY;
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartY.current = event.touches[0]?.clientY ?? null;
   };
 
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (touchStartY.current !== null) {
-      const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-      if (deltaY > 40) {
-        triggerDive();
-      }
-      touchStartY.current = null;
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touchStart = touchStartY.current;
+    const touchEnd = event.changedTouches[0]?.clientY;
+    if (touchStart !== null && touchEnd !== undefined && touchStart - touchEnd > 40) {
+      triggerDive();
     }
+    touchStartY.current = null;
   };
 
-  // Window-level wheel listener for instant response anywhere on the home screen
   useEffect(() => {
     if (isTimelineActive) return;
 
-    const handleWindowWheel = (e: WheelEvent) => {
+    const handleWindowWheel = (event: WheelEvent) => {
       if (document.querySelector('.ocean-modal-overlay')) return;
-      if (e.deltaY > 15) {
+      if (event.deltaY > 15) {
         triggerDive();
       }
     };
 
     window.addEventListener('wheel', handleWindowWheel, { passive: true });
     return () => window.removeEventListener('wheel', handleWindowWheel);
-  }, [isTimelineActive]);
+  }, [isTimelineActive, triggerDive]);
 
   return (
     <div
@@ -86,17 +76,10 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
         pointerEvents: isTimelineActive ? 'none' : 'auto',
       }}
     >
-      {/* 1. Deep Sea Atmosphere & Volumetric Sunlight */}
       <OceanAtmosphere />
-
-      {/* 2. Layered Flat Marine Silhouettes (Whale, Shark, Shoal, Octopus, Jellyfish, Manta) */}
-      <MarineLife />
-
-      {/* 3. Central Prominent Display Title (LITFEST 2.0, Unboxed) */}
-      <UnderwaterTitle
-        onRegisterClick={onRegisterClick}
-        onExploreClick={triggerDive}
-      />
+      <MarineLife showJellyfish />
+      <MarineVegetation />
+      <UnderwaterTitle onExploreClick={triggerDive} />
     </div>
   );
 };

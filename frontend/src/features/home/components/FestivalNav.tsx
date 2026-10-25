@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './FestivalNav.css';
 
 interface FestivalNavProps {
@@ -11,6 +11,15 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
   onNavClick,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLink = (section: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -21,13 +30,17 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
   };
 
   return (
-    <header className="festival-nav-header" role="banner">
+    <header className={`festival-nav-header ${isScrolled ? 'nav-scrolled' : ''}`} role="banner">
       <div className="nav-inner-container">
-        {/* Left: Brand Identity */}
-        <a href="/" className="nav-brand-logo" id="nav-brand-logo">
+        {/* Left: Brand Identity (Clicking returns to top of page) */}
+        <a
+          href="#home"
+          className="nav-brand-logo"
+          id="nav-brand-logo"
+          onClick={(e) => handleLink('home', e)}
+          title="Return to Litfest 2.0 Surface"
+        >
           <span className="brand-primary">LITERATI</span>
-          <span className="brand-dot">•</span>
-          <span className="brand-secondary">NIT RAIPUR</span>
         </a>
 
         {/* Center: Navigation Links */}

@@ -1,7 +1,11 @@
 import React from 'react';
 import './MarineLife.css';
 
-export const MarineLife: React.FC = () => {
+interface MarineLifeProps {
+  showJellyfish?: boolean;
+}
+
+export const MarineLife: React.FC<MarineLifeProps> = ({ showJellyfish = true }) => {
   // Generate coordinates for an organic, natural school of small fish
   const fishSchool = [
     { id: 1, x: 0, y: 0, s: 1.0 },
@@ -226,134 +230,138 @@ export const MarineLife: React.FC = () => {
         </svg>
       </div>
 
-      {/* 5. TRANSLUCENT BIOLUMINESCENT JELLYFISHES */}
-      {/* Primary Jellyfish (Right midwater) */}
-      <div className="creature-track jellyfish-track jelly-main">
-        <svg
-          className="jelly-svg"
-          viewBox="0 0 120 220"
-          width="120"
-          height="220"
-        >
-          <defs>
-            <linearGradient id="jellyBellGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
-              <stop offset="40%" stopColor="#0ea5e9" stopOpacity="0.55" />
-              <stop offset="90%" stopColor="#0284c7" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#0369a1" stopOpacity="0" />
-            </linearGradient>
-            <radialGradient id="jellyGlow" cx="50%" cy="40%" r="45%">
-              <stop offset="0%" stopColor="#e0f2fe" stopOpacity="0.8" />
-              <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
-            </radialGradient>
-          </defs>
+      {/* 5. TRANSLUCENT BIOLUMINESCENT JELLYFISHES (Excluded in deeper About zone) */}
+      {showJellyfish && (
+        <>
+          {/* Primary Jellyfish (Right midwater) */}
+          <div className="creature-track jellyfish-track jelly-main">
+            <svg
+              className="jelly-svg"
+              viewBox="0 0 120 220"
+              width="120"
+              height="220"
+            >
+              <defs>
+                <linearGradient id="jellyBellGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+                  <stop offset="40%" stopColor="#0ea5e9" stopOpacity="0.55" />
+                  <stop offset="90%" stopColor="#0284c7" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#0369a1" stopOpacity="0" />
+                </linearGradient>
+                <radialGradient id="jellyGlow" cx="50%" cy="40%" r="45%">
+                  <stop offset="0%" stopColor="#e0f2fe" stopOpacity="0.8" />
+                  <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
+                </radialGradient>
+              </defs>
 
-          {/* Translucent Pulsing Bell */}
-          <path
-            className="jelly-bell"
-            d="
-              M 18,65
-              C 18,24 35,10 60,10
-              C 85,10 102,24 102,65
-              C 95,70 86,66 79,69
-              C 73,72 66,68 60,71
-              C 54,68 47,72 41,69
-              C 34,66 25,70 18,65
-              Z
-            "
-            fill="url(#jellyBellGrad)"
-          />
+              {/* Translucent Pulsing Bell */}
+              <path
+                className="jelly-bell"
+                d="
+                  M 18,65
+                  C 18,24 35,10 60,10
+                  C 85,10 102,24 102,65
+                  C 95,70 86,66 79,69
+                  C 73,72 66,68 60,71
+                  C 54,68 47,72 41,69
+                  C 34,66 25,70 18,65
+                  Z
+                "
+                fill="url(#jellyBellGrad)"
+              />
 
-          {/* Luminous Core */}
-          <ellipse cx="60" cy="42" rx="22" ry="16" fill="url(#jellyGlow)" />
+              {/* Luminous Core */}
+              <ellipse cx="60" cy="42" rx="22" ry="16" fill="url(#jellyGlow)" />
 
-          {/* Oral arms */}
-          <path
-            d="M 50,70 Q 44,95 56,125 Q 46,145 58,175 Q 52,150 48,125 Z"
-            fill="#38bdf8"
-            opacity="0.6"
-          />
-          <path
-            d="M 70,70 Q 76,95 64,125 Q 74,145 62,175 Q 68,150 72,125 Z"
-            fill="#0ea5e9"
-            opacity="0.5"
-          />
+              {/* Oral arms */}
+              <path
+                d="M 50,70 Q 44,95 56,125 Q 46,145 58,175 Q 52,150 48,125 Z"
+                fill="#38bdf8"
+                opacity="0.6"
+              />
+              <path
+                d="M 70,70 Q 76,95 64,125 Q 74,145 62,175 Q 68,150 72,125 Z"
+                fill="#0ea5e9"
+                opacity="0.5"
+              />
 
-          {/* Whispy Tentacles */}
-          <path
-            className="jelly-filament f1"
-            d="M 28,68 Q 20,110 32,155 T 24,205"
-            fill="none"
-            stroke="#7dd3fc"
-            strokeWidth="1.2"
-            opacity="0.6"
-          />
-          <path
-            className="jelly-filament f2"
-            d="M 40,70 Q 34,115 46,160 T 36,215"
-            fill="none"
-            stroke="#38bdf8"
-            strokeWidth="1.4"
-            opacity="0.75"
-          />
-          <path
-            className="jelly-filament f3"
-            d="M 80,70 Q 86,115 74,160 T 84,215"
-            fill="none"
-            stroke="#38bdf8"
-            strokeWidth="1.4"
-            opacity="0.75"
-          />
-          <path
-            className="jelly-filament f4"
-            d="M 92,68 Q 100,110 88,155 T 96,205"
-            fill="none"
-            stroke="#7dd3fc"
-            strokeWidth="1.2"
-            opacity="0.6"
-          />
-        </svg>
-      </div>
+              {/* Whispy Tentacles */}
+              <path
+                className="jelly-filament f1"
+                d="M 28,68 Q 20,110 32,155 T 24,205"
+                fill="none"
+                stroke="#7dd3fc"
+                strokeWidth="1.2"
+                opacity="0.6"
+              />
+              <path
+                className="jelly-filament f2"
+                d="M 40,70 Q 34,115 46,160 T 36,215"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="1.4"
+                opacity="0.75"
+              />
+              <path
+                className="jelly-filament f3"
+                d="M 80,70 Q 86,115 74,160 T 84,215"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="1.4"
+                opacity="0.75"
+              />
+              <path
+                className="jelly-filament f4"
+                d="M 92,68 Q 100,110 88,155 T 96,205"
+                fill="none"
+                stroke="#7dd3fc"
+                strokeWidth="1.2"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
 
-      {/* Secondary Jellyfish (Distant background) */}
-      <div className="creature-track jellyfish-track jelly-distant">
-        <svg
-          className="jelly-svg"
-          viewBox="0 0 120 220"
-          width="75"
-          height="140"
-        >
-          <path
-            className="jelly-bell"
-            d="
-              M 18,65
-              C 18,24 35,10 60,10
-              C 85,10 102,24 102,65
-              C 95,70 86,66 79,69
-              C 73,72 66,68 60,71
-              C 54,68 47,72 41,69
-              C 34,66 25,70 18,65
-              Z
-            "
-            fill="rgba(56, 189, 248, 0.45)"
-          />
-          <path
-            d="M 35,70 Q 30,115 40,160 T 32,210"
-            fill="none"
-            stroke="#38bdf8"
-            strokeWidth="1"
-            opacity="0.4"
-          />
-          <path
-            d="M 85,70 Q 90,115 80,160 T 88,210"
-            fill="none"
-            stroke="#38bdf8"
-            strokeWidth="1"
-            opacity="0.4"
-          />
-        </svg>
-      </div>
+          {/* Secondary Jellyfish (Distant background) */}
+          <div className="creature-track jellyfish-track jelly-distant">
+            <svg
+              className="jelly-svg"
+              viewBox="0 0 120 220"
+              width="75"
+              height="140"
+            >
+              <path
+                className="jelly-bell"
+                d="
+                  M 18,65
+                  C 18,24 35,10 60,10
+                  C 85,10 102,24 102,65
+                  C 95,70 86,66 79,69
+                  C 73,72 66,68 60,71
+                  C 54,68 47,72 41,69
+                  C 34,66 25,70 18,65
+                  Z
+                "
+                fill="rgba(56, 189, 248, 0.45)"
+              />
+              <path
+                d="M 35,70 Q 30,115 40,160 T 32,210"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="1"
+                opacity="0.4"
+              />
+              <path
+                d="M 85,70 Q 90,115 80,160 T 88,210"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="1"
+                opacity="0.4"
+              />
+            </svg>
+          </div>
+        </>
+      )}
 
       {/* 6. MANTA RAYS (Gliding through lower abyss) */}
       <div className="creature-track manta-track manta-1">

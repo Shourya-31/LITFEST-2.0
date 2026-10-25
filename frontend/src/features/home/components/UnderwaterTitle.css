@@ -95,17 +95,17 @@
 }
 
 /* =========================================
-   PRIMARY TITLE: LITFEST (Unboxed, Pure Typography)
+   PRIMARY TITLE: LITFEST (Unboxed, Dominant Serif)
    ========================================= */
 .ocean-litfest-title {
   margin: 0;
   padding: 0 0 0 clamp(6px, 1.8vw, 18px);
   font-family: var(--font-display);
-  font-size: clamp(48px, 11vw, 110px);
+  font-size: clamp(62px, 13vw, 136px);
   font-weight: 900;
-  letter-spacing: clamp(6px, 1.8vw, 18px);
+  letter-spacing: clamp(8px, 2vw, 22px);
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 0.95;
   user-select: none;
   position: relative;
   /* Luminous water-caustic gradient text fill */
@@ -121,23 +121,23 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   /* Multi-layered ocean glow */
-  filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.45))
-    drop-shadow(0 0 50px rgba(14, 165, 233, 0.3));
+  filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.5))
+    drop-shadow(0 0 60px rgba(14, 165, 233, 0.35));
   animation: titleSubtleShimmer 6s ease-in-out infinite alternate;
 }
 
 @keyframes titleSubtleShimmer {
   0% {
-    filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.4))
-      drop-shadow(0 0 40px rgba(14, 165, 233, 0.25));
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.45))
+      drop-shadow(0 0 50px rgba(14, 165, 233, 0.3));
   }
   50% {
-    filter: drop-shadow(0 0 28px rgba(125, 211, 252, 0.65))
-      drop-shadow(0 0 65px rgba(56, 189, 248, 0.45));
+    filter: drop-shadow(0 0 32px rgba(125, 211, 252, 0.7))
+      drop-shadow(0 0 75px rgba(56, 189, 248, 0.5));
   }
   100% {
-    filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.45))
-      drop-shadow(0 0 45px rgba(14, 165, 233, 0.3));
+    filter: drop-shadow(0 0 22px rgba(56, 189, 248, 0.5))
+      drop-shadow(0 0 55px rgba(14, 165, 233, 0.35));
   }
 }
 
@@ -148,10 +148,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
-  max-width: 480px;
-  margin-top: 14px;
+  max-width: 520px;
+  margin-top: 18px;
 }
 
 .accent-bar {
@@ -186,17 +186,17 @@
 .edition-text-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   position: relative;
 }
 
 .edition-number {
   font-family: var(--font-serif);
-  font-size: clamp(20px, 3.2vw, 34px);
+  font-size: clamp(24px, 3.6vw, 38px);
   font-weight: 700;
-  letter-spacing: 6px;
+  letter-spacing: 8px;
   color: #bae6fd;
-  text-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+  text-shadow: 0 0 18px rgba(56, 189, 248, 0.65);
 }
 
 .celestial-spark {
@@ -220,48 +220,56 @@
 }
 
 /* =========================================
-   FREE-FLOATING UNBOXED ACTION BUTTONS
+   PRIMARY HERO CALL TO ACTION (Single prominent Explore Events)
    ========================================= */
 .hero-action-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-top: 28px;
-  flex-wrap: wrap;
-}
-
-.ocean-cta {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  padding: 13px 28px;
-  border-radius: 100px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
+  margin-top: 38px;
 }
 
 .ocean-cta.explore-btn {
-  background: rgba(3, 19, 42, 0.45);
-  color: #e0f2fe;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(56, 189, 248, 0.15);
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  min-width: 260px;
+  padding: 16px 44px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(14, 165, 233, 0.28) 0%,
+    rgba(3, 22, 48, 0.75) 100%
+  );
+  color: #f0f9ff;
+  border: 1.5px solid rgba(56, 189, 248, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 4px 28px rgba(2, 132, 199, 0.45),
+    inset 0 0 20px rgba(56, 189, 248, 0.25);
 }
 
 .ocean-cta.explore-btn:hover {
-  background: rgba(14, 165, 233, 0.2);
-  border-color: #38bdf8;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(14, 165, 233, 0.45) 0%,
+    rgba(4, 28, 58, 0.85) 100%
+  );
+  border-color: #7dd3fc;
   color: #ffffff;
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.4), inset 0 0 16px rgba(56, 189, 248, 0.3);
+  box-shadow:
+    0 8px 38px rgba(56, 189, 248, 0.65),
+    inset 0 0 26px rgba(56, 189, 248, 0.4);
 }
 
 .cta-chevron {
@@ -269,34 +277,7 @@
 }
 
 .ocean-cta.explore-btn:hover .cta-chevron {
-  transform: translateX(4px);
-}
-
-.ocean-cta.register-btn {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  color: #ffffff;
-  border: 1px solid rgba(186, 230, 253, 0.5);
-  box-shadow: 0 4px 24px rgba(2, 132, 199, 0.55);
-}
-
-.ocean-cta.register-btn:hover {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 36px rgba(14, 165, 233, 0.7);
-  border-color: #bae6fd;
-}
-
-.btn-glow-pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 20px #38bdf8;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.ocean-cta.register-btn:hover .btn-glow-pulse {
-  opacity: 0.6;
+  transform: translateX(5px);
 }
 
 /* =========================================
@@ -376,22 +357,29 @@
   .ocean-litfest-title {
     letter-spacing: 5px;
     padding-left: 5px;
+    font-size: clamp(46px, 14vw, 72px);
   }
 
   .edition-line {
     max-width: 320px;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .edition-number {
+    font-size: 22px;
+    letter-spacing: 5px;
   }
 
   .hero-action-buttons {
-    flex-direction: column;
+    margin-top: 28px;
     width: 100%;
-    gap: 12px;
   }
 
-  .ocean-cta {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
+  .ocean-cta.explore-btn {
+    min-width: 220px;
+    padding: 14px 32px;
+    font-size: 15px;
   }
 
   .scroll-invitation {

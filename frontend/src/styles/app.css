@@ -295,6 +295,16 @@ html.lenis, html.lenis body {
   transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
+.secondary-content-view {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 88px;
+  background-color: var(--color-abyss);
+}
+
 /* =========================================
    CAPTAIN'S DESK FAQ CHAMBER MODAL
    ========================================= */
@@ -438,6 +448,7 @@ html.lenis, html.lenis body {
     border-left: 1px solid rgba(56, 189, 248, 0.25);
     padding: 60px 24px;
     z-index: 110;
+    pointer-events: auto;
   }
 
   .mobile-nav-link {
