@@ -220,7 +220,7 @@ export const LitfestUnderwaterHome: React.FC = () => {
                 </div>
                 <div className="modal-cta-group">
                   <a
-                    href="/signup"
+                    href="/login"
                     className="modal-primary-btn"
                     id="modal-register-link"
                   >

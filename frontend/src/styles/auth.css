@@ -1,481 +1,713 @@
 /* ==========================================================================
-   LitFest 2.0 - Auth Layout & Components CSS
-   Complies with LitFest_Frontend_Guide.pdf (Sections 2, 3, 4, 5, 7, 10)
+   LitFest 2.0 - Blue Pulse Authentication Styling
+   Coastal Editorial 50/50 Centered Popup Design System
+   Source: litfest_registration_concept.html & LitFest 2.0 Editorial Guidelines
    ========================================================================== */
 
-/* Page Wrapper */
+:root {
+  --litfest-midnight: #082567;
+  --litfest-coral: #F23850;
+  --litfest-peach: #F9CBB8;
+  --litfest-rose: #D98A9E;
+  --litfest-violet: #805080;
+  --litfest-ivory: #FAF6F1;
+  --litfest-ink: #20243A;
+  --litfest-slate: #626579;
+  --litfest-border: #d8d6df;
+  --litfest-placeholder: #9293a2;
+}
+
+/* Modal Overlay Container */
 .litfest-auth-wrapper {
-  min-height: calc(100vh - 140px);
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-6) var(--space-4) var(--space-8);
+  box-sizing: border-box;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(6, 12, 30, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.litfest-auth-card,
+.litfest-auth-card * {
   box-sizing: border-box;
 }
 
-/* Two-Column Card Container */
+/* Centered Popup Card - Equal 50/50 Split */
 .litfest-auth-card {
-  width: 100%;
-  max-width: 1040px;
+  position: relative;
   display: grid;
-  grid-template-columns: 0.92fr 1.08fr;
-  background-color: var(--color-ivory);
-  border-radius: var(--radius-lg);
+  grid-template-columns: 1fr 1fr;
+  width: min(1040px, 100%);
+  min-height: 640px;
+  max-height: calc(100vh - 48px);
+  margin: auto;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: var(--shadow-card);
-  border: 1px solid rgba(8, 37, 103, 0.08);
+  background: var(--litfest-ivory);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 24px 70px rgba(10, 18, 44, 0.32);
 }
 
-/* Left Art Panel */
+/* Close button on popup */
+.litfest-auth-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--litfest-slate);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(8, 37, 103, 0.12);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.litfest-auth-close-btn:hover {
+  color: var(--litfest-midnight);
+  background: #ffffff;
+  border-color: rgba(8, 37, 103, 0.3);
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Left Panel: Blue Pulse Editorial Artwork
+   ========================================================================== */
 .litfest-art-panel {
   position: relative;
-  background: linear-gradient(160deg, var(--color-violet) 0%, var(--color-midnight) 62%, var(--color-ink) 100%);
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: var(--space-7) var(--space-6);
+  width: 100%;
+  height: 100%;
+  min-height: 640px;
+  padding: 38px;
   overflow: hidden;
   user-select: none;
-  min-height: 520px;
+  color: #FAF6F1;
+  background:
+    radial-gradient(ellipse at 16% 80%, rgba(242, 56, 80, 0.55), transparent 35%),
+    radial-gradient(ellipse at 80% 10%, rgba(217, 138, 158, 0.68), transparent 38%),
+    linear-gradient(155deg, #805080 0%, #423f83 27%, #17457d 57%, #082567 100%);
 }
 
-/* Top-Right Dusty Rose Glow */
-.litfest-art-glow-rose {
+/* Diagonal linear grid texture */
+.litfest-art-panel::before {
+  content: "";
   position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(217, 138, 158, 0.45) 0%, transparent 70%);
-  filter: blur(25px);
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(8, 15, 46, 0.12), rgba(8, 15, 46, 0.35)),
+    repeating-linear-gradient(165deg, transparent 0 37px, rgba(255, 255, 255, 0.035) 38px 39px);
 }
 
-/* Low-Left Ocean Cyan Water Glow */
-.litfest-art-glow-coral {
-  position: absolute;
-  bottom: -40px;
-  left: -40px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 240, 255, 0.22) 0%, transparent 70%);
-  filter: blur(30px);
-  pointer-events: none;
-}
-
-/* Peach Sun and Scenery Container */
-.litfest-art-scene {
-  position: relative;
-  width: 100%;
-  height: 230px;
-  margin: var(--space-2) 0 var(--space-4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
+/* Coral Sun */
 .litfest-art-sun {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  overflow: visible;
-}
-
-.litfest-art-waves {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 125px;
-  z-index: 2;
-  pointer-events: none;
-  overflow: visible;
-}
-
-/* Header in Art Panel */
-.litfest-art-brand {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-}
-
-.litfest-particle-wrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.litfest-particle-box {
-  width: 100%;
-  height: 160px;
-  position: relative;
-}
-
-.litfest-particle-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: calc(-1 * var(--space-2));
-  margin-bottom: var(--space-2);
-  padding: 3px var(--space-3);
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(249, 203, 184, 0.2);
-  backdrop-filter: blur(8px);
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-peach);
-  opacity: 0.85;
-  user-select: none;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-.litfest-particle-hint-dot {
-  width: 5px;
-  height: 5px;
+  z-index: 1;
+  top: 18%;
+  right: 13%;
+  width: 170px;
+  height: 170px;
   border-radius: 50%;
-  background-color: #00f0ff;
-  box-shadow: 0 0 6px #00f0ff;
-  animation: pulseHint 2s infinite ease-in-out;
+  background: radial-gradient(circle at 40% 40%, #ffe3cf 0, #f9cbb8 35%, rgba(242, 56, 80, 0.7) 62%, transparent 72%);
+  opacity: 0.95;
+  pointer-events: none;
 }
 
-@keyframes pulseHint {
-  0%, 100% { opacity: 0.5; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.2); }
+/* Horizon Curve */
+.litfest-art-horizon {
+  position: absolute;
+  z-index: 1;
+  left: -8%;
+  right: -8%;
+  bottom: 23%;
+  height: 37%;
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  background: linear-gradient(180deg, rgba(242, 56, 80, 0.28), rgba(10, 35, 88, 0.45) 36%, rgba(4, 17, 50, 0.92));
+  border-top: 1px solid rgba(255, 219, 210, 0.45);
+  transform: rotate(-3deg);
+  pointer-events: none;
 }
 
-.litfest-art-wordmark {
-  font-family: var(--font-accent);
-  font-size: 28px;
-  letter-spacing: 0.04em;
-  color: var(--color-ivory);
-  margin-bottom: var(--space-2);
+/* Wave Curve */
+.litfest-art-wave {
+  position: absolute;
+  z-index: 1;
+  left: -10%;
+  right: -10%;
+  bottom: 17%;
+  height: 15%;
+  border-top: 1px solid rgba(249, 203, 184, 0.7);
+  border-radius: 50%;
+  transform: rotate(5deg);
+  pointer-events: none;
 }
 
-.litfest-art-tagline {
-  font-family: var(--font-auth-display, 'Cormorant Garamond', serif);
-  font-size: 17px;
-  font-style: italic;
-  color: var(--color-peach);
-  letter-spacing: 0.02em;
-  opacity: 0.92;
-  text-align: center;
-}
-
-.litfest-art-quote-container {
+/* Editorial Content Block */
+.litfest-art-content {
   position: relative;
-  z-index: 3;
-  margin-top: auto;
-  padding-top: var(--space-4);
-  border-top: 1px solid rgba(249, 203, 184, 0.2);
+  z-index: 2;
+  max-width: 380px;
+}
+
+.litfest-art-eyebrow {
+  display: block;
+  margin: 0 0 18px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f7d9dc;
+}
+
+.litfest-art-brand {
+  margin: 0 0 14px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(44px, 5vw, 67px);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.litfest-art-brand span {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72em;
+}
+
+.litfest-art-pulse {
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #f8d8d6;
+}
+
+.litfest-art-rule {
+  width: 78px;
+  height: 1px;
+  margin: 24px 0;
+  background: linear-gradient(90deg, var(--litfest-coral), var(--litfest-peach));
 }
 
 .litfest-art-quote {
-  font-family: var(--font-auth-display, 'Cormorant Garamond', serif);
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--color-ivory);
-  opacity: 0.9;
+  max-width: 360px;
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 29px;
+  font-weight: 500;
+  line-height: 1.12;
+  color: #ffffff;
 }
 
-/* Right Form Side */
-.litfest-form-panel {
-  background-color: var(--color-ivory);
-  padding: var(--space-7) var(--space-7);
+.litfest-art-copy {
+  max-width: 320px;
+  margin-top: 14px;
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.77);
+}
+
+/* Bottom footer of artwork */
+.litfest-art-bottom {
+  position: relative;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.litfest-art-signal {
+  width: 72px;
+  height: 22px;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   Right Panel: Warm Ivory Form Panel
+   ========================================================================== */
+.litfest-form-panel {
+  position: relative;
+  display: flex;
   align-items: center;
-  box-sizing: border-box;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 640px;
+  padding: 44px clamp(28px, 5vw, 68px);
+  overflow-y: auto;
+  background: var(--litfest-ivory);
+  color: var(--litfest-ink);
+  font-family: "Manrope", sans-serif;
 }
 
 .litfest-form-inner {
   width: 100%;
-  max-width: var(--form-column-max-width);
+  max-width: 400px;
+  margin: auto;
 }
 
-/* Header Block */
+/* Step Label (optional, e.g. for recovery) */
 .litfest-step-label {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-violet);
-  margin-bottom: var(--space-2);
+  color: var(--litfest-violet);
 }
 
+/* Headings */
 .litfest-heading {
-  font-family: var(--font-auth-display, 'Cormorant Garamond', serif);
-  font-size: 46px;
+  margin: 0 0 12px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(38px, 4vw, 48px);
   font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  color: var(--color-midnight);
-  margin-bottom: var(--space-2);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--litfest-midnight);
 }
 
 .litfest-intro {
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--color-slate);
-  margin-bottom: var(--space-6);
-}
-
-/* Stepper Tracker */
-.litfest-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: var(--space-6);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid rgba(32, 36, 58, 0.08);
-}
-
-.litfest-stepper-track {
-  position: absolute;
-  top: 16px;
-  left: 24px;
-  right: 24px;
-  height: 2px;
-  background-color: rgba(32, 36, 58, 0.12);
-  z-index: 0;
-}
-
-.litfest-stepper-progress {
-  height: 100%;
-  background-color: var(--color-midnight);
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.litfest-step-item {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.litfest-step-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
+  margin: 0 0 24px;
+  font-family: "Manrope", sans-serif;
   font-size: 13px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--litfest-slate);
+}
+
+/* Form Fields */
+.litfest-field {
+  position: relative;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.litfest-label {
+  display: block;
+  margin-bottom: 7px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
   font-weight: 700;
-  transition: all 0.25s ease;
+  color: var(--litfest-ink);
 }
 
-.litfest-step-circle--active {
-  background-color: var(--color-midnight);
-  color: var(--color-white);
-  box-shadow: 0 0 0 4px rgba(8, 37, 103, 0.15);
-  border: 2px solid var(--color-midnight);
+.litfest-input-wrap {
+  position: relative;
+  width: 100%;
 }
 
-.litfest-step-circle--completed {
-  background-color: var(--color-violet);
-  color: var(--color-white);
-  border: 2px solid var(--color-violet);
-}
-
-.litfest-step-circle--upcoming {
-  background-color: var(--color-ivory);
-  color: var(--color-slate);
-  border: 2px solid rgba(32, 36, 58, 0.2);
-}
-
-.litfest-step-title {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.litfest-step-title--active {
-  color: var(--color-midnight);
-  font-weight: 700;
-}
-
-.litfest-step-title--completed {
-  color: var(--color-violet);
-  font-weight: 600;
-}
-
-.litfest-step-title--upcoming {
-  color: var(--color-slate);
-}
-
-/* Inputs & Interactive Controls */
 .litfest-input {
-  box-sizing: border-box;
-}
-
-.litfest-input:focus {
-  border-color: var(--color-midnight) !important;
-  box-shadow: var(--shadow-focus) !important;
-  background-color: var(--color-white) !important;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 14px;
+  font-family: "Manrope", sans-serif;
+  font-size: 13px;
+  color: var(--litfest-ink);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--litfest-border);
+  border-radius: 9px;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .litfest-input::placeholder {
-  color: var(--color-slate);
-  opacity: 0.85;
+  color: var(--litfest-placeholder);
+  font-size: 13px;
+}
+
+.litfest-input:focus {
+  background: #ffffff;
+  border-color: var(--litfest-midnight);
+  box-shadow: 0 0 0 3px rgba(8, 37, 103, 0.12);
 }
 
 .litfest-input--error {
-  border-color: var(--color-error) !important;
+  border-color: var(--litfest-coral);
+  background: rgba(242, 56, 80, 0.03);
 }
 
 .litfest-input--error:focus {
-  box-shadow: 0 0 0 3px rgba(242, 56, 80, 0.18) !important;
+  border-color: var(--litfest-coral);
+  box-shadow: 0 0 0 3px rgba(242, 56, 80, 0.16);
 }
 
-/* Button Interactive States */
-.litfest-button--primary:hover:not(:disabled) {
-  background-color: var(--color-midnight-dark) !important;
+/* Password Toggle Button */
+.litfest-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--litfest-slate);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.litfest-password-toggle:hover {
+  color: var(--litfest-midnight);
+}
+
+/* Field Error message */
+.litfest-field-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--litfest-coral);
+}
+
+/* Terms Row & Forgot Password Row */
+.litfest-auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 0 20px;
+}
+
+.litfest-check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  color: var(--litfest-slate);
+  cursor: pointer;
+  user-select: none;
+}
+
+.litfest-check-label input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--litfest-midnight);
+  cursor: pointer;
+}
+
+.litfest-textlink {
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--litfest-midnight);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.litfest-textlink:hover {
+  color: var(--litfest-coral);
+  text-decoration: underline;
+}
+
+/* Primary Action Button */
+.litfest-primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 46px;
+  padding: 13px 16px;
+  font-family: "Manrope", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--litfest-midnight);
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.litfest-primary-btn:hover:not(:disabled) {
+  background: var(--litfest-coral);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-button);
+  box-shadow: 0 4px 14px rgba(242, 56, 80, 0.25);
 }
 
-.litfest-button--primary:focus-visible {
-  outline: 2px solid var(--color-coral) !important;
-  outline-offset: 2px !important;
+.litfest-primary-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
-.litfest-button--secondary:hover:not(:disabled) {
-  background-color: rgba(8, 37, 103, 0.05) !important;
-  border-color: var(--color-midnight) !important;
+/* Divider: OR CONTINUE WITH */
+.litfest-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9898a5;
 }
 
-.litfest-button--secondary:focus-visible {
-  outline: 2px solid var(--color-midnight) !important;
-  outline-offset: 2px !important;
+.litfest-divider::before,
+.litfest-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e1dce0;
 }
 
-.litfest-toggle-btn:hover {
-  color: var(--color-midnight) !important;
-  background-color: rgba(8, 37, 103, 0.06) !important;
+/* Social Buttons Grid */
+.litfest-social-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.litfest-toggle-btn:focus-visible {
-  outline: 2px solid var(--color-midnight) !important;
+.litfest-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 14px;
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--litfest-ink);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid #ddd8df;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.litfest-social-btn:hover {
+  color: var(--litfest-midnight);
+  background: #ffffff;
+  border-color: var(--litfest-midnight);
+}
+
+/* Social notice banner (for unavailable providers) */
+.litfest-social-notice {
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--litfest-midnight);
+  background: rgba(8, 37, 103, 0.08);
+  border: 1px solid rgba(8, 37, 103, 0.16);
+  border-radius: 6px;
+  text-align: center;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Quick Fill Test Accounts on Login */
+.litfest-quick-accounts {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(32, 36, 58, 0.08);
+  text-align: center;
+}
+
+.litfest-quick-title {
+  margin-bottom: 8px;
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--litfest-slate);
+}
+
+.litfest-quick-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.litfest-quick-btn {
+  padding: 5px 12px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--litfest-midnight);
+  background: rgba(8, 37, 103, 0.06);
+  border: 1px solid rgba(8, 37, 103, 0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.litfest-quick-btn:hover {
+  background: rgba(8, 37, 103, 0.12);
 }
 
 /* Footer Link Area */
 .litfest-auth-footer {
-  margin-top: var(--space-6);
-  padding-top: var(--space-4);
-  border-top: 1px solid rgba(32, 36, 58, 0.08);
+  margin-top: 22px;
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
   text-align: center;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-slate);
+  color: var(--litfest-slate);
 }
 
 .litfest-auth-link {
-  color: var(--color-midnight);
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--litfest-midnight);
   text-decoration: underline;
   text-underline-offset: 3px;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .litfest-auth-link:hover {
-  color: var(--color-coral);
+  color: var(--litfest-coral);
+}
+
+/* Helper spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ==========================================================================
-   Responsive Breakpoints: Mobile (<= 800px) & Small (<= 480px)
+   Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 800px) {
   .litfest-auth-wrapper {
-    padding: var(--space-4) var(--space-2) var(--space-6);
+    padding: 14px;
   }
 
   .litfest-auth-card {
     grid-template-columns: 1fr;
-    max-width: 520px;
+    max-height: calc(100vh - 28px);
+    border-radius: 18px;
+    overflow-y: auto;
   }
 
   .litfest-art-panel {
-    min-height: 280px;
-    max-height: 320px;
-    padding: var(--space-5) var(--space-5);
-  }
-
-  .litfest-particle-box {
-    height: 110px;
-  }
-
-  .litfest-art-scene {
-    height: 120px;
-    margin: var(--space-1) 0;
+    min-height: 250px;
+    padding: 24px;
   }
 
   .litfest-art-sun {
-    width: 76px;
-    height: 76px;
+    top: 15%;
+    right: 10%;
+    width: 95px;
+    height: 95px;
   }
 
-  .litfest-art-quote-container {
-    display: none; /* Hide long quotes on mobile art panel to maintain compact 280px height */
+  .litfest-art-brand {
+    font-size: 38px;
+  }
+
+  .litfest-art-quote {
+    font-size: 22px;
+  }
+
+  .litfest-art-rule,
+  .litfest-art-copy {
+    display: none;
   }
 
   .litfest-form-panel {
-    padding: var(--space-6) var(--space-5);
+    min-height: auto;
+    padding: 28px 22px;
   }
 
   .litfest-heading {
-    font-size: 38px;
+    font-size: 36px;
   }
 }
 
 @media (max-width: 480px) {
+  .litfest-auth-wrapper {
+    padding: 10px;
+  }
+
   .litfest-form-panel {
-    padding: var(--space-5) var(--space-4);
+    padding: 24px 16px;
   }
 
   .litfest-heading {
     font-size: 32px;
   }
 
-  .litfest-stepper-track {
-    left: 16px;
-    right: 16px;
+  .litfest-auth-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 
-  .litfest-step-circle {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
-
-  .litfest-step-title {
-    font-size: 11px;
+  .litfest-social-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-/* Reduced Motion Support (Section 7) */
+/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  .litfest-auth-card *,
+  .litfest-primary-btn,
+  .litfest-social-btn,
+  .litfest-auth-close-btn {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

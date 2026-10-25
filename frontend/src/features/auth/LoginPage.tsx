@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../state/AuthContext';
 import { AuthLayout } from '../../layouts/AuthLayout';
-import { FormField } from '../../components/ui/FormField';
-import { PasswordField } from '../../components/ui/PasswordField';
-import { Button } from '../../components/ui/Button';
 import { Alert } from '../../components/ui/Alert';
-import { Mail, ArrowRight } from 'lucide-react';
 import { z } from 'zod';
 
 const loginValidationSchema = z.object({
   email: z
     .string()
+    .trim()
     .min(1, 'Email address is required')
     .email('Please enter a valid email address'),
   password: z.string().min(1, 'Password cannot be empty')
@@ -27,6 +24,7 @@ export const LoginPage: React.FC = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -37,9 +35,9 @@ export const LoginPage: React.FC = () => {
       if (!trimmed) {
         setErrors((prev) => ({ ...prev, email: 'Email address is required' }));
       } else {
-        const result = z.string().email('Please enter a valid email address').safeParse(trimmed);
+        const result = z.string().email().safeParse(trimmed);
         if (!result.success) {
-          setErrors((prev) => ({ ...prev, email: result.error.errors[0]?.message || 'Please enter a valid email address' }));
+          setErrors((prev) => ({ ...prev, email: 'Please enter a valid email address' }));
         } else {
           setErrors((prev) => {
             const next = { ...prev };
@@ -66,7 +64,6 @@ export const LoginPage: React.FC = () => {
     setErrors({});
     setServerError(null);
 
-    // Zod client validation
     const result = loginValidationSchema.safeParse({ email: email.trim(), password });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -84,6 +81,7 @@ export const LoginPage: React.FC = () => {
     } catch (err: any) {
       const errorMsg =
         err?.response?.data?.error?.message ||
+        err?.response?.data?.message ||
         err?.message ||
         'Login failed. Please check your credentials.';
       setServerError(errorMsg);
@@ -101,12 +99,11 @@ export const LoginPage: React.FC = () => {
 
   return (
     <AuthLayout
-      stepLabel="01 / Access the festival"
       title="Welcome back."
       intro="Sign in to your account to explore events, manage registrations, and access the festival."
       quote="Every story begins with a horizon."
     >
-      {/* Form-level Server Error Alert */}
+      {/* Server Error Alert */}
       {serverError && (
         <Alert
           type="error"
@@ -116,158 +113,152 @@ export const LoginPage: React.FC = () => {
       )}
 
       {/* Login Form */}
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate id="loginForm" style={{ marginTop: '12px' }}>
         {/* Email Address */}
-        <FormField
-          id="login-email"
-          name="email"
-          type="email"
-          label="Email Address"
-          required
-          placeholder="aarav@nitrr.ac.in"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (errors.email) {
-              setErrors((prev) => {
-                const next = { ...prev };
-                delete next.email;
-                return next;
-              });
-            }
-          }}
-          onBlur={() => handleBlur('email')}
-          error={errors.email}
-          leftIcon={<Mail size={18} strokeWidth={1.8} />}
-          autoComplete="email"
-          autoFocus
-        />
+        <div className="litfest-field">
+          <label className="litfest-label" htmlFor="login-email">
+            Email address
+          </label>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            className={`litfest-input ${errors.email ? 'litfest-input--error' : ''}`}
+            autoComplete="email"
+            placeholder="aarav@nitrr.ac.in"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (errors.email) {
+                setErrors((prev) => {
+                  const next = { ...prev };
+                  delete next.email;
+                  return next;
+                });
+              }
+            }}
+            onBlur={() => handleBlur('email')}
+            required
+            autoFocus
+          />
+          {errors.email && (
+            <div className="litfest-field-error" role="alert">
+              <span>•</span> {errors.email}
+            </div>
+          )}
+        </div>
 
         {/* Password */}
-        <PasswordField
-          id="login-password"
-          name="password"
-          label="Password"
-          required
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (errors.password) {
-              setErrors((prev) => {
-                const next = { ...prev };
-                delete next.password;
-                return next;
-              });
-            }
-          }}
-          onBlur={() => handleBlur('password')}
-          error={errors.password}
-          autoComplete="current-password"
-          rightLabelAction={
+        <div className="litfest-field">
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '7px'
+            }}
+          >
+            <label className="litfest-label" htmlFor="login-password" style={{ marginBottom: 0 }}>
+              Password
+            </label>
             <Link
               to="/forgot-password"
-              className="litfest-auth-link"
-              style={{ fontSize: '13px', fontWeight: 500 }}
+              className="litfest-textlink"
+              id="login-forgot-password-link"
             >
               Forgot password?
             </Link>
-          }
-        />
+          </div>
+
+          <div className="litfest-input-wrap">
+            <input
+              id="login-password"
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              className={`litfest-input ${errors.password ? 'litfest-input--error' : ''}`}
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errors.password) {
+                  setErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.password;
+                    return next;
+                  });
+                }
+              }}
+              onBlur={() => handleBlur('password')}
+              required
+            />
+            <button
+              id="toggleLoginPassword"
+              className="litfest-password-toggle"
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              aria-pressed={showPassword}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+          {errors.password && (
+            <div className="litfest-field-error" role="alert">
+              <span>•</span> {errors.password}
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
-        <div style={{ marginTop: 'var(--space-6)' }}>
-          <Button
-            type="submit"
-            variant="primary"
-            fullWidth
-            loading={submitting}
-            rightIcon={
-              !submitting ? (
-                <ArrowRight size={17} color="var(--color-coral)" />
-              ) : undefined
-            }
-          >
-            Sign In
-          </Button>
-        </div>
+        <button
+          className="litfest-primary-btn"
+          type="submit"
+          disabled={submitting}
+          id="login-submit-btn"
+          style={{ marginTop: '22px' }}
+        >
+          {submitting ? (
+            <>
+              <span
+                style={{
+                  width: '15px',
+                  height: '15px',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderTopColor: '#ffffff',
+                  borderRadius: '50%',
+                  display: 'inline-block',
+                  animation: 'spin 0.8s linear infinite'
+                }}
+              />
+              <span>Signing in...</span>
+            </>
+          ) : (
+            <>
+              <span>Sign In</span>
+              <span aria-hidden="true">&nbsp; →</span>
+            </>
+          )}
+        </button>
       </form>
 
-      {/* Quick Fill Test Accounts for Demo & Development */}
-      <div
-        style={{
-          marginTop: 'var(--space-6)',
-          paddingTop: 'var(--space-4)',
-          borderTop: '1px solid rgba(32, 36, 58, 0.08)',
-          textAlign: 'center'
-        }}
-      >
-        <p
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '11px',
-            fontWeight: 600,
-            color: 'var(--color-slate)',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            marginBottom: 'var(--space-2)'
-          }}
-        >
-          Quick fill test accounts
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            gap: 'var(--space-2)',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}
-        >
+      {/* Quick Fill Test Accounts */}
+      <div className="litfest-quick-accounts">
+        <p className="litfest-quick-title">Quick fill test accounts</p>
+        <div className="litfest-quick-buttons">
           <button
             type="button"
+            className="litfest-quick-btn"
             onClick={() => handleQuickLogin('participant@nitrr.ac.in', 'User@12345')}
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '12px',
-              fontWeight: 600,
-              padding: '5px var(--space-3)',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'rgba(8, 37, 103, 0.06)',
-              color: 'var(--color-midnight)',
-              border: '1px solid rgba(8, 37, 103, 0.15)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(8, 37, 103, 0.12)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(8, 37, 103, 0.06)';
-            }}
+            id="quick-fill-participant-btn"
           >
             Participant (Aarav)
           </button>
           <button
             type="button"
+            className="litfest-quick-btn"
             onClick={() => handleQuickLogin('admin@nitrr.ac.in', 'Admin@12345')}
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '12px',
-              fontWeight: 600,
-              padding: '5px var(--space-3)',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'rgba(128, 80, 128, 0.08)',
-              color: 'var(--color-violet)',
-              border: '1px solid rgba(128, 80, 128, 0.2)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(128, 80, 128, 0.16)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(128, 80, 128, 0.08)';
-            }}
+            id="quick-fill-admin-btn"
           >
             Admin (Literati)
           </button>
@@ -277,7 +268,7 @@ export const LoginPage: React.FC = () => {
       {/* Switch to Signup */}
       <footer className="litfest-auth-footer">
         Don't have an account yet?{' '}
-        <Link to="/signup" className="litfest-auth-link">
+        <Link to="/signup" className="litfest-auth-link" id="switch-to-register-link">
           Register now
         </Link>
       </footer>
