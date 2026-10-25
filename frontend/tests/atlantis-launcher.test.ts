@@ -13,6 +13,7 @@ test("actual arcade Game 2 card opens Atlantis and Ocean Rush still opens its or
   };
   install("window",win); install("document",win.document); install("navigator",win.navigator);
   install("HTMLElement",win.HTMLElement); install("AbortController",win.AbortController);
+  install("Image",win.Image);
   install("matchMedia",win.matchMedia.bind(win)); install("IS_REACT_ACT_ENVIRONMENT",true);
   install("ResizeObserver",class {observe() {} disconnect() {}});
   install("requestAnimationFrame",() => 1); install("cancelAnimationFrame",() => {});

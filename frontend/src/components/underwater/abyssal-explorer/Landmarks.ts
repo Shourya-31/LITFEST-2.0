@@ -1,0 +1,75 @@
+import type { LandmarkDefinition, RelicDefinition } from './types';
+
+export const abyssalLandmarks: LandmarkDefinition[] = [
+  {
+    id: 'home',
+    kind: 'gateway',
+    name: 'The Surface Gateway',
+    description: 'Rise through a sunlit arch to return to the Litfest home.',
+    position: [2, 15, 74],
+    accent: '#8eeaff',
+    route: 'home',
+  },
+  {
+    id: 'archive',
+    kind: 'archive',
+    name: 'The Lost Temple',
+    description: 'A quiet, ancient place where the story of LITFEST begins.',
+    position: [39, 4, 29],
+    accent: '#8ae0ff',
+    route: 'about',
+  },
+  {
+    id: 'amphitheatre',
+    kind: 'amphitheatre',
+    name: 'Coral Amphitheatre',
+    description: 'An open stone arena where the festival comes together.',
+    position: [33, 4, -51],
+    accent: '#7ef6c9',
+    route: 'events',
+  },
+  {
+    id: 'beacon',
+    kind: 'lighthouse',
+    name: 'Lighthouse of Stories',
+    description: 'A turning beacon marks the festival timeline.',
+    position: [50, 17, -15],
+    accent: '#f7d27a',
+    route: 'timeline',
+  },
+  {
+    id: 'trench',
+    kind: 'galleon',
+    name: 'The Sunken Galleon',
+    description: 'A forgotten shipwreck hides the entrance to the Blue Pulse Arcade.',
+    position: [-59, 3, -26],
+    accent: '#70c9e6',
+    route: 'arcade',
+  },
+  {
+    id: 'oracle',
+    kind: 'oracle',
+    name: 'Oracle of Poseidon',
+    description: 'An ancient sea-king watches over answers to festival questions.',
+    position: [-46, 8, 34],
+    accent: '#87d9d0',
+    route: 'faq',
+  },
+  {
+    id: 'festival',
+    kind: 'festival',
+    name: 'Pearl of Passage',
+    description: 'A luminous pearl rests within an ancient oyster, welcoming you to LITFEST.',
+    position: [7.5, 10, -20],
+    accent: '#a7f3ff',
+    route: 'register',
+  },
+];
+
+export const relics: RelicDefinition[] = [
+  { id: 'ink-shell', name: 'Ink Shell', position: [15, 1, -12], color: '#8fe9ff' },
+  { id: 'glass-codex', name: 'Glass Codex', position: [-28, 4, 22], color: '#7ef6c9' },
+  { id: 'moon-page', name: 'Moon Page', position: [32, 7, 8], color: '#ffd89c' },
+  { id: 'echo-bell', name: 'Echo Bell', position: [-8, 9, -44], color: '#ffc1d9' },
+  { id: 'reef-key', name: 'Reef Key', position: [4, 16, 40], color: '#b7d5ff' },
+];

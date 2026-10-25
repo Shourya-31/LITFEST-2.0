@@ -355,11 +355,10 @@ export default class OceanScene extends Phaser.Scene {
     }
   }
 
-  update(time: number, delta: number): void {
+  update(time: number): void {
     if (!this.player) return;
 
     // 1. Swimmer Movement (Original proven water physics)
-    let isMoving = false;
     if (this.cursors && this.wasd) {
       const left = this.cursors.left.isDown || this.wasd.A.isDown;
       const right = this.cursors.right.isDown || this.wasd.D.isDown;
@@ -369,7 +368,7 @@ export default class OceanScene extends Phaser.Scene {
       const dx = (right ? 1 : 0) - (left ? 1 : 0);
       const dy = (down ? 1 : 0) - (up ? 1 : 0);
 
-      isMoving = dx !== 0 || dy !== 0;
+      const isMoving = dx !== 0 || dy !== 0;
 
       const dir = new Phaser.Math.Vector2(dx, dy).normalize();
       this.player.setAcceleration(dir.x * 600, dir.y * 600);

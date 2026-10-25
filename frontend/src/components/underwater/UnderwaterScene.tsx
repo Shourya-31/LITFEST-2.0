@@ -1,12 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import React, { Suspense, lazy, useState, useCallback } from 'react';
 import { DeepWater } from './DeepWater';
 import { LightRays } from './LightRays';
 import { WaterHaze } from './WaterHaze';
 import { Particles } from './Particles';
 import { BubbleOverlay } from './BubbleOverlay';
 import PhaserGame from './PhaserGame';
+import type { AbyssalExplorerProps } from './abyssal-explorer';
 import { LitfestAboutSection } from '../../features/about/LitfestAboutSection';
 import './Underwater.css';
+
+const LazyAbyssalExplorer = lazy(() =>
+  import('./abyssal-explorer').then(({ AbyssalExplorer: component }) => ({ default: component }))
+);
 
 export interface UnderwaterSceneProps {
   className?: string;
@@ -14,6 +19,8 @@ export interface UnderwaterSceneProps {
   particleCount?: number;
   enableClickBubbles?: boolean;
   enableAvatar?: boolean;
+  enableAbyssalExplorer?: boolean;
+  abyssalExplorerProps?: Partial<AbyssalExplorerProps>;
   onNavigate?: (section: string) => void;
   children?: React.ReactNode;
 }
@@ -24,6 +31,8 @@ export const UnderwaterScene: React.FC<UnderwaterSceneProps> = ({
   particleCount = 45,
   enableClickBubbles = true,
   enableAvatar = true,
+  enableAbyssalExplorer = false,
+  abyssalExplorerProps,
   onNavigate,
   children,
 }) => {
@@ -37,18 +46,35 @@ export const UnderwaterScene: React.FC<UnderwaterSceneProps> = ({
     [onNavigate]
   );
 
+  const onAbyssalNavigate = abyssalExplorerProps?.onLandmarkNavigate;
+  const handleAbyssalNavigate = useCallback(
+    (explicitRoute: string) => {
+      handleLandmarkTrigger(explicitRoute);
+      onAbyssalNavigate?.(explicitRoute);
+    },
+    [handleLandmarkTrigger, onAbyssalNavigate]
+  );
+
   return (
     <div
       className={`underwater-scene ${className}`.trim()}
       style={style}
       role="presentation"
-      aria-hidden="true"
+      aria-hidden={enableAbyssalExplorer ? undefined : true}
     >
       <DeepWater />
       <LightRays />
       <WaterHaze />
       <Particles count={particleCount} />
-      {enableAvatar && <PhaserGame onNavigate={handleLandmarkTrigger} />}
+      {enableAvatar && !enableAbyssalExplorer && <PhaserGame onNavigate={handleLandmarkTrigger} />}
+      {enableAbyssalExplorer && (
+        <Suspense fallback={<div className="abyssal-loading" role="status">Preparing the abyssal voyage…</div>}>
+          <LazyAbyssalExplorer
+            {...abyssalExplorerProps}
+            onLandmarkNavigate={handleAbyssalNavigate}
+          />
+        </Suspense>
+      )}
       {enableClickBubbles && <BubbleOverlay />}
       {children}
 
