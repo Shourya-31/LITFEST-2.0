@@ -4,20 +4,25 @@ import { GameDialog } from './game-dialog';
 import { getAdapters } from '../../services/auth';
 import { AtlantisDialog } from '../atlantis/dialog';
 import { MemoryAtlantisService } from '../atlantis/service';
+import { AquaSplashDialog } from '../aqua-splash/dialog';
+import { MemoryAquaSplashService } from '../aqua-splash/service';
 import '../../styles/blue-pulse.css';
 import '../atlantis/atlantis.css';
+import '../aqua-splash/aqua-splash.css';
 import './GameLauncher.css';
 
 // The modal is imperative DOM: replace an old open instance when its code updates.
 if (import.meta.hot) {
   import.meta.hot.accept('./game-dialog', () => window.location.reload());
   import.meta.hot.accept('../atlantis/dialog', () => window.location.reload());
+  import.meta.hot.accept('../aqua-splash/dialog', () => window.location.reload());
 }
 
 /** React owns the launcher; the existing Canvas game owns its native modal. */
 export function GameLauncher() {
   const dialogRef = useRef<GameDialog | null>(null);
   const atlantisRef = useRef<AtlantisDialog | null>(null);
+  const aquaSplashRef = useRef<AquaSplashDialog | null>(null);
   const openGame = (event: MouseEvent<HTMLButtonElement>) => {
     void dialogRef.current?.open(event.currentTarget);
   };
@@ -27,13 +32,20 @@ export function GameLauncher() {
     const dialog = new GameDialog(adapters);
     const atlantis = new AtlantisDialog({auth:adapters.auth,
       service:window.bluePulseAtlantisService ?? new MemoryAtlantisService(adapters.auth)});
+    const aquaSplash = new AquaSplashDialog({
+      auth: adapters.auth,
+      service: window.bluePulseAquaSplashService ?? new MemoryAquaSplashService(adapters.auth)
+    });
     dialogRef.current = dialog;
     atlantisRef.current = atlantis;
+    aquaSplashRef.current = aquaSplash;
     return () => {
       dialog.destroy();
       atlantis.destroy();
+      aquaSplash.destroy();
       dialogRef.current = null;
       atlantisRef.current = null;
+      aquaSplashRef.current = null;
     };
   }, []);
 
@@ -71,16 +83,15 @@ export function GameLauncher() {
           <span id="ocean-game-2-status" className="ocean-game-tagline">Ten lost chambers. Test your literary knowledge and awaken Atlantis.</span>
         </button>
       </h2>
-      {[3].map(number => (
-        <h2 className="ocean-game-heading" key={number}>
-          <button type="button" className="ocean-game-card" disabled
-            aria-labelledby={`ocean-game-${number}-title`} aria-describedby={`ocean-game-${number}-status`}>
-            <span className="ocean-game-eyebrow">BLUE PULSE ARCADE</span>
-            <span id={`ocean-game-${number}-title`} className="ocean-game-title">Game {number}</span>
-            <span id={`ocean-game-${number}-status`} className="ocean-game-tagline">Coming soon</span>
-          </button>
-        </h2>
-      ))}
+      <h2 className="ocean-game-heading">
+        <button type="button" className="ocean-game-card" aria-haspopup="dialog"
+          aria-labelledby="ocean-game-3-title" aria-describedby="ocean-game-3-status"
+          onClick={event => { void aquaSplashRef.current?.open(event.currentTarget); }}>
+          <span className="ocean-game-eyebrow">UNDERWATER TETRIS ARCADE</span>
+          <span id="ocean-game-3-title" className="ocean-game-title">Aqua Spash</span>
+          <span id="ocean-game-3-status" className="ocean-game-tagline">Dive into the sunken ruins. Stack crystal blocks, hold pieces, and earn credits.</span>
+        </button>
+      </h2>
       </div>
     </section>
   );
