@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Underwater 4-Layer Cinematic Scene + Props + Click Bubbles</title>
+  <title>Blue Pulse — 2D Underwater Exploration</title>
   <link rel="stylesheet" href="./Underwater.css" />
+  <link rel="stylesheet" href="./PhaserGame.css" />
+  <link rel="stylesheet" href="../../features/about/LitfestAboutSection.css" />
   <style>
     * {
       box-sizing: border-box;
@@ -17,14 +19,195 @@
       overflow: hidden;
       background-color: #031326;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+
+    /* Phaser game layer container */
+    #phaser-game-container, .phaser-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+      pointer-events: auto;
+    }
+    #phaser-game-container canvas, .phaser-layer canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* Controls HUD Overlay */
+    .controls-hud {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 100;
+      background: rgba(3, 23, 48, 0.82);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 10px;
+      padding: 10px 16px;
+      color: #bae6fd;
+      font-size: 13px;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .controls-hud strong {
+      color: #38bdf8;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    .controls-hud span {
+      display: inline-block;
+      background: rgba(2, 132, 199, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      border-radius: 4px;
+      padding: 1px 6px;
+      margin: 0 2px;
+      font-family: monospace;
+      color: #fff176;
+    }
+
+    /* Modal Overlay for Landmark Triggers */
+    .ocean-landmark-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(1, 10, 24, 0.78);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+    }
+    .ocean-landmark-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(3, 27, 54, 0.95), rgba(1, 15, 33, 0.98));
+      border: 1.5px solid rgba(0, 240, 255, 0.55);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25), 0 12px 40px rgba(0, 0, 0, 0.8);
+      border-radius: 16px;
+      max-width: 620px;
+      width: 100%;
+      padding: 32px 36px;
+      color: #f0f9ff;
+    }
+    .modal-card.about-card-wide {
+      max-width: 960px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 30px 24px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.4) rgba(2, 14, 30, 0.5);
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      color: #7dd3fc;
+      font-size: 28px;
+      line-height: 1;
       cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .modal-close-btn:hover {
+      color: #fff176;
+      transform: scale(1.15);
+    }
+    .modal-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #38bdf8;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 12px;
+    }
+    .modal-desc {
+      color: #bae6fd;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .schedule-time {
+      font-family: monospace;
+      color: #fff176;
+      font-weight: bold;
+    }
+    .schedule-event {
+      color: #f8fafc;
+      font-weight: 600;
+    }
+    .modal-action-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border: 1px solid #38bdf8;
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .modal-action-btn:hover {
+      background: linear-gradient(135deg, #0369a1, #0284c7);
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
+  <!-- HUD Instructions -->
+  <div class="controls-hud">
+    <strong>BLUE PULSE EXPLORATION</strong>
+    Move with <span>W</span><span>A</span><span>S</span><span>D</span> or <span>Arrows</span><br />
+    Approach landmarks and press <span>E</span> or click to interact!
+  </div>
+
+  <!-- Landmark Interactive Modal -->
+  <div id="landmark-modal" class="ocean-landmark-modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="modal-close" class="modal-close-btn" aria-label="Close">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
   <div class="underwater-scene" aria-hidden="true">
-    <!-- Layer 1: Deep Water (With illuminated lower depths) -->
-    <div class="underwater-layer-deep-water"></div>
+    <!-- Layer 1: Deep Water Background -->
+    <div class="underwater-layer-deep-water">
+      <img src="../../assets/media/underwater-bg.jpg" alt="" class="underwater-bg-image" />
+      <div class="underwater-bg-overlay"></div>
+    </div>
 
     <!-- Layer 2: Light Rays -->
     <div class="underwater-layer-light-rays">
@@ -44,57 +227,847 @@
       <div class="underwater-haze-cloud underwater-haze-cloud-3"></div>
     </div>
 
-    <!-- Layer 4: Particles -->
+    <!-- Layer 4: Particles Canvas -->
     <canvas id="underwaterCanvas" class="underwater-layer-particles"></canvas>
 
-    <!-- Underwater Props (Corals along seabed & swimming turtle) -->
-    <div class="underwater-props-layer">
-      <!-- Corals -->
-      <div class="underwater-corals-container">
-        <div class="coral-prop coral-prop-left">
-          <img src="../../assets/media/coral1.png" alt="" class="coral-img coral-img-primary" />
-        </div>
-        <div class="coral-prop coral-prop-left-deep">
-          <img src="../../assets/media/coral1.png" alt="" class="coral-img coral-img-deep" />
-        </div>
-        <div class="coral-prop coral-prop-right">
-          <img src="../../assets/media/coral1.png" alt="" class="coral-img coral-img-right" />
-        </div>
-      </div>
-
-      <!-- Bioluminescent Jellyfish -->
-      <div class="jellyfish-prop-track">
-        <div class="jellyfish-prop">
-          <img src="../../assets/media/jellyfish.png" alt="" class="jellyfish-img" />
-        </div>
-      </div>
-
-      <!-- Swimming Sea Turtle -->
-      <div class="turtle-prop-track">
-        <div class="turtle-prop">
-          <img src="../../assets/media/turtle.png" alt="" class="turtle-img" />
-        </div>
-      </div>
-    </div>
+    <!-- Avatar Exploration Layer (Phaser) -->
+    <div id="phaser-game-container" class="phaser-layer"></div>
 
     <!-- Interactive Click Bubble Overlay Canvas -->
     <canvas id="bubbleCanvas" class="underwater-layer-bubbles"></canvas>
   </div>
 
+  <!-- Phaser 3 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
   <script>
-    // Layer 4 Particles Canvas
+    (function initOceanGame() {
+      if (typeof Phaser === 'undefined') return;
+
+      const WORLD_W = 3200;
+      const WORLD_H = 1800;
+
+      // ==========================================
+      // PROCEDURAL TEXTURE GENERATION
+      // ==========================================
+      function generateTextures(scene) {
+        // 1. Swimmer Avatar
+        if (!scene.textures.exists('testAvatar')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          g.fillStyle(0x00f0ff, 0.45);
+          g.fillCircle(24, 24, 22);
+          g.fillStyle(0x38bdf8, 0.75);
+          g.fillCircle(24, 24, 16);
+          g.fillStyle(0xfff176, 1);
+          g.fillCircle(24, 24, 11);
+          g.fillStyle(0xffffff, 1);
+          g.fillCircle(24, 24, 5);
+          g.generateTexture('testAvatar', 48, 48);
+          g.destroy();
+        }
+
+        // 2. Basalt Pillar
+        if (!scene.textures.exists('underwaterPillar')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          g.fillStyle(0x02172d, 0.95);
+          g.fillRect(15, 40, 60, 410);
+          g.fillStyle(0x06305a, 0.8);
+          g.fillRect(60, 40, 15, 410);
+          g.fillRoundedRect(5, 20, 80, 22, 4);
+          g.fillStyle(0x02172d, 0.98);
+          g.fillRoundedRect(5, 415, 80, 35, 6);
+          g.lineStyle(2, 0x00f0ff, 0.65);
+          g.beginPath();
+          g.moveTo(45, 50);
+          g.lineTo(48, 120);
+          g.lineTo(42, 190);
+          g.lineTo(47, 280);
+          g.strokePath();
+          g.fillStyle(0x38bdf8, 0.9);
+          g.fillCircle(48, 120, 3.5);
+          g.fillCircle(42, 190, 4);
+          g.generateTexture('underwaterPillar', 90, 450);
+          g.destroy();
+        }
+
+        // 3. Underwater Rock
+        if (!scene.textures.exists('underwaterRock')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          g.fillStyle(0x021324, 0.95);
+          g.fillRoundedRect(10, 45, 160, 80, 28);
+          g.fillStyle(0x041f39, 0.95);
+          g.fillRoundedRect(35, 15, 110, 75, 24);
+          g.fillStyle(0x05465e, 0.8);
+          g.fillRoundedRect(40, 15, 90, 14, 6);
+          g.fillStyle(0x38bdf8, 0.7);
+          g.fillCircle(55, 38, 2.5);
+          g.fillCircle(75, 50, 3);
+          g.fillCircle(115, 42, 2.8);
+          g.generateTexture('underwaterRock', 180, 130);
+          g.destroy();
+        }
+
+        // 4. Seaweed Stalk
+        if (!scene.textures.exists('seaweedStalk')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          g.lineStyle(6, 0x052e3d, 0.95);
+          g.beginPath();
+          g.moveTo(30, 240);
+          g.lineTo(24, 180);
+          g.lineTo(38, 120);
+          g.lineTo(26, 60);
+          g.lineTo(34, 25);
+          g.lineTo(30, 0);
+          g.strokePath();
+          g.fillStyle(0x084b61, 0.85);
+          g.fillEllipse(18, 170, 26, 12);
+          g.fillEllipse(15, 100, 24, 10);
+          g.fillEllipse(20, 40, 20, 8);
+          g.fillStyle(0x0e6480, 0.85);
+          g.fillEllipse(42, 135, 26, 11);
+          g.fillEllipse(40, 75, 22, 9);
+          g.fillEllipse(36, 20, 16, 7);
+          g.fillStyle(0x22d3ee, 0.9);
+          g.fillCircle(30, 4, 3);
+          g.generateTexture('seaweedStalk', 60, 240);
+          g.destroy();
+        }
+
+        // 5. BURIED CLOCK TOWER (Schedule)
+        if (!scene.textures.exists('landmark_clock_tower')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          const cx = 80;
+          g.fillStyle(0x03192f, 0.98);
+          g.fillRect(35, 75, 90, 160);
+          g.fillStyle(0x010d1c, 0.95);
+          g.fillRect(35, 75, 24, 160);
+          g.fillStyle(0x07365f, 0.85);
+          g.fillRect(100, 75, 25, 160);
+          g.fillStyle(0x0b4b7f, 0.9);
+          g.fillRect(30, 72, 100, 8);
+          g.fillRect(28, 205, 104, 8);
+          g.fillStyle(0x0d9488, 0.9);
+          g.beginPath();
+          g.moveTo(cx, 10);
+          g.lineTo(30, 72);
+          g.lineTo(130, 72);
+          g.closePath();
+          g.fillPath();
+          g.fillStyle(0x0f766e, 0.95);
+          g.beginPath();
+          g.moveTo(cx, 10);
+          g.lineTo(30, 72);
+          g.lineTo(cx, 72);
+          g.closePath();
+          g.fillPath();
+          g.fillStyle(0x38bdf8, 1);
+          g.fillCircle(cx, 8, 4);
+
+          // Clock dial
+          g.fillStyle(0x0a416b, 1);
+          g.fillCircle(cx, 106, 28);
+          g.fillStyle(0xd97706, 1);
+          g.fillCircle(cx, 106, 25);
+          g.fillStyle(0x38bdf8, 0.95);
+          g.fillCircle(cx, 106, 20);
+          g.fillStyle(0xe0f2fe, 1);
+          g.fillCircle(cx, 106, 16);
+          g.fillStyle(0x0369a1, 1);
+          g.fillRect(cx - 1.5, 92, 3, 4);
+          g.fillRect(cx + 12, 104.5, 4, 3);
+          g.fillRect(cx - 1.5, 116, 3, 4);
+          g.fillRect(cx - 16, 104.5, 4, 3);
+          g.lineStyle(2.5, 0x0f172a, 1);
+          g.lineBetween(cx, 106, cx - 8, 98);
+          g.lineStyle(2, 0xd97706, 1);
+          g.lineBetween(cx, 106, cx + 10, 96);
+          g.fillStyle(0xfff176, 1);
+          g.fillCircle(cx, 106, 3);
+
+          // Sand mound
+          g.fillStyle(0x041b31, 0.95);
+          g.beginPath();
+          g.moveTo(10, 270);
+          g.lineTo(30, 245);
+          g.lineTo(55, 228);
+          g.lineTo(90, 235);
+          g.lineTo(130, 248);
+          g.lineTo(155, 270);
+          g.closePath();
+          g.fillPath();
+          g.generateTexture('landmark_clock_tower', 160, 270);
+          g.destroy();
+        }
+
+        // 6. PEARL SHELL (Register)
+        if (!scene.textures.exists('landmark_pearl_shell')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          const cx = 75;
+          g.fillStyle(0x02162a, 0.95);
+          g.fillRoundedRect(20, 85, 110, 42, 16);
+          g.fillStyle(0x075985, 0.95);
+          g.beginPath();
+          g.moveTo(cx, 90);
+          g.lineTo(25, 30);
+          g.lineTo(50, 12);
+          g.lineTo(cx, 6);
+          g.lineTo(100, 12);
+          g.lineTo(125, 30);
+          g.closePath();
+          g.fillPath();
+          g.fillStyle(0xbae6fd, 0.85);
+          g.fillEllipse(cx, 75, 80, 38);
+          g.fillStyle(0x38bdf8, 0.5);
+          g.fillCircle(cx, 68, 22);
+          g.fillStyle(0xf0f9ff, 1);
+          g.fillCircle(cx, 68, 17);
+          g.fillStyle(0xffffff, 1);
+          g.fillCircle(cx - 5, 63, 4);
+          g.generateTexture('landmark_pearl_shell', 150, 130);
+          g.destroy();
+        }
+
+        // 7. SUNKEN RUINS (About)
+        if (!scene.textures.exists('landmark_sunken_ruins')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          const cx = 90;
+          g.fillStyle(0x031d38, 0.98);
+          g.beginPath();
+          g.moveTo(cx, 15);
+          g.lineTo(20, 60);
+          g.lineTo(160, 60);
+          g.closePath();
+          g.fillPath();
+          g.fillStyle(0x07355c, 0.95);
+          g.fillRect(15, 60, 150, 14);
+          [28, 62, 102, 136].forEach(px => {
+            g.fillStyle(0x02192f, 0.95);
+            g.fillRect(px, 74, 16, 75);
+          });
+          g.fillStyle(0x010913, 1);
+          g.fillRoundedRect(72, 85, 36, 64, 8);
+          g.fillStyle(0x00f0ff, 0.6);
+          g.fillCircle(90, 115, 12);
+          g.fillStyle(0x031d38, 1);
+          g.fillRect(10, 149, 160, 14);
+          g.fillRect(5, 163, 170, 17);
+          g.generateTexture('landmark_sunken_ruins', 180, 180);
+          g.destroy();
+        }
+
+        // 8. CORAL GARDEN (Gallery)
+        if (!scene.textures.exists('landmark_coral_garden')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          g.fillStyle(0x031f3b, 0.95);
+          g.fillRoundedRect(15, 70, 130, 75, 24);
+          g.fillStyle(0x0284c7, 0.9);
+          g.fillRoundedRect(25, 25, 20, 60, 10);
+          g.fillCircle(35, 22, 11);
+          g.fillStyle(0x0369a1, 0.95);
+          g.fillRoundedRect(70, 10, 22, 80, 11);
+          g.fillCircle(81, 10, 12);
+          g.fillStyle(0x0e7490, 0.9);
+          g.fillRoundedRect(115, 30, 20, 55, 10);
+          g.fillCircle(125, 28, 10);
+          g.generateTexture('landmark_coral_garden', 160, 150);
+          g.destroy();
+        }
+
+        // 9. UNDERWATER MONUMENT (Our Team)
+        if (!scene.textures.exists('landmark_monument')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          const cx = 70;
+          g.fillStyle(0x02192f, 0.98);
+          g.beginPath();
+          g.moveTo(cx - 20, 30);
+          g.lineTo(cx + 20, 30);
+          g.lineTo(cx + 35, 175);
+          g.lineTo(cx - 35, 175);
+          g.closePath();
+          g.fillPath();
+          g.fillStyle(0x0284c7, 1);
+          g.beginPath();
+          g.moveTo(cx, 8);
+          g.lineTo(cx - 20, 30);
+          g.lineTo(cx + 20, 30);
+          g.closePath();
+          g.fillPath();
+          g.lineStyle(3, 0x38bdf8, 1);
+          g.lineBetween(cx, 70, cx, 125);
+          g.fillStyle(0x04213d, 1);
+          g.fillRect(20, 175, 100, 18);
+          g.fillRect(10, 193, 120, 24);
+          g.generateTexture('landmark_monument', 140, 220);
+          g.destroy();
+        }
+
+        // 10. SUNKEN PALACE (Dashboard)
+        if (!scene.textures.exists('landmark_sunken_palace')) {
+          const g = scene.make.graphics({ x: 0, y: 0 });
+          const cx = 110;
+          g.fillStyle(0x031c36, 0.98);
+          g.fillRect(40, 90, 140, 125);
+          g.fillStyle(0x0369a1, 0.95);
+          g.fillCircle(cx, 75, 36);
+          g.fillRect(cx - 36, 75, 72, 16);
+          g.fillStyle(0x010c18, 1);
+          g.fillRoundedRect(cx - 24, 135, 48, 80, 16);
+          g.fillStyle(0x00f0ff, 0.65);
+          g.fillCircle(cx, 170, 16);
+          g.fillStyle(0x052e54, 1);
+          g.fillRect(5, 215, 210, 22);
+          g.generateTexture('landmark_sunken_palace', 220, 240);
+          g.destroy();
+        }
+      }
+
+      // ==========================================
+      // PHASER OCEAN SCENE CLASS
+      // ==========================================
+      class OceanScene extends Phaser.Scene {
+        constructor() {
+          super('OceanScene');
+          this.landmarks = [];
+          this.seaweeds = [];
+        }
+
+        preload() {
+          // Preload clean props and primary landmarks when running under HTTP/HTTPS
+          if (window.location.protocol.startsWith('http')) {
+            this.load.image('coralReefClean', '../../assets/media/coral_reef_clean.png');
+            this.load.image('seaweedClean', '../../assets/media/seaweed_clean.png');
+            this.load.image('landmark_schedule_img', '../../assets/media/schedule_clean.png');
+            this.load.image('landmark_about_img', '../../assets/media/about_clean.png');
+            this.load.image('landmark_register_img', '../../assets/media/register_clean.png');
+          }
+        }
+
+        create() {
+          generateTextures(this);
+
+          // World & Camera
+          this.physics.world.setBounds(0, 0, WORLD_W, WORLD_H);
+          this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
+
+          // 1. Decorative Environment Props
+          this.createProps();
+
+          // 2. Clickable Landmarks
+          this.createLandmarks();
+
+          // 3. Swimmer Avatar - spawned directly above Buried Clock Tower on seafloor
+          const startX = WORLD_W * 0.5;
+          const startY = WORLD_H - 350; // 1450: Seabed and landmarks in immediate view
+
+          this.player = this.physics.add.sprite(startX, startY, 'testAvatar');
+          this.player.setDepth(50);
+          this.player.setCollideWorldBounds(true);
+          this.player.setDamping(true);
+          this.player.setDrag(0.9);
+          this.player.setMaxVelocity(240);
+
+          // Center immediately so initial view displays swimmer and seabed landmark
+          this.cameras.main.centerOn(startX, startY);
+
+          // Smooth Camera Follow
+          this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+
+          // Keyboard input
+          const keyboard = this.input.keyboard;
+          if (keyboard) {
+            this.cursors = keyboard.createCursorKeys();
+            this.wasd = keyboard.addKeys('W,A,S,D');
+            this.keyE = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+            keyboard.addCapture('UP,DOWN,LEFT,RIGHT,E');
+          }
+        }
+
+        createProps() {
+          // Basalt pillars
+          [220, 820, 2380, 2980].forEach(px => {
+            const pillar = this.add.sprite(px, WORLD_H - 10, 'underwaterPillar');
+            pillar.setOrigin(0.5, 1);
+            pillar.setDepth(2);
+            pillar.setScrollFactor(0.92);
+            pillar.setAlpha(0.75);
+          });
+
+          // Rocks
+          [420, 1250, 1950, 2780].forEach(rx => {
+            const rock = this.add.sprite(rx, WORLD_H - 12, 'underwaterRock');
+            rock.setOrigin(0.5, 1);
+            rock.setDepth(4);
+            rock.setTint(0x99ccff);
+          });
+
+          // Seaweed
+          [140, 380, 720, 1340, 1860, 2420, 2850].forEach(sx => {
+            const texture = this.textures.exists('seaweedClean') ? 'seaweedClean' : 'seaweedStalk';
+            const sw = this.add.sprite(sx, WORLD_H - 8, texture);
+            sw.setOrigin(0.5, 1);
+            sw.setDepth(6);
+            sw.setDisplaySize(55, 200 + Math.random() * 60);
+            sw.setTint(0x88ddff);
+            this.seaweeds.push(sw);
+          });
+        }
+
+        createLandmarks() {
+          const scheduleKey = this.textures.exists('landmark_schedule_img')
+            ? 'landmark_schedule_img'
+            : 'landmark_clock_tower';
+          const aboutKey = this.textures.exists('landmark_about_img')
+            ? 'landmark_about_img'
+            : 'landmark_sunken_ruins';
+          const registerKey = this.textures.exists('landmark_register_img')
+            ? 'landmark_register_img'
+            : 'landmark_pearl_shell';
+
+          const list = [
+            {
+              id: 'clock-tower',
+              name: 'Buried Capsule Tower',
+              target: 'schedule',
+              title: 'Buried Capsule Tower',
+              subtitle: 'Press E or Click to View Schedule',
+              x: WORLD_W * 0.5, // 1600
+              y: WORLD_H - 16,
+              texture: scheduleKey,
+              w: 170,
+              h: 270,
+              triggerRadius: 215,
+            },
+            {
+              id: 'sunken-ruins',
+              name: 'Sunken Ruins',
+              target: 'about',
+              title: 'Sunken Sanctuary',
+              subtitle: 'Press E or Click for About Litfest',
+              x: WORLD_W * 0.18,
+              y: WORLD_H - 16,
+              texture: aboutKey,
+              w: 235,
+              h: 220,
+              triggerRadius: 225,
+            },
+            {
+              id: 'pearl-shell',
+              name: 'Pearl Shell',
+              target: 'register',
+              title: 'Pearl of Passage',
+              subtitle: 'Press E or Click to Register',
+              x: WORLD_W * 0.34,
+              y: WORLD_H - 16,
+              texture: registerKey,
+              w: 170,
+              h: 195,
+              triggerRadius: 200,
+            },
+            {
+              id: 'coral-garden',
+              name: 'Coral Garden',
+              target: 'gallery',
+              title: 'Coral Garden',
+              subtitle: 'Press E or Click to View Gallery',
+              x: WORLD_W * 0.66,
+              y: WORLD_H - 16,
+              texture: 'landmark_coral_garden',
+              w: 145,
+              h: 135,
+              triggerRadius: 190,
+            },
+            {
+              id: 'monument',
+              name: 'Underwater Monument',
+              target: 'team',
+              title: 'Literati Obelisk',
+              subtitle: 'Press E or Click for Our Team',
+              x: WORLD_W * 0.82,
+              y: WORLD_H - 16,
+              texture: 'landmark_monument',
+              w: 125,
+              h: 200,
+              triggerRadius: 190,
+            },
+            {
+              id: 'sunken-palace',
+              name: 'Sunken Palace',
+              target: 'dashboard',
+              title: 'Sunken Palace Portal',
+              subtitle: 'Press E or Click for Dashboard',
+              x: WORLD_W * 0.94,
+              y: WORLD_H - 16,
+              texture: 'landmark_sunken_palace',
+              w: 190,
+              h: 210,
+              triggerRadius: 210,
+            },
+          ];
+
+          list.forEach(cfg => {
+            const aura = this.add.graphics();
+            aura.setDepth(5);
+
+            const sprite = this.physics.add.sprite(cfg.x, cfg.y, cfg.texture);
+            sprite.setOrigin(0.5, 1);
+            sprite.setDisplaySize(cfg.w, cfg.h);
+            sprite.setDepth(8);
+            sprite.setImmovable(true);
+            sprite.setTint(0xd4edfc);
+            sprite.setInteractive({ useHandCursor: true });
+
+            const basePromptY = cfg.y - cfg.h - 28;
+            const container = this.add.container(cfg.x, basePromptY);
+            container.setDepth(60);
+            container.setAlpha(0);
+
+            const bg = this.add.graphics();
+            bg.fillStyle(0x02172d, 0.92);
+            bg.fillRoundedRect(-110, -22, 220, 44, 12);
+            bg.lineStyle(2, 0x00f0ff, 0.85);
+            bg.strokeRoundedRect(-110, -22, 220, 44, 12);
+            container.add(bg);
+
+            const badge = this.add.graphics();
+            badge.fillStyle(0x0284c7, 0.95);
+            badge.fillRoundedRect(-98, -14, 28, 28, 6);
+            badge.lineStyle(1.5, 0xfff176, 1);
+            badge.strokeRoundedRect(-98, -14, 28, 28, 6);
+            container.add(badge);
+
+            const kText = this.add.text(-84, 0, 'E', {
+              fontFamily: 'sans-serif',
+              fontSize: '14px',
+              fontStyle: 'bold',
+              color: '#fff176'
+            }).setOrigin(0.5, 0.5);
+            container.add(kText);
+
+            const title = this.add.text(-60, -9, cfg.title, {
+              fontFamily: 'sans-serif',
+              fontSize: '13px',
+              fontStyle: 'bold',
+              color: '#38bdf8'
+            });
+            container.add(title);
+
+            const sub = this.add.text(-60, 6, cfg.subtitle, {
+              fontFamily: 'sans-serif',
+              fontSize: '10px',
+              color: '#bae6fd'
+            });
+            container.add(sub);
+
+            container.setSize(220, 44);
+            container.setInteractive(new Phaser.Geom.Rectangle(-110, -22, 220, 44), Phaser.Geom.Rectangle.Contains);
+
+            const lm = {
+              ...cfg,
+              sprite,
+              aura,
+              container,
+              basePromptY,
+              glowIntensity: 0,
+              isNear: false,
+              triggerRadius: Math.max(cfg.w * 1.1, 190)
+            };
+
+            container.on('pointerdown', (p) => {
+              p.event?.stopPropagation();
+              openLandmarkModal(lm);
+            });
+            sprite.on('pointerdown', () => openLandmarkModal(lm));
+
+            this.landmarks.push(lm);
+          });
+        }
+
+        update(time) {
+          if (!this.player) return;
+
+          // Swimmer controls
+          if (this.cursors && this.wasd) {
+            const left = this.cursors.left.isDown || this.wasd.A.isDown;
+            const right = this.cursors.right.isDown || this.wasd.D.isDown;
+            const up = this.cursors.up.isDown || this.wasd.W.isDown;
+            const down = this.cursors.down.isDown || this.wasd.S.isDown;
+
+            const dx = (right ? 1 : 0) - (left ? 1 : 0);
+            const dy = (down ? 1 : 0) - (up ? 1 : 0);
+
+            const dir = new Phaser.Math.Vector2(dx, dy).normalize();
+            this.player.setAcceleration(dir.x * 600, dir.y * 600);
+          }
+
+          // Seaweed sway
+          const sway = Math.sin(time * 0.002) * 0.05;
+          for (let i = 0; i < this.seaweeds.length; i++) {
+            this.seaweeds[i].rotation = sway + Math.sin(time * 0.002 + i) * 0.03;
+          }
+
+          // Landmark proximity
+          let nearest = null;
+          for (const lm of this.landmarks) {
+            const cy = lm.y - lm.h * 0.5;
+            const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, lm.x, cy);
+            const isNear = dist < lm.triggerRadius;
+            lm.isNear = isNear;
+            if (isNear) nearest = lm;
+
+            const targetGlow = isNear ? 1.0 : 0.0;
+            lm.glowIntensity = Phaser.Math.Linear(lm.glowIntensity, targetGlow, 0.08);
+
+            lm.container.setAlpha(lm.glowIntensity);
+            if (lm.glowIntensity > 0.05) {
+              lm.container.setY(lm.basePromptY + Math.sin(time * 0.0035) * 4);
+            }
+
+            // Draw aura & seabed grounding
+            const g = lm.aura;
+            g.clear();
+
+            // 1. Seafloor contact shadow - grounds landmark into seabed sand drift naturally
+            const shadowW = lm.w * 0.95;
+            const shadowH = 14;
+            g.fillStyle(0x010f22, 0.55);
+            g.fillEllipse(lm.x, lm.y - 3, shadowW, shadowH);
+            g.fillStyle(0x021c38, 0.38);
+            g.fillEllipse(lm.x, lm.y - 5, shadowW * 0.75, shadowH * 0.7);
+
+            // 2. Idle ambient oceanic back-glow (gentle breathing beacon so landmarks stand out as primary destinations)
+            const idlePulse = 0.88 + Math.sin(time * 0.0025 + lm.x * 0.008) * 0.12;
+            const ambientAlpha = 0.14 * idlePulse;
+            g.fillStyle(0x00f0ff, ambientAlpha);
+            g.fillCircle(lm.x, cy, lm.w * 0.58 * idlePulse);
+            g.fillStyle(0x38bdf8, ambientAlpha * 0.75);
+            g.fillCircle(lm.x, cy, lm.w * 0.38 * idlePulse);
+
+            // 3. Active Proximity Glow when swimmer approaches
+            if (lm.glowIntensity > 0.01) {
+              const activePulse = 1 + Math.sin(time * 0.004) * 0.12;
+              const intensity = lm.glowIntensity;
+
+              // Outer vibrant turquoise aura
+              g.fillStyle(0x00f0ff, 0.28 * intensity);
+              g.fillCircle(lm.x, cy, lm.w * 0.78 * activePulse);
+
+              // Inner electric cyan halo
+              g.fillStyle(0x38bdf8, 0.42 * intensity);
+              g.fillCircle(lm.x, cy, lm.w * 0.54 * activePulse);
+
+              // Core illumination accent
+              g.fillStyle(0xffffff, 0.22 * intensity);
+              g.fillCircle(lm.x, cy, lm.w * 0.26 * activePulse);
+
+              // Luminous seabed light reflection pool
+              g.fillStyle(0x00f0ff, 0.32 * intensity);
+              g.fillEllipse(lm.x, lm.y - 5, lm.w * 0.88, 16);
+            }
+
+            // 4. Dynamic Sprite Tinting:
+            // At distance: soft deep-water tint (0xd4edfc); Nearby: crisp full-spectrum brilliant white (0xffffff)
+            const r = Math.min(255, Math.floor(212 + (255 - 212) * lm.glowIntensity));
+            const gr = Math.min(255, Math.floor(237 + (255 - 237) * lm.glowIntensity));
+            lm.sprite.setTint(Phaser.Display.Color.GetColor(r, gr, 255));
+          }
+
+          // E Key press
+          if (this.keyE && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+            if (nearest) openLandmarkModal(nearest);
+          }
+        }
+      }
+
+      // ==========================================
+      // MODAL CONTROLLER FOR PREVIEW.HTML
+      // ==========================================
+      function openLandmarkModal(lm) {
+        const modal = document.getElementById('landmark-modal');
+        const content = document.getElementById('modal-content');
+        const card = modal?.querySelector('.modal-card');
+        if (!modal || !content || !card) return;
+
+        let html = '';
+        if (lm.target === 'about') {
+          card.classList.add('about-card-wide');
+          html = `
+            <div class="about-centered-content">
+              <h2 class="about-main-title">About LITFEST</h2>
+              <p class="about-subtitle">
+                A celebration of literature, imagination, and creative energy.
+              </p>
+              <p class="about-intro-description">
+                LITFEST returns for its second edition under <strong>BLUE PULSE</strong>, bringing together
+                literature, debate, creativity, and diplomacy in a deeper, more exciting experience. Here,
+                words become waves, ideas create currents, and every voice leaves a ripple.
+              </p>
+              <div class="about-feature-cards-grid">
+                <div class="feature-card" tabindex="0" role="region" aria-label="Inspire">
+                  <div class="feature-icon-wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M9 21h6" stroke-linecap="round" />
+                    </svg>
+                  </div>
+                  <h3 class="feature-title">INSPIRE</h3>
+                  <p class="feature-desc">
+                    Discover fresh perspectives through literature, debate, and thought-provoking challenges.
+                  </p>
+                </div>
+                <div class="feature-card" tabindex="0" role="region" aria-label="Create">
+                  <div class="feature-icon-wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M2 2l7.586 7.586" stroke-linecap="round" stroke-linejoin="round" />
+                      <circle cx="11" cy="11" r="2" />
+                    </svg>
+                  </div>
+                  <h3 class="feature-title">CREATE</h3>
+                  <p class="feature-desc">
+                    Explore new ideas, express yourself, and take on creative experiences across the festival.
+                  </p>
+                </div>
+                <div class="feature-card" tabindex="0" role="region" aria-label="Connect">
+                  <div class="feature-icon-wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 00-3-3.87" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </div>
+                  <h3 class="feature-title">CONNECT</h3>
+                  <p class="feature-desc">
+                    Meet curious minds, exchange perspectives, and find your place in a community of ideas.
+                  </p>
+                </div>
+              </div>
+              <div class="about-stats-container">
+                <div class="about-stats-row">
+                  <div class="stat-unit">
+                    <div class="stat-value">5</div>
+                    <div class="stat-name">Days</div>
+                  </div>
+                  <div class="stat-unit">
+                    <div class="stat-value">10+</div>
+                    <div class="stat-name">Events</div>
+                  </div>
+                  <div class="stat-unit">
+                    <div class="stat-value">1000+</div>
+                    <div class="stat-name">Participants</div>
+                  </div>
+                </div>
+              </div>
+              <p class="about-legacy-paragraph">
+                From the energy of Tube Trolls to the parliamentary proceedings of Lok Sabha and the diplomacy of
+                UNHRC, the first edition laid the foundation for a new tradition. Tube Trolls returns, while new
+                events promise fresh challenges and unexpected adventures.
+              </p>
+              <div class="about-closing-wrapper">
+                <p class="closing-dive-quote">
+                  &ldquo;Wishing you a happy and safe deep dive into the literary abyss.&rdquo;
+                </p>
+                <button type="button" class="about-surface-link" onclick="closeModal()">
+                  <svg viewBox="0 0 20 20" width="13" height="13" fill="currentColor">
+                    <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Surface</span>
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (lm.target === 'schedule') {
+          card.classList.remove('about-card-wide');
+          html = `
+            <span class="modal-eyebrow">FESTIVAL ITINERARY</span>
+            <h3 class="modal-title">Buried Capsule Tower — Schedule</h3>
+            <p class="modal-desc">The ancient hands of the underwater clock mark the hours of celebration. Here is the official festival timeline for LitFest 2.0:</p>
+            <div class="schedule-list">
+              <div class="schedule-item">
+                <span class="schedule-time">09:30 AM</span>
+                <span class="schedule-event">Opening Voyage & Keynote Address</span>
+              </div>
+              <div class="schedule-item">
+                <span class="schedule-time">11:00 AM</span>
+                <span class="schedule-event">Verbatim: Parliamentary Debate Battles</span>
+              </div>
+              <div class="schedule-item">
+                <span class="schedule-time">02:30 PM</span>
+                <span class="schedule-event">Inkspire: Creative Flash Fiction & Spoken Word</span>
+              </div>
+              <div class="schedule-item">
+                <span class="schedule-time">05:00 PM</span>
+                <span class="schedule-event">Quizzitch: High Seas Pop-Culture & Literary Quest</span>
+              </div>
+            </div>
+            <button class="modal-action-btn" onclick="closeModal()">Close Itinerary</button>
+          `;
+        } else if (lm.target === 'register') {
+          card.classList.remove('about-card-wide');
+          html = `
+            <span class="modal-eyebrow">REGISTRATION PORTAL</span>
+            <h3 class="modal-title">Pearl of Passage — Register</h3>
+            <p class="modal-desc">Secure your place aboard the flagship voyage. Unlock access to all competitive literary arenas, author panels, and merit certificates.</p>
+            <button class="modal-action-btn" onclick="alert('Registration form confirmed!'); closeModal();">Confirm Registration</button>
+          `;
+        } else {
+          card.classList.remove('about-card-wide');
+          html = `
+            <span class="modal-eyebrow">OCEANIC DISCOVERY</span>
+            <h3 class="modal-title">${lm.title}</h3>
+            <p class="modal-desc">${lm.subtitle}. Section: ${lm.target.toUpperCase()}.</p>
+            <button class="modal-action-btn" onclick="closeModal()">Close</button>
+          `;
+        }
+
+        content.innerHTML = html;
+        modal.classList.add('active');
+      }
+
+      window.closeModal = function() {
+        const modal = document.getElementById('landmark-modal');
+        const card = modal?.querySelector('.modal-card');
+        if (card) card.classList.remove('about-card-wide');
+        if (modal) modal.classList.remove('active');
+      };
+
+      document.getElementById('modal-close')?.addEventListener('click', window.closeModal);
+      document.getElementById('landmark-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'landmark-modal') window.closeModal();
+      });
+
+      // Start Phaser
+      new Phaser.Game({
+        type: Phaser.AUTO,
+        parent: 'phaser-game-container',
+        transparent: true,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        scale: {
+          mode: Phaser.Scale.RESIZE,
+          width: '100%',
+          height: '100%',
+        },
+        physics: {
+          default: 'arcade',
+          arcade: { gravity: { x: 0, y: 0 }, debug: false },
+        },
+        scene: [OceanScene],
+      });
+    })();
+  </script>
+
+  <!-- Layer 4 Particles Canvas Script -->
+  <script>
     (function initParticles() {
       const canvas = document.getElementById('underwaterCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d', { alpha: true });
       if (!ctx) return;
 
-      let width = 0;
-      let height = 0;
-      let dpr = 1;
+      let width = 0, height = 0, dpr = 1;
       const count = 45;
       const particles = [];
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function createParticle(initY) {
         const radius = 0.8 + Math.random() * 1.8;
@@ -123,42 +1096,24 @@
         ctx.scale(dpr, dpr);
 
         if (particles.length === 0) {
-          for (let i = 0; i < count; i++) {
-            particles.push(createParticle());
-          }
+          for (let i = 0; i < count; i++) particles.push(createParticle());
         }
       }
 
       window.addEventListener('resize', resize);
       resize();
 
-      let isDocumentVisible = !document.hidden;
-      document.addEventListener('visibilitychange', () => {
-        isDocumentVisible = !document.hidden;
-      });
-
       function render() {
-        if (!isDocumentVisible) {
-          requestAnimationFrame(render);
-          return;
-        }
-
         ctx.clearRect(0, 0, width, height);
-        const motionFactor = prefersReducedMotion ? 0.2 : 1;
-
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
-          p.phase += p.phaseSpeed * motionFactor;
-          p.x += (p.vx + Math.sin(p.phase) * 0.22) * motionFactor;
-          p.y += p.vy * motionFactor;
+          p.phase += p.phaseSpeed;
+          p.x += p.vx + Math.sin(p.phase) * 0.22;
+          p.y += p.vy;
           p.alpha = p.baseAlpha * (0.75 + Math.sin(p.phase) * 0.25);
 
-          if (p.y < -10) {
-            p.y = height + 10;
-            p.x = Math.random() * width;
-          } else if (p.y > height + 10) {
-            p.y = -10;
-          }
+          if (p.y < -10) { p.y = height + 10; p.x = Math.random() * width; }
+          else if (p.y > height + 10) { p.y = -10; }
           if (p.x < -10) p.x = width + 10;
           else if (p.x > width + 10) p.x = -10;
 
@@ -177,26 +1132,23 @@
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
           ctx.fill();
         }
-
         requestAnimationFrame(render);
       }
-
       requestAnimationFrame(render);
     })();
+  </script>
 
-    // Click Bubble Overlay Canvas
+  <!-- Bubble Click Overlay Canvas Script -->
+  <script>
     (function initBubbles() {
       const canvas = document.getElementById('bubbleCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d', { alpha: true });
       if (!ctx) return;
 
-      let width = 0;
-      let height = 0;
-      let dpr = 1;
+      let width = 0, height = 0, dpr = 1;
       const bubbles = [];
       const maxBubbles = 80;
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function resize() {
         dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -215,11 +1167,9 @@
         const count = 6 + Math.floor(Math.random() * 7);
         for (let i = 0; i < count; i++) {
           if (bubbles.length >= maxBubbles) bubbles.shift();
-
           const angle = Math.random() * Math.PI * 2;
           const speed = 0.8 + Math.random() * 2.6;
           const targetRadius = 3 + Math.random() * 8.5;
-
           bubbles.push({
             x: originX + (Math.random() - 0.5) * 12,
             y: originY + (Math.random() - 0.5) * 12,
@@ -239,60 +1189,38 @@
       }
 
       window.addEventListener('pointerdown', (e) => {
-        spawnBurst(e.clientX, e.clientY);
+        // Only spawn bubbles if clicking on canvas, not modal
+        if (!e.target.closest('.modal-card')) {
+          spawnBurst(e.clientX, e.clientY);
+        }
       }, { passive: true });
 
       function renderBubbles() {
         ctx.clearRect(0, 0, width, height);
-        const motionFactor = prefersReducedMotion ? 0.3 : 1;
-
         for (let i = bubbles.length - 1; i >= 0; i--) {
           const b = bubbles[i];
           b.life += 1;
-
-          if (b.radius < b.targetRadius) {
-            b.radius += (b.targetRadius - b.radius) * 0.15;
-          }
-
+          if (b.radius < b.targetRadius) b.radius += (b.targetRadius - b.radius) * 0.15;
           b.vx *= 0.94;
-          b.vy -= 0.045 * motionFactor;
+          b.vy -= 0.045;
           if (b.vy < -3.2) b.vy = -3.2;
 
-          b.wobblePhase += b.wobbleSpeed * motionFactor;
-          const wobbleX = Math.sin(b.wobblePhase) * b.wobbleAmp;
-
-          b.x += (b.vx + wobbleX) * motionFactor;
-          b.y += b.vy * motionFactor;
+          b.wobblePhase += b.wobbleSpeed;
+          b.x += b.vx + Math.sin(b.wobblePhase) * b.wobbleAmp;
+          b.y += b.vy;
 
           const lifeRatio = b.life / b.maxLife;
           let fade = 1;
-          if (lifeRatio > 0.75) {
-            fade = 1 - (lifeRatio - 0.75) / 0.25;
-          }
-          if (b.y < 40) {
-            fade *= Math.max(0, b.y / 40);
-          }
+          if (lifeRatio > 0.75) fade = 1 - (lifeRatio - 0.75) / 0.25;
+          if (b.y < 40) fade *= Math.max(0, b.y / 40);
 
           const currentAlpha = b.alpha * fade;
-
           if (b.y < -b.radius || currentAlpha <= 0.02 || b.life >= b.maxLife) {
             bubbles.splice(i, 1);
             continue;
           }
 
-          const bodyGrad = ctx.createRadialGradient(
-            b.x - b.radius * 0.2,
-            b.y - b.radius * 0.2,
-            b.radius * 0.1,
-            b.x,
-            b.y,
-            b.radius
-          );
-          bodyGrad.addColorStop(0, `rgba(225, 245, 255, ${currentAlpha * 0.15})`);
-          bodyGrad.addColorStop(0.7, `rgba(130, 215, 255, ${currentAlpha * 0.25})`);
-          bodyGrad.addColorStop(1, `rgba(50, 175, 240, ${currentAlpha * 0.55})`);
-
-          ctx.fillStyle = bodyGrad;
+          ctx.fillStyle = `rgba(130, 215, 255, ${currentAlpha * 0.35})`;
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
           ctx.fill();
@@ -302,28 +1230,9 @@
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
           ctx.stroke();
-
-          const glintOffset = b.radius * 0.45;
-          const glintX = b.x + Math.cos(b.sheenAngle) * glintOffset;
-          const glintY = b.y + Math.sin(b.sheenAngle) * glintOffset;
-          const glintRadius = Math.max(0.8, b.radius * 0.26);
-
-          ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha * 0.9})`;
-          ctx.beginPath();
-          ctx.arc(glintX, glintY, glintRadius, 0, Math.PI * 2);
-          ctx.fill();
-
-          const secGlintX = b.x - Math.cos(b.sheenAngle) * (glintOffset * 0.75);
-          const secGlintY = b.y - Math.sin(b.sheenAngle) * (glintOffset * 0.75);
-          ctx.fillStyle = `rgba(165, 235, 255, ${currentAlpha * 0.4})`;
-          ctx.beginPath();
-          ctx.arc(secGlintX, secGlintY, glintRadius * 0.65, 0, Math.PI * 2);
-          ctx.fill();
         }
-
         requestAnimationFrame(renderBubbles);
       }
-
       requestAnimationFrame(renderBubbles);
     })();
   </script>
