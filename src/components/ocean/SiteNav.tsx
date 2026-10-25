@@ -31,6 +31,20 @@ export function SiteNav() {
             Events
           </Link>
           <Link
+            to="/timeline"
+            className={cls}
+            activeProps={{ className: "text-pearl bg-secondary/80 shadow-sm" }}
+          >
+            Timeline
+          </Link>
+          <Link
+            to="/faq"
+            className={cls}
+            activeProps={{ className: "text-pearl bg-secondary/80 shadow-sm" }}
+          >
+            FAQ
+          </Link>
+          <Link
             to="/team"
             className={cls}
             activeProps={{ className: "text-pearl bg-secondary/80 shadow-sm" }}

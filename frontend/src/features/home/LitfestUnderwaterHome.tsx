@@ -7,7 +7,15 @@ import { FestivalNav } from './components/FestivalNav';
 import { LitfestAboutSection } from '../about';
 import './LitfestUnderwaterHome.css';
 
-export const LitfestUnderwaterHome: React.FC = () => {
+interface LitfestUnderwaterHomeProps {
+  onExploreClick?: () => void;
+  isTimelineActive?: boolean;
+}
+
+export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
+  onExploreClick,
+  isTimelineActive = false,
+}) => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [activeModal, setActiveModal] = useState<'register' | 'events' | null>(null);
 
@@ -111,6 +119,7 @@ export const LitfestUnderwaterHome: React.FC = () => {
       className="litfest-underwater-root"
       role="main"
       aria-label="Litfest 2.0 Underwater Experience"
+      style={{ display: isTimelineActive ? 'none' : undefined }}
     >
       {/* 1. Global Navigation Header (Floating, fixed with glassmorphism on scroll) */}
       <FestivalNav
@@ -135,7 +144,13 @@ export const LitfestUnderwaterHome: React.FC = () => {
 
         {/* Central Prominent Display Title & Interactive Descend Indicator */}
         <UnderwaterTitle
-          onExploreClick={() => setActiveModal('events')}
+          onExploreClick={() => {
+            if (onExploreClick) {
+              onExploreClick();
+            } else {
+              setActiveModal('events');
+            }
+          }}
           onDescendClick={() => scrollToSection('about')}
         />
       </section>

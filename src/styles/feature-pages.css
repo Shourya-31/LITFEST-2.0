@@ -1,0 +1,51 @@
+.litfest-feature-page {
+  --color-abyss: #010610;
+  --color-ocean-deep: #020b18;
+  --color-ocean-mid: #05162a;
+  --color-ocean-teal: #082845;
+  --color-biolum-cyan: #38bdf8;
+  --color-biolum-glow: #22d3ee;
+  --color-surface-beam: #a5f3fc;
+  --color-text-bright: #f0f9ff;
+  --color-text-dim: #94a3b8;
+  --font-serif: "Cinzel", Georgia, serif;
+  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-pirate: "Pirata One", "Cinzel", cursive;
+  --font-mono: "Space Grotesk", monospace;
+  --pirate-gold: #38bdf8;
+  --pirate-gold-glow: #22d3ee;
+  --pirate-gold-light: #a5f3fc;
+  --pirate-bronze: #0284c7;
+  --pirate-wood: #05162a;
+  --beach-turquoise: #22d3ee;
+  --beach-seafoam: #38bdf8;
+  --beach-water-shallow: #a5f3fc;
+  --beach-sun-gold: #22d3ee;
+  --border-ocean-subtle: rgba(56, 189, 248, 0.28);
+  --border-ocean-glow: rgba(56, 189, 248, 0.6);
+  --border-gold-subtle: rgba(56, 189, 248, 0.35);
+  --max-width: 1360px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --sea-cyan: #38bdf8;
+  --sea-progress: #38bdf8;
+  --text-primary: #f0f9ff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-sand: #e0f2fe;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.litfest-feature-page *,
+.litfest-feature-page *::before,
+.litfest-feature-page *::after {
+  box-sizing: border-box;
+}
+
+.litfest-feature-page .interactive {
+  cursor: pointer;
+  user-select: none;
+}

@@ -19,4 +19,4 @@ export type { BubbleOverlayProps, ClickBubble } from './BubbleOverlay';
 export { UnderwaterPropsLayer } from './UnderwaterPropsLayer';
 export type { UnderwaterPropsLayerProps } from './UnderwaterPropsLayer';
 
-export default UnderwaterScene;
+export { UnderwaterScene as default } from './UnderwaterScene';
