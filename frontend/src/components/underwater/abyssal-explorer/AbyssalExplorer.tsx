@@ -2,18 +2,31 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ExplorerScene } from './ExplorerScene';
 import { ExplorerHUD } from './ExplorerHUD';
 import { abyssalLandmarks, relics } from './Landmarks';
-import type { ExplorerTelemetry, LandmarkDefinition } from './types';
+import type { AbyssalNavigationTarget, ExplorerTelemetry, LandmarkDefinition } from './types';
 import './AbyssalExplorer.css';
 
 export interface AbyssalExplorerProps {
   className?: string;
-  onLandmarkNavigate?: (route: string) => void;
+  onLandmarkNavigate?: (target: AbyssalNavigationTarget) => void;
   onExit?: () => void;
   autoplay?: boolean;
 }
 
 const STORAGE_KEY = 'litfest-abyssal-progress';
 const RELIC_IDS = new Set(relics.map((relic) => relic.id));
+const NAVIGATION_TARGETS = new Set<string>([
+  'home',
+  'timeline',
+  'about',
+  'arcade',
+  'faq',
+  'events',
+  'register',
+]);
+
+function isAbyssalNavigationTarget(target: string): target is AbyssalNavigationTarget {
+  return NAVIGATION_TARGETS.has(target);
+}
 
 function readSavedProgress(): string[] {
   if (typeof window === 'undefined') {
@@ -131,7 +144,10 @@ export function AbyssalExplorer({
           onLandmarkInteract: (selectedLandmark) => {
             setLandmark(selectedLandmark);
             setNotification(`${selectedLandmark.name} discovered`);
-            navigateRef.current?.(selectedLandmark.route ?? selectedLandmark.id);
+            const target = selectedLandmark.route;
+            if (target && isAbyssalNavigationTarget(target)) {
+              navigateRef.current?.(target);
+            }
           },
           onLandmarkDiscovered: (discoveredLandmark) => {
             setDiscoveredLandmarkIds((current) => current.includes(discoveredLandmark.id)
@@ -224,7 +240,8 @@ export function AbyssalExplorer({
     if (!started) return undefined;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'Escape') {
-        handlePauseToggle();
+        event.preventDefault();
+        handleExit();
         return;
       }
       if (paused || event.repeat) return;
@@ -263,7 +280,7 @@ export function AbyssalExplorer({
       window.removeEventListener('keyup', onKeyUp);
       window.removeEventListener('blur', onBlur);
     };
-  }, [handleInteract, handleMove, handlePauseToggle, handleSonar, paused, started]);
+  }, [handleExit, handleInteract, handleMove, handleSonar, paused, started]);
 
   return (
     <div className={`abyssal-explorer ${className}`.trim()}>

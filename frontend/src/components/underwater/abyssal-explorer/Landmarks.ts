@@ -67,9 +67,11 @@ export const abyssalLandmarks: LandmarkDefinition[] = [
 ];
 
 export const relics: RelicDefinition[] = [
-  { id: 'ink-shell', name: 'Ink Shell', position: [15, 1, -12], color: '#8fe9ff' },
-  { id: 'glass-codex', name: 'Glass Codex', position: [-28, 4, 22], color: '#7ef6c9' },
-  { id: 'moon-page', name: 'Moon Page', position: [32, 7, 8], color: '#ffd89c' },
-  { id: 'echo-bell', name: 'Echo Bell', position: [-8, 9, -44], color: '#ffc1d9' },
-  { id: 'reef-key', name: 'Reef Key', position: [4, 16, 40], color: '#b7d5ff' },
+  { id: 'surface-current', name: 'Surface Current', landmarkId: 'home', destination: 'Home', route: 'home', position: [0, 14.5, 0.8], color: '#70dcff' },
+  { id: 'lost-temple-relic', name: 'Lost Temple Relic', landmarkId: 'archive', destination: 'About LITFEST', route: 'about', position: [0, 12.7, -0.8], color: '#71f1e5' },
+  { id: 'lighthouse-heart', name: 'Lighthouse Heart', landmarkId: 'beacon', destination: 'Timeline', route: 'timeline', position: [0, 13, 0.1], color: '#77caff' },
+  { id: 'galleon-treasure', name: 'Galleon Treasure', landmarkId: 'trench', destination: 'Blue Pulse Arcade', route: 'arcade', position: [3, 5.2, -1.45], color: '#ffc875' },
+  { id: 'oracles-orb', name: "Oracle's Orb", landmarkId: 'oracle', destination: 'Festival FAQs', route: 'faq', position: [0, 11.8, 0.6], color: '#9cf2d9' },
+  { id: 'amphitheatre-core', name: 'Amphitheatre Core', landmarkId: 'amphitheatre', destination: 'Events / Arenas', route: 'events', position: [0, 13.8, -3], color: '#f2a8e9' },
+  { id: 'pearl-of-passage', name: 'Pearl of Passage', landmarkId: 'festival', destination: 'Registration', route: 'register', position: [0, 14.7, 0.7], color: '#b5f5ff' },
 ];

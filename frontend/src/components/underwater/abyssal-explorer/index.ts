@@ -6,4 +6,10 @@ export { ExplorerScene } from './ExplorerScene';
 export { VehicleController } from './VehicleController';
 export { createUnderwaterWorld } from './UnderwaterWorld';
 export { abyssalLandmarks, relics } from './Landmarks';
-export type { ExplorerTelemetry, LandmarkDefinition, RelicDefinition, GlobalProgress } from './types';
+export type {
+  AbyssalNavigationTarget,
+  ExplorerTelemetry,
+  LandmarkDefinition,
+  RelicDefinition,
+  GlobalProgress,
+} from './types';

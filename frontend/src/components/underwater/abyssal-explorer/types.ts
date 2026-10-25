@@ -8,9 +8,21 @@ export interface LandmarkDefinition {
   route?: string;
 }
 
+export type AbyssalNavigationTarget =
+  | 'home'
+  | 'timeline'
+  | 'about'
+  | 'arcade'
+  | 'faq'
+  | 'events'
+  | 'register';
+
 export interface RelicDefinition {
   id: string;
   name: string;
+  landmarkId: string;
+  destination: string;
+  route: AbyssalNavigationTarget;
   position: [number, number, number];
   color: string;
 }
@@ -27,6 +39,7 @@ export interface ExplorerTelemetry {
   sonarReady: boolean;
   discoveryCount: number;
   interactionLabel: string;
+  nearbyArtifact?: RelicDefinition;
   nearbyLandmark?: LandmarkDefinition;
   navigationTarget?: LandmarkDefinition;
   navigationDistance?: number;

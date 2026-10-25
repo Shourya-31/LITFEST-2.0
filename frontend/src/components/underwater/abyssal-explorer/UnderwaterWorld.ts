@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import { abyssalLandmarks, relics } from './Landmarks';
+import { createArtifact } from './ArtifactFactory';
 import type { RelicDefinition } from './types';
 
 export interface WorldAssembly {
   root: THREE.Group;
   landmarkMeshes: Map<string, THREE.Group>;
-  relicMeshes: Map<string, THREE.Object3D>;
+  artifactMeshes: Map<string, THREE.Group>;
   animatedLights: THREE.Object3D[];
   causticTime: { value: number };
   swimmingSchools: Array<{ group: THREE.Group; x: number; y: number; z: number; phase: number }>;
@@ -495,23 +496,9 @@ function addFestivalBeacon(group: THREE.Group, accent: string, animatedLights: T
   raisedShell.add(hinge);
   display.add(raisedShell);
 
-  const pearlMaterial = new THREE.MeshStandardMaterial({
-    color: '#fff3e9', roughness: 0.16, metalness: 0.12, emissive: '#83e9ff', emissiveIntensity: 0.48,
-  });
-  const pearl = new THREE.Mesh(new THREE.SphereGeometry(1.08, 32, 24), pearlMaterial);
-  pearl.position.set(0, 4.2, 0.7);
-  pearl.scale.set(1, 0.94, 0.96);
-  display.add(pearl);
-  const pearlHalo = new THREE.Mesh(
-    new THREE.SphereGeometry(1.72, 24, 16),
-    new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.12, side: THREE.BackSide, depthWrite: false })
-  );
-  pearlHalo.position.copy(pearl.position);
-  display.add(pearlHalo);
   const pearlLight = new THREE.PointLight(accent, 18, 26, 2);
   pearlLight.position.set(0, 5.1, 1.8);
   display.add(pearlLight);
-  animatedLights.push(pearl, pearlHalo);
 
   const shellRidgeGeometry = new THREE.TorusGeometry(1, 0.035, 5, 48);
   for (let ridgeIndex = 0; ridgeIndex < 5; ridgeIndex += 1) {
@@ -542,7 +529,7 @@ function addFestivalBeacon(group: THREE.Group, accent: string, animatedLights: T
 export function createUnderwaterWorld(): WorldAssembly {
   const root = new THREE.Group();
   const landmarkMeshes = new Map<string, THREE.Group>();
-  const relicMeshes = new Map<string, THREE.Object3D>();
+  const artifactMeshes = new Map<string, THREE.Group>();
   const animatedLights: THREE.Object3D[] = [];
   const causticTime = { value: 0 };
   const swayingKelp: Array<{ group: THREE.Group; phase: number }> = [];
@@ -673,6 +660,7 @@ export function createUnderwaterWorld(): WorldAssembly {
   for (const landmark of abyssalLandmarks) {
     const group = new THREE.Group();
     group.position.set(landmark.position[0], -8.8, landmark.position[2]);
+    if (landmark.kind === 'galleon') group.position.y = -2.2;
     group.rotation.y = Math.atan2(-landmark.position[0], -landmark.position[2]);
 
     const foundation = new THREE.Mesh(new THREE.CylinderGeometry(7, 8, 1.1, 24), darkStoneMaterial);
@@ -686,6 +674,14 @@ export function createUnderwaterWorld(): WorldAssembly {
     if (landmark.kind === 'galleon') addGalleon(group);
     if (landmark.kind === 'oracle') addOracle(group);
     if (landmark.kind === 'festival') addFestivalBeacon(group, landmark.accent, animatedLights);
+
+    for (const artifact of relics as RelicDefinition[]) {
+      if (artifact.landmarkId !== landmark.id) continue;
+      const artifactGroup = createArtifact(artifact);
+      artifactGroup.position.set(...artifact.position);
+      group.add(artifactGroup);
+      artifactMeshes.set(artifact.id, artifactGroup);
+    }
 
     const marker = new THREE.Mesh(
       new THREE.TorusGeometry(0.7, 0.04, 8, 24),
@@ -701,25 +697,5 @@ export function createUnderwaterWorld(): WorldAssembly {
     root.add(group);
   }
 
-  for (const relic of relics as RelicDefinition[]) {
-    const [x, y, z] = relic.position;
-    const relicGroup = new THREE.Group();
-    const shell = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(0.75, 1),
-      new THREE.MeshStandardMaterial({ color: relic.color, roughness: 0.45, metalness: 0.13, emissive: relic.color, emissiveIntensity: 0.12 })
-    );
-    shell.scale.set(0.8, 1.25, 0.55);
-    relicGroup.add(shell);
-    const halo = new THREE.Mesh(
-      new THREE.TorusGeometry(1.25, 0.035, 6, 24),
-      new THREE.MeshBasicMaterial({ color: relic.color, transparent: true, opacity: 0.52 })
-    );
-    halo.rotation.x = Math.PI / 2.5;
-    relicGroup.add(halo);
-    relicGroup.position.set(x, y, z);
-    relicMeshes.set(relic.id, relicGroup);
-    root.add(relicGroup);
-  }
-
-  return { root, landmarkMeshes, relicMeshes, animatedLights, causticTime, swimmingSchools, swayingKelp };
+  return { root, landmarkMeshes, artifactMeshes, animatedLights, causticTime, swimmingSchools, swayingKelp };
 }

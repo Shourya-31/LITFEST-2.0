@@ -5,7 +5,7 @@ import { WaterHaze } from './WaterHaze';
 import { Particles } from './Particles';
 import { BubbleOverlay } from './BubbleOverlay';
 import PhaserGame from './PhaserGame';
-import type { AbyssalExplorerProps } from './abyssal-explorer';
+import type { AbyssalExplorerProps, AbyssalNavigationTarget } from './abyssal-explorer';
 import { LitfestAboutSection } from '../../features/about/LitfestAboutSection';
 import './Underwater.css';
 
@@ -48,9 +48,9 @@ export const UnderwaterScene: React.FC<UnderwaterSceneProps> = ({
 
   const onAbyssalNavigate = abyssalExplorerProps?.onLandmarkNavigate;
   const handleAbyssalNavigate = useCallback(
-    (explicitRoute: string) => {
-      handleLandmarkTrigger(explicitRoute);
-      onAbyssalNavigate?.(explicitRoute);
+    (target: AbyssalNavigationTarget) => {
+      handleLandmarkTrigger(target);
+      onAbyssalNavigate?.(target);
     },
     [handleLandmarkTrigger, onAbyssalNavigate]
   );

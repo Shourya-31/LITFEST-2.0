@@ -3,6 +3,7 @@ export type { UnderwaterSceneProps } from './UnderwaterScene';
 
 export { AbyssalExplorer } from './abyssal-explorer';
 export type { AbyssalExplorerProps } from './abyssal-explorer';
+export type { AbyssalNavigationTarget } from './abyssal-explorer';
 
 export { DeepWater } from './DeepWater';
 export type { DeepWaterProps } from './DeepWater';

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { Navbar } from '../components/navigation/Navbar';
@@ -8,6 +8,8 @@ import { PirateWheelTimeline } from '../features/schedule/PirateWheelTimeline';
 import { FaqSection } from '../features/faq/FaqSection';
 import { LitfestAboutSection } from '../features/about';
 import { GameLauncher } from '../features/game/GameLauncher';
+import { AbyssalExplorer } from '../components/underwater';
+import type { AbyssalNavigationTarget } from '../components/underwater';
 import { X, Compass, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
@@ -15,12 +17,25 @@ export const App: React.FC = () => {
   const [faqOpen, setFaqOpen] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<'register' | 'arenas' | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+  const [abyssalExplorerOpen, setAbyssalExplorerOpen] = useState(false);
   const [currentNavSection, setCurrentNavSection] = useState<
     'home' | 'timeline' | 'about' | 'arcade'
   >('home');
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [transitionDirection, setTransitionDirection] = useState<'dive' | 'surface'>('dive');
   const lenisInstanceRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    if (!abyssalExplorerOpen) return undefined;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+    };
+  }, [abyssalExplorerOpen]);
 
   const toggleFaq = (open: boolean) => {
     soundEngine.playDroplet();
@@ -108,8 +123,36 @@ export const App: React.FC = () => {
     setIsAudioPlaying(active);
   };
 
+  const handleAbyssalLandmarkNavigate = (target: AbyssalNavigationTarget) => {
+    setAbyssalExplorerOpen(false);
+    switch (target) {
+      case 'home':
+        handleNavigateHome();
+        break;
+      case 'timeline':
+        handleNavigateTimeline();
+        break;
+      case 'about':
+        handleNavigateAbout();
+        break;
+      case 'arcade':
+        handleNavigateArcade();
+        break;
+      case 'faq':
+        toggleFaq(true);
+        break;
+      case 'events':
+        setActiveModal('arenas');
+        break;
+      case 'register':
+        setActiveModal('register');
+        break;
+    }
+  };
+
   return (
     <div className="litfest-app-root">
+      <div inert={abyssalExplorerOpen}>
       {/* 1. Global Floating Navbar */}
       <Navbar
         currentSection={currentNavSection}
@@ -147,6 +190,7 @@ export const App: React.FC = () => {
       {/* 4. Surface & Abyssal Underwater Homepage */}
       <LitfestUnderwaterHome
         onExploreClick={handleNavigateTimeline}
+        onExploreAbyss={() => setAbyssalExplorerOpen(true)}
         isTimelineActive={currentNavSection !== 'home'}
       />
 
@@ -370,6 +414,17 @@ export const App: React.FC = () => {
               <FaqSection />
             </div>
           </div>
+        </div>
+      )}
+      </div>
+
+      {abyssalExplorerOpen && (
+        <div className="abyssal-explorer-overlay" role="dialog" aria-modal="true" aria-label="Abyssal Voyage">
+          <AbyssalExplorer
+            autoplay
+            onExit={() => setAbyssalExplorerOpen(false)}
+            onLandmarkNavigate={handleAbyssalLandmarkNavigate}
+          />
         </div>
       )}
     </div>

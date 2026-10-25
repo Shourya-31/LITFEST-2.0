@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { Suspense, lazy, useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { OceanAtmosphere } from './components/OceanAtmosphere';
 import { MarineLife } from './components/MarineLife';
 import { MarineVegetation } from './components/MarineVegetation';
@@ -6,22 +7,53 @@ import { UnderwaterTitle } from './components/UnderwaterTitle';
 import { FestivalNav } from './components/FestivalNav';
 import { LitfestAboutSection } from '../about';
 import { GameLauncher } from '../game/GameLauncher';
+import type { AbyssalNavigationTarget } from '../../components/underwater/abyssal-explorer';
 import './LitfestUnderwaterHome.css';
+
+const LazyAbyssalExplorer = lazy(() =>
+  import('../../components/underwater/abyssal-explorer').then(({ AbyssalExplorer }) => ({
+    default: AbyssalExplorer,
+  }))
+);
 
 interface LitfestUnderwaterHomeProps {
   onExploreClick?: () => void;
+  onExploreAbyss?: () => void;
+  onAbyssalNavigate?: (target: AbyssalNavigationTarget) => void;
   isTimelineActive?: boolean;
+  isDestinationOpen?: boolean;
 }
 
 export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   onExploreClick,
+  onExploreAbyss,
   isTimelineActive = false,
+  isDestinationOpen = false,
+  onAbyssalNavigate,
 }) => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [activeModal, setActiveModal] = useState<'register' | 'events' | null>(null);
+  const [abyssalExplorerOpen, setAbyssalExplorerOpen] = useState(false);
+  const homeRef = useRef<HTMLElement | null>(null);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
+
+  useEffect(() => {
+    if (!abyssalExplorerOpen) return undefined;
+    const homeElement = homeRef.current;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousInert = homeElement?.inert ?? false;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    if (homeElement) homeElement.inert = true;
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      if (homeElement) homeElement.inert = previousInert;
+    };
+  }, [abyssalExplorerOpen]);
 
   // Smooth scroll handler for in-page oceanic descent navigation
   const scrollToSection = (sectionId: string) => {
@@ -115,12 +147,39 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
     }
   };
 
+  const handleAbyssalNavigate = (target: AbyssalNavigationTarget) => {
+    setAbyssalExplorerOpen(false);
+    switch (target) {
+      case 'home':
+        scrollToSection('home');
+        break;
+      case 'about':
+        scrollToSection('about');
+        break;
+      case 'arcade':
+        document.querySelector('.ocean-game-entry')?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      case 'events':
+        setActiveModal('events');
+        break;
+      case 'register':
+        setActiveModal('register');
+        break;
+      case 'timeline':
+      case 'faq':
+        onAbyssalNavigate?.(target);
+        break;
+    }
+  };
+
   return (
     <main
+      ref={homeRef}
       className="litfest-underwater-root"
       role="main"
       aria-label="Litfest 2.0 Underwater Experience"
       style={{ display: isTimelineActive ? 'none' : undefined }}
+      inert={isDestinationOpen}
     >
       {/* 1. Global Navigation Header (Floating, fixed with glassmorphism on scroll) */}
       <FestivalNav
@@ -157,6 +216,21 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       </section>
 
       <GameLauncher />
+
+      <section className="abyss-entry-section" aria-label="Abyssal Voyage">
+        <div className="abyss-entry-copy">
+          <span>THE ABYSSAL VOYAGE</span>
+          <h2>Explore the stories beneath the surface.</h2>
+          <p>Begin your underwater literary voyage.</p>
+        </div>
+        <button
+          type="button"
+          className="abyss-entry-button"
+          onClick={() => onExploreAbyss ? onExploreAbyss() : setAbyssalExplorerOpen(true)}
+        >
+          EXPLORE THE ABYSS <span aria-hidden="true">↗</span>
+        </button>
+      </section>
 
       {/* 3. Deeper Ocean Descent & Litfest 2.0 About Experience */}
       <LitfestAboutSection
@@ -295,6 +369,19 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
           </div>
         </div>
       )}
+      {abyssalExplorerOpen &&
+        createPortal(
+          <div className="abyssal-explorer-overlay" role="dialog" aria-modal="true" aria-label="Abyssal Voyage">
+            <Suspense fallback={<div className="abyssal-loading" role="status">Preparing the abyssal voyage…</div>}>
+              <LazyAbyssalExplorer
+                autoplay
+                onExit={() => setAbyssalExplorerOpen(false)}
+                onLandmarkNavigate={handleAbyssalNavigate}
+              />
+            </Suspense>
+          </div>,
+          document.body
+        )}
     </main>
   );
 };
