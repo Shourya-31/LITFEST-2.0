@@ -10,7 +10,6 @@ interface OceanicTimelineBackdropProps {
 export const OceanicTimelineBackdrop: React.FC<OceanicTimelineBackdropProps> = ({
   currentZ,
   maxCameraZ = 15600,
-  activeIdx = 0,
 }) => {
   // Normalize scroll depth from 0 (Event 1, upper reef) to 1 (Event 14, deep abyssal trench)
   const progress = Math.max(0, Math.min(1, currentZ / maxCameraZ));

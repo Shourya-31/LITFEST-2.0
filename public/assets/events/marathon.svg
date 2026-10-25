@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="mbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#0e3a5a" />
+      <stop offset="100%" stop-color="#082840" />
+    </linearGradient>
+    <radialGradient id="mglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.8" />
+      <stop offset="45%" stop-color="#0284c7" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+    </radialGradient>
+    <filter id="mblur">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#mbg)" />
+  <circle cx="400" cy="220" r="190" fill="url(#mglow)" filter="url(#mblur)" />
+  
+  <!-- Floating deep sea bubbles -->
+  <circle cx="180" cy="140" r="12" fill="#ccfbf1" opacity="0.35" />
+  <circle cx="620" cy="110" r="16" fill="#99f6e4" opacity="0.25" />
+  <circle cx="230" cy="390" r="8" fill="#5eead4" opacity="0.4" />
+  <circle cx="670" cy="350" r="14" fill="#2dd4bf" opacity="0.3" />
+
+  <!-- Unfurling Oceanic Manuscript & Glowing Feather Quill -->
+  <g transform="translate(400, 210)">
+    <!-- Swirling Manuscript Ribbon -->
+    <path d="M-130,50 C-100,-60 -20,-70 20,-30 C60,10 110,-10 140,-50 C130,30 40,70 -10,30 C-60,-10 -90,60 -130,50 Z" fill="#0d9488" fill-opacity="0.3" stroke="#2dd4bf" stroke-width="2" />
+    
+    <!-- Open Book / Scroll Portal -->
+    <path d="M-90,30 Q-45,10 0,35 Q45,10 90,30 L85,75 Q45,55 0,78 Q-45,55 -85,75 Z" fill="#134e4a" fill-opacity="0.6" stroke="#99f6e4" stroke-width="2" />
+    
+    <!-- Feather Quill -->
+    <path d="M-10,25 C10,-20 40,-70 95,-105 C75,-65 60,-30 45,10 Z" fill="#2dd4bf" stroke="#f0fdfa" stroke-width="2" />
+    <path d="M-10,25 L95,-105" stroke="#f0fdfa" stroke-width="2" />
+    
+    <!-- Luminous ink drops -->
+    <circle cx="-16" cy="38" r="4" fill="#f0fdfa" />
+    <circle cx="-25" cy="52" r="2.5" fill="#5eead4" />
+    <circle cx="-32" cy="68" r="1.5" fill="#2dd4bf" />
+  </g>
+  <text x="400" y="420" font-family="'Cormorant Garamond', Georgia, serif" font-size="34" font-weight="600" fill="#f0fdfa" text-anchor="middle" letter-spacing="3">LITERARY MARATHON</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="13" font-weight="500" fill="#5eead4" text-anchor="middle" letter-spacing="4">ENDLESS STORYTELLING QUEST</text>
+</svg>

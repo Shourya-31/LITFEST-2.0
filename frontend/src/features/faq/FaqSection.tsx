@@ -3,7 +3,6 @@ import {
   HelpCircle,
   Search,
   ChevronDown,
-  Sparkles,
   MapPin,
   Mail,
   Instagram,
@@ -13,7 +12,7 @@ import {
   Send
 } from 'lucide-react';
 import { LITFEST_FAQS } from './faqData';
-import { FaqItem, FaqCategory, FaqSectionProps } from '../../types/faq';
+import type { FaqCategory, FaqSectionProps } from '../../types/faq';
 import { soundEngine } from '../../utils/soundEngine';
 
 export const FaqSection: React.FC<FaqSectionProps> = ({

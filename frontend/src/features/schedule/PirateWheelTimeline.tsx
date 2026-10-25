@@ -20,7 +20,7 @@ import { PIRATE_WHEEL_MILESTONES } from './timelineData';
 import { PirateWheelSvg } from './PirateWheelSvg';
 import { OceanicTimelineBackdrop } from './components/OceanicTimelineBackdrop';
 import { soundEngine } from '../../utils/soundEngine';
-import { TimelineMilestone, PirateWheelTimelineProps } from '../../types/timeline';
+import type { PirateWheelTimelineProps } from '../../types/timeline';
 
 export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   milestones = PIRATE_WHEEL_MILESTONES,
@@ -74,8 +74,6 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
   const scrollSnapTimerRef = useRef<number | null>(null);
   const dragSnapTimerRef = useRef<number | null>(null);
   const atMilestoneZeroSinceRef = useRef<number>(Date.now());
-
-  const selectedMilestone = milestones[activeIdx] || milestones[0];
 
   // Initialize Lenis smooth scroll engine synchronized with GSAP Ticker
   useEffect(() => {
@@ -384,7 +382,7 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
       ref={containerRef}
       id="timeline-stage"
       className={`z-axis-interactive-viewport ${className}`}
-      aria-label="Interactive 3D Z-Axis Timeline Traversal"
+      aria-label={`${title}. ${subtitle}`}
     >
       {/* 1. Living Oceanic Voyage Backdrop: Animated creatures, swaying kelp, corals, shipwreck, and parallax seabed */}
       <OceanicTimelineBackdrop

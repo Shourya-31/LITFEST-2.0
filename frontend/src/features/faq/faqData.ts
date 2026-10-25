@@ -1,4 +1,4 @@
-import { FaqItem } from '../../types/faq';
+import type { FaqItem } from '../../types/faq';
 
 export const LITFEST_FAQS: FaqItem[] = [
   {

@@ -16,7 +16,7 @@
 .about-abyss-gradient {
   position: absolute;
   inset: 0;
-  background:
+  background: 
     radial-gradient(ellipse 90% 50% at 50% 10%, rgba(6, 32, 60, 0.45) 0%, transparent 70%),
     radial-gradient(ellipse 80% 60% at 20% 70%, rgba(3, 20, 42, 0.5) 0%, transparent 75%),
     linear-gradient(180deg, #010610 0%, #010816 20%, #00040d 55%, #010714 85%, #010610 100%);

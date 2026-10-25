@@ -3,10 +3,12 @@ import './UnderwaterTitle.css';
 
 interface UnderwaterTitleProps {
   onExploreClick?: () => void;
+  onDescendClick?: () => void;
 }
 
 export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
   onExploreClick,
+  onDescendClick,
 }) => {
   return (
     <div className="underwater-title-wrapper">
@@ -112,32 +114,31 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
             </svg>
           </button>
         </div>
-      </div>
 
-      {/* Downward indicator inviting deeper exploration into timeline */}
-      <button
-        type="button"
-        className="scroll-invitation"
-        onClick={onExploreClick}
-        aria-label="Descend into Timeline"
-        title="Descend into Timeline"
-        id="hero-descend-btn"
-      >
-        <span className="scroll-caption">DESCEND</span>
-        <svg
-          className="scroll-arrow"
-          viewBox="0 0 24 24"
-          width="16"
-          height="16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        {/* Downward indicator inviting deeper exploration */}
+        <button
+          type="button"
+          className="scroll-invitation"
+          onClick={onDescendClick}
+          aria-label="Descend to About Litfest section"
+          id="hero-descend-btn"
         >
-          <path d="M7 10l5 5 5-5" />
-        </svg>
-      </button>
+          <span className="scroll-caption">DESCEND</span>
+          <svg
+            className="scroll-arrow"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M7 10l5 5 5-5" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TimelineMilestone } from '../../types/timeline';
+import type { TimelineMilestone } from '../../types/timeline';
 
 interface PirateWheelSvgProps {
   milestones: TimelineMilestone[];
@@ -125,8 +125,8 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
 
                 {/* Outer Ergonomic Handle extending beyond Outer Rim (r=152 to r=206) */}
                 <path
-                  d="M -3.8 -152 
-                     L -3.2 -166 
+                  d="M -3.8 -152
+                     L -3.2 -166
                      Q -6.5 -182 -4.5 -194
                      Q 0 -201 4.5 -194
                      Q 6.5 -182 3.2 -166
@@ -149,11 +149,11 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
           {/* 2. Heavy Double Ring Rim (r=98 to r=154) */}
           <g className="wheel-felloe-rim">
             <path
-              d="M 0 -154 
-                 A 154 154 0 1 1 0 154 
-                 A 154 154 0 1 1 0 -154 
-                 M 0 -98 
-                 A 98 98 0 1 0 0 98 
+              d="M 0 -154
+                 A 154 154 0 1 1 0 154
+                 A 154 154 0 1 1 0 -154
+                 M 0 -98
+                 A 98 98 0 1 0 0 98
                  A 98 98 0 1 0 0 -98 Z"
               fill="url(#abyssalRimGrad)"
               stroke="#010610"

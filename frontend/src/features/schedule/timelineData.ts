@@ -1,4 +1,4 @@
-import { TimelineMilestone } from '../../types/timeline';
+import type { TimelineMilestone } from '../../types/timeline';
 
 /**
  * 14-Spoke Timeline Dataset (Placeholders)

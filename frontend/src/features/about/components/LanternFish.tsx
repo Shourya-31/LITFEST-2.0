@@ -104,12 +104,16 @@ export const LanternFish: React.FC = () => {
           <path
             className="lantern-torso"
             d="
+              /* Forehead & Snout */
               M 42,94
               C 40,86 48,74 62,68
               C 76,62 96,64 120,68
+              /* Back slope to caudal peduncle */
               C 148,72 172,88 188,102
               C 188,106 172,120 148,126
+              /* Deep rounded belly */
               C 126,132 102,136 78,128
+              /* Cavernous lower jaw curve */
               C 62,122 48,110 42,94
               Z
             "

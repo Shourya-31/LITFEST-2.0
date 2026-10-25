@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="fgbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#3b0764" />
+      <stop offset="100%" stop-color="#090514" />
+    </linearGradient>
+    <radialGradient id="fgglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#fb7185" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#c084fc" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0" />
+    </radialGradient>
+    <filter id="fgblur">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#fgbg)" />
+  <circle cx="400" cy="220" r="185" fill="url(#fgglow)" filter="url(#fgblur)" />
+
+  <!-- Underwater Carnival Games & Luminous Arcade -->
+  <g transform="translate(400, 215)">
+    <!-- Glowing arcade game controller & target bubbles -->
+    <rect x="-70" y="-35" width="140" height="85" rx="30" fill="#4c1d95" stroke="#f43f5e" stroke-width="3" />
+    
+    <!-- D-Pad -->
+    <rect x="-48" y="-12" width="10" height="30" rx="3" fill="#e0e7ff" />
+    <rect x="-58" y="-2" width="30" height="10" rx="3" fill="#e0e7ff" />
+
+    <!-- Action Buttons -->
+    <circle cx="28" cy="12" r="7" fill="#fb7185" />
+    <circle cx="45" cy="-5" r="7" fill="#38bdf8" />
+    <circle cx="28" cy="-22" r="7" fill="#34d399" />
+    <circle cx="11" cy="-5" r="7" fill="#fbbf24" />
+
+    <!-- Floating target bubble rings -->
+    <circle cx="-65" cy="-65" r="18" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="4 3" />
+    <circle cx="65" cy="-65" r="14" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 3" />
+    <circle cx="0" cy="-75" r="22" fill="none" stroke="#facc15" stroke-width="2" stroke-dasharray="6 4" />
+  </g>
+  <text x="400" y="420" font-family="'Cormorant Garamond', Georgia, serif" font-size="34" font-weight="600" fill="#fff1f2" text-anchor="middle" letter-spacing="3">OTHER FUN GAMES</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="13" font-weight="500" fill="#fb7185" text-anchor="middle" letter-spacing="4">COMMUNITY, JOY & MINI-CHALLENGES</text>
+</svg>

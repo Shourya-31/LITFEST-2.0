@@ -90,7 +90,7 @@
     rgba(34, 211, 238, 0.95) 100%
   );
   border: 1px solid rgba(165, 243, 252, 0.85);
-  box-shadow: 
+  box-shadow:
     0 0 14px rgba(56, 189, 248, 0.65),
     inset 0 0 8px rgba(255, 255, 255, 0.6);
   will-change: transform, opacity;

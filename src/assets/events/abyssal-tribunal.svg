@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="atbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22" />
+      <stop offset="50%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#021a14" />
+    </linearGradient>
+    <radialGradient id="atglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.8" />
+      <stop offset="45%" stop-color="#059669" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#022c22" stop-opacity="0" />
+    </radialGradient>
+    <filter id="atblur">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#atbg)" />
+  <circle cx="400" cy="220" r="185" fill="url(#atglow)" filter="url(#atblur)" />
+
+  <!-- Scales of Justice & Judicial Gavel in Oceanic Court -->
+  <g transform="translate(400, 215)">
+    <!-- Main Center Pillar -->
+    <line x1="0" y1="-85" x2="0" y2="75" stroke="#6ee7b7" stroke-width="5" stroke-linecap="round" />
+    <circle cx="0" cy="-85" r="9" fill="#a7f3d0" />
+    
+    <!-- Balance Beam -->
+    <path d="M-85,-55 L0,-65 L85,-55" fill="none" stroke="#6ee7b7" stroke-width="4" stroke-linecap="round" />
+    
+    <!-- Left Scale Pan -->
+    <line x1="-85" y1="-55" x2="-115" y2="-10" stroke="#a7f3d0" stroke-width="1.5" />
+    <line x1="-85" y1="-55" x2="-55" y2="-10" stroke="#a7f3d0" stroke-width="1.5" />
+    <path d="M-120,-10 C-120,15 -50,15 -50,-10 Z" fill="#047857" fill-opacity="0.6" stroke="#34d399" stroke-width="2" />
+    <!-- Pearl in left scale -->
+    <circle cx="-85" cy="-2" r="7" fill="#f0fdf4" />
+    
+    <!-- Right Scale Pan -->
+    <line x1="85" y1="-55" x2="55" y2="-10" stroke="#a7f3d0" stroke-width="1.5" />
+    <line x1="85" y1="-55" x2="115" y2="-10" stroke="#a7f3d0" stroke-width="1.5" />
+    <path d="M50,-10 C50,15 120,15 120,-10 Z" fill="#047857" fill-opacity="0.6" stroke="#34d399" stroke-width="2" />
+    <!-- Pearl in right scale -->
+    <circle cx="85" cy="-2" r="7" fill="#f0fdf4" />
+    
+    <!-- Pedestal Base -->
+    <ellipse cx="0" cy="78" rx="55" ry="14" fill="#065f46" stroke="#34d399" stroke-width="2" />
+  </g>
+  <text x="400" y="420" font-family="'Cormorant Garamond', Georgia, serif" font-size="34" font-weight="600" fill="#ecfdf5" text-anchor="middle" letter-spacing="3">ABYSSAL TRIBUNAL</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="13" font-weight="500" fill="#34d399" text-anchor="middle" letter-spacing="4">TRIAL OF FICTIONAL LORE</text>
+</svg>
