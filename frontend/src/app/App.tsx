@@ -421,7 +421,6 @@ export const App: React.FC = () => {
       {abyssalExplorerOpen && (
         <div className="abyssal-explorer-overlay" role="dialog" aria-modal="true" aria-label="Abyssal Voyage">
           <AbyssalExplorer
-            autoplay
             onExit={() => setAbyssalExplorerOpen(false)}
             onLandmarkNavigate={handleAbyssalLandmarkNavigate}
           />

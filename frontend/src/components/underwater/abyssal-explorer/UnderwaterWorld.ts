@@ -378,11 +378,40 @@ function addGalleon(group: THREE.Group) {
     sail.position.set(mastPosition, 7, 0.12);
     group.add(sail);
   }
+  const chestWood = new THREE.MeshStandardMaterial({ color: '#8d7045', roughness: 0.72, metalness: 0.18 });
+  const chestTrim = new THREE.MeshStandardMaterial({ color: '#c3a266', roughness: 0.42, metalness: 0.56 });
   for (const side of [-1, 1]) {
-    const chest = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.2, 1.3), new THREE.MeshStandardMaterial({
-      color: '#8d7045', roughness: 0.72, metalness: 0.18,
-    }));
+    const chest = new THREE.Group();
     chest.position.set(side * 3, 2.8, -1.45);
+    const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.05, 1.3), chestWood);
+    chest.add(body);
+    const band = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.14, 1.38), chestTrim);
+    band.position.y = 0.24;
+    chest.add(band);
+    const latch = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.42, 0.12), chestTrim);
+    latch.position.set(0, 0.04, 0.71);
+    chest.add(latch);
+
+    if (side === 1) {
+      const interior = new THREE.Mesh(
+        new THREE.BoxGeometry(1.56, 0.12, 1.06),
+        new THREE.MeshStandardMaterial({ color: '#302b28', roughness: 0.9 })
+      );
+      interior.position.y = 0.55;
+      chest.add(interior);
+      const openLid = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.9, 0.16), chestWood);
+      openLid.position.set(0, 1.05, -0.67);
+      openLid.rotation.x = 0.88;
+      chest.add(openLid);
+      const lidBand = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.12, 0.2), chestTrim);
+      lidBand.position.set(0, 1.05, -0.67);
+      lidBand.rotation.x = 0.88;
+      chest.add(lidBand);
+    } else {
+      const closedLid = new THREE.Mesh(new THREE.BoxGeometry(1.84, 0.3, 1.36), chestWood);
+      closedLid.position.y = 0.67;
+      chest.add(closedLid);
+    }
     group.add(chest);
   }
 }

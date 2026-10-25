@@ -1,7 +1,26 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { LitfestUnderwaterHome } from './features/home';
 import type { AbyssalNavigationTarget } from './components/underwater/abyssal-explorer';
 import './App.css';
+
+const destinationTargets = new Set<string>([
+  'home',
+  'timeline',
+  'about',
+  'arcade',
+  'faq',
+  'events',
+  'register',
+]);
+
+function isAbyssalDestination(value: string | null): value is AbyssalNavigationTarget {
+  return value !== null && destinationTargets.has(value);
+}
+
+function readDestinationFromUrl(): AbyssalNavigationTarget | null {
+  const destination = new URLSearchParams(window.location.search).get('destination');
+  return isAbyssalDestination(destination) ? destination : null;
+}
 
 const LazyPirateWheelTimeline = lazy(() =>
   import('./features/schedule/PirateWheelTimeline').then(({ PirateWheelTimeline }) => ({
@@ -13,7 +32,12 @@ const LazyFaqSection = lazy(() =>
 );
 
 function App() {
-  const [activeDestination, setActiveDestination] = useState<'timeline' | 'faq' | null>(null);
+  const [requestedDestination] = useState(readDestinationFromUrl);
+  const [activeDestination, setActiveDestination] = useState<'timeline' | 'faq' | null>(() =>
+    requestedDestination === 'timeline' || requestedDestination === 'faq'
+      ? requestedDestination
+      : null
+  );
 
   useEffect(() => {
     if (activeDestination !== 'faq') return undefined;
@@ -27,16 +51,17 @@ function App() {
     };
   }, [activeDestination]);
 
-  const handleAbyssalNavigate = (target: AbyssalNavigationTarget) => {
+  const handleAbyssalNavigate = useCallback((target: AbyssalNavigationTarget) => {
     if (target === 'timeline' || target === 'faq') {
       setActiveDestination(target);
     }
-  };
+  }, []);
 
   return (
     <div className="app-container">
       <LitfestUnderwaterHome
         onAbyssalNavigate={handleAbyssalNavigate}
+        initialDestination={requestedDestination}
         isDestinationOpen={activeDestination !== null}
       />
       {activeDestination && (

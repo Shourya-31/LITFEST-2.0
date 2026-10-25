@@ -20,6 +20,7 @@ interface LitfestUnderwaterHomeProps {
   onExploreClick?: () => void;
   onExploreAbyss?: () => void;
   onAbyssalNavigate?: (target: AbyssalNavigationTarget) => void;
+  initialDestination?: AbyssalNavigationTarget | null;
   isTimelineActive?: boolean;
   isDestinationOpen?: boolean;
 }
@@ -30,9 +31,14 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   isTimelineActive = false,
   isDestinationOpen = false,
   onAbyssalNavigate,
+  initialDestination = null,
 }) => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [activeModal, setActiveModal] = useState<'register' | 'events' | null>(null);
+  const [activeModal, setActiveModal] = useState<'register' | 'events' | null>(() =>
+    initialDestination === 'register' || initialDestination === 'events'
+      ? initialDestination
+      : null
+  );
   const [abyssalExplorerOpen, setAbyssalExplorerOpen] = useState(false);
   const homeRef = useRef<HTMLElement | null>(null);
 
@@ -56,7 +62,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   }, [abyssalExplorerOpen]);
 
   // Smooth scroll handler for in-page oceanic descent navigation
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = React.useCallback((sectionId: string) => {
     if (sectionId === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -65,7 +71,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
     if (elem) {
       elem.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   const handleNavClick = (sec: string) => {
     if (sec === 'home') {
@@ -147,7 +153,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
     }
   };
 
-  const handleAbyssalNavigate = (target: AbyssalNavigationTarget) => {
+  const handleAbyssalNavigate = React.useCallback((target: AbyssalNavigationTarget) => {
     setAbyssalExplorerOpen(false);
     switch (target) {
       case 'home':
@@ -170,7 +176,17 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
         onAbyssalNavigate?.(target);
         break;
     }
-  };
+  }, [onAbyssalNavigate, scrollToSection]);
+
+  useEffect(() => {
+    if (initialDestination === 'home') {
+      scrollToSection('home');
+    } else if (initialDestination === 'about') {
+      scrollToSection('about');
+    } else if (initialDestination === 'arcade') {
+      document.querySelector('.ocean-game-entry')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [initialDestination, scrollToSection]);
 
   return (
     <main
@@ -374,7 +390,6 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
           <div className="abyssal-explorer-overlay" role="dialog" aria-modal="true" aria-label="Abyssal Voyage">
             <Suspense fallback={<div className="abyssal-loading" role="status">Preparing the abyssal voyage…</div>}>
               <LazyAbyssalExplorer
-                autoplay
                 onExit={() => setAbyssalExplorerOpen(false)}
                 onLandmarkNavigate={handleAbyssalNavigate}
               />

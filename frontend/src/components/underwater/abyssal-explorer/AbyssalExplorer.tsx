@@ -3,48 +3,59 @@ import { ExplorerScene } from './ExplorerScene';
 import { ExplorerHUD } from './ExplorerHUD';
 import { abyssalLandmarks, relics } from './Landmarks';
 import type { AbyssalNavigationTarget, ExplorerTelemetry, LandmarkDefinition } from './types';
+import { soundEngine } from '../../../utils/soundEngine';
 import './AbyssalExplorer.css';
 
 export interface AbyssalExplorerProps {
   className?: string;
   onLandmarkNavigate?: (target: AbyssalNavigationTarget) => void;
   onExit?: () => void;
-  autoplay?: boolean;
 }
 
 const STORAGE_KEY = 'litfest-abyssal-progress';
-const RELIC_IDS = new Set(relics.map((relic) => relic.id));
-const NAVIGATION_TARGETS = new Set<string>([
-  'home',
-  'timeline',
-  'about',
-  'arcade',
-  'faq',
-  'events',
-  'register',
-]);
+const ARTIFACT_IDS = new Set(relics.map((artifact) => artifact.id));
 
-function isAbyssalNavigationTarget(target: string): target is AbyssalNavigationTarget {
-  return NAVIGATION_TARGETS.has(target);
+interface ExplorerNotice {
+  title: string;
+  description?: string;
+  destinationStatus?: string;
+  destinationHref?: string;
 }
 
-function readSavedProgress(): string[] {
-  if (typeof window === 'undefined') {
-    return [];
-  }
+function openDestinationInNewTab(target: AbyssalNavigationTarget): { opened: boolean; href: string } {
+  const destinationUrl = new URL(window.location.href);
+  destinationUrl.searchParams.set('destination', target);
+  const href = destinationUrl.toString();
+  const destinationTab = window.open('about:blank', '_blank');
+  if (!destinationTab) return { opened: false, href };
 
   try {
+    destinationTab.opener = null;
+    destinationTab.location.replace(href);
+    return { opened: true, href };
+  } catch (error) {
+    console.error('Unable to open the Abyssal Voyage destination tab.', error);
+    destinationTab.close();
+    return { opened: false, href };
+  }
+}
+
+function readSavedProgress(): { collectedArtifactIds: string[]; hasWon: boolean } {
+  try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return [];
-    }
+    if (!raw) return { collectedArtifactIds: [], hasWon: false };
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.every((id): id is string => typeof id === 'string')
-      ? [...new Set(parsed.filter((id) => RELIC_IDS.has(id)))]
-      : [];
+    const savedIds = Array.isArray(parsed)
+      ? parsed
+      : typeof parsed === 'object' && parsed !== null && 'collectedArtifactIds' in parsed && Array.isArray(parsed.collectedArtifactIds)
+        ? parsed.collectedArtifactIds
+        : [];
+    const collectedArtifactIds = [...new Set(savedIds.filter((id): id is string => typeof id === 'string' && ARTIFACT_IDS.has(id)))];
+    const hasWon = typeof parsed === 'object' && parsed !== null && 'hasWon' in parsed && parsed.hasWon === true;
+    return { collectedArtifactIds, hasWon: hasWon && collectedArtifactIds.length === relics.length };
   } catch (error) {
     console.warn('Unable to restore Abyssal Voyage progress.', error);
-    return [];
+    return { collectedArtifactIds: [], hasWon: false };
   }
 }
 
@@ -52,16 +63,23 @@ export function AbyssalExplorer({
   className = '',
   onLandmarkNavigate,
   onExit,
-  autoplay = false,
 }: AbyssalExplorerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sceneRef = useRef<ExplorerScene | null>(null);
   const navigateRef = useRef(onLandmarkNavigate);
-  const [started, setStarted] = useState(autoplay);
+  const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [collection, setCollection] = useState<string[]>(() => readSavedProgress());
+  const [savedProgress] = useState(() => readSavedProgress());
+  const [collection, setCollection] = useState<string[]>(() => savedProgress.collectedArtifactIds);
   const collectionRef = useRef(collection);
+  const [hasWon, setHasWon] = useState(savedProgress.hasWon);
+  const hasWonRef = useRef(savedProgress.hasWon);
+  const artifactNoticeUntilRef = useRef(0);
+  const [missionOpen, setMissionOpen] = useState(true);
+  const [howToPlayOpen, setHowToPlayOpen] = useState(false);
+  const [journalOpen, setJournalOpen] = useState(false);
+  const [victoryOpen, setVictoryOpen] = useState(false);
   const [discoveredLandmarkIds, setDiscoveredLandmarkIds] = useState<string[]>(() => {
     try {
       const raw = window.localStorage.getItem('litfest-abyssal-discoveries');
@@ -87,7 +105,7 @@ export function AbyssalExplorer({
     statusMessage: 'Cruising the abyssal shelf',
   });
   const [landmark, setLandmark] = useState<LandmarkDefinition | undefined>();
-  const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState<ExplorerNotice | null>(null);
   const [storageWarning, setStorageWarning] = useState('');
   const [sceneError, setSceneError] = useState('');
 
@@ -98,6 +116,10 @@ export function AbyssalExplorer({
   useEffect(() => {
     collectionRef.current = collection;
   }, [collection]);
+
+  useEffect(() => {
+    hasWonRef.current = hasWon;
+  }, [hasWon]);
 
   useEffect(() => {
     discoveriesRef.current = discoveredLandmarkIds;
@@ -118,12 +140,16 @@ export function AbyssalExplorer({
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: 2,
+        collectedArtifactIds: collection,
+        hasWon,
+      }));
     } catch (error) {
       console.warn('Unable to save Abyssal Voyage progress.', error);
       window.setTimeout(() => setStorageWarning('Progress cannot be saved in this browser session.'), 0);
     }
-  }, [collection]);
+  }, [collection, hasWon]);
 
   useEffect(() => {
     if (!containerRef.current || !started) {
@@ -134,30 +160,61 @@ export function AbyssalExplorer({
     try {
       scene = new ExplorerScene({
         container: containerRef.current,
-        collectedRelicIds: collectionRef.current,
+        collectedArtifactIds: collectionRef.current,
         discoveredLandmarkIds: discoveriesRef.current,
         callbacks: {
           onTelemetry: (next) => {
             setTelemetry(next);
             setLandmark(next.nearbyLandmark);
           },
-          onLandmarkInteract: (selectedLandmark) => {
-            setLandmark(selectedLandmark);
-            setNotification(`${selectedLandmark.name} discovered`);
-            const target = selectedLandmark.route;
-            if (target && isAbyssalNavigationTarget(target)) {
-              navigateRef.current?.(target);
-            }
-          },
           onLandmarkDiscovered: (discoveredLandmark) => {
             setDiscoveredLandmarkIds((current) => current.includes(discoveredLandmark.id)
               ? current
               : [...current, discoveredLandmark.id]);
-            setNotification(`${discoveredLandmark.name} revealed by sonar`);
+            if (Date.now() >= artifactNoticeUntilRef.current) {
+              setNotification({ title: `${discoveredLandmark.name} revealed by sonar` });
+            }
           },
-          onRelicCollected: (relicId) => {
-            setCollection((current) => current.includes(relicId) ? current : [...current, relicId]);
-            setNotification(`Relic recovered: ${relics.find((relic) => relic.id === relicId)?.name ?? 'relic'}`);
+          onArtifactCollected: (artifactId) => {
+            const artifact = relics.find((entry) => entry.id === artifactId);
+            if (!artifact) {
+              console.error(`Collected unknown Abyssal Voyage artifact "${artifactId}".`);
+              return false;
+            }
+            if (collectionRef.current.includes(artifactId)) return false;
+
+            const nextCollection = [...collectionRef.current, artifactId];
+            collectionRef.current = nextCollection;
+            setCollection(nextCollection);
+            try {
+              window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                version: 2,
+                collectedArtifactIds: nextCollection,
+                hasWon: hasWonRef.current,
+              }));
+            } catch (error) {
+              console.warn('Unable to save Abyssal Voyage progress.', error);
+              setStorageWarning('Progress cannot be saved in this browser session.');
+            }
+
+            const destination = openDestinationInNewTab(artifact.route);
+            artifactNoticeUntilRef.current = Date.now() + 3200;
+            setNotification({
+              title: 'ARTIFACT ACQUIRED',
+              description: `${artifact.name} collected.`,
+              destinationStatus: destination.opened
+                ? `${artifact.destination} opened in a new tab.`
+                : 'DESTINATION READY — OPEN PAGE',
+              destinationHref: destination.opened ? undefined : destination.href,
+            });
+            soundEngine.playSeaBell(nextCollection.length % 14);
+            return destination.opened;
+          },
+          onVictory: () => {
+            if (hasWonRef.current) return;
+            hasWonRef.current = true;
+            setHasWon(true);
+            setVictoryOpen(true);
           },
         },
       });
@@ -193,8 +250,14 @@ export function AbyssalExplorer({
 
   const handleResetProgress = useCallback(() => {
     setCollection([]);
+    setHasWon(false);
+    hasWonRef.current = false;
+    setVictoryOpen(false);
+    setDiscoveredLandmarkIds([]);
+    discoveriesRef.current = [];
+    setJournalOpen(false);
     sceneRef.current?.resetCollectedRelics();
-    setNotification('Relics will be rediscovered on this voyage');
+    setNotification({ title: 'THE HUNT IS RESET', description: 'All seven artifacts restored.' });
   }, []);
 
   const handleInteract = useCallback(() => {
@@ -213,15 +276,33 @@ export function AbyssalExplorer({
     sceneRef.current?.restartCheckpoint();
     setPaused(false);
     setLandmark(undefined);
-    setNotification('Checkpoint restored');
+    setNotification({ title: 'Checkpoint restored' });
   }, []);
 
   const handleExit = useCallback(() => {
     setStarted(false);
     setPaused(false);
+    setMissionOpen(true);
+    setVictoryOpen(false);
+    setJournalOpen(false);
     setSceneError('');
     onExit?.();
   }, [onExit]);
+
+  const handleBeginHunt = useCallback(() => {
+    setMissionOpen(false);
+    setStarted(true);
+    if (collectionRef.current.length === relics.length && !hasWonRef.current) {
+      hasWonRef.current = true;
+      setHasWon(true);
+      setVictoryOpen(true);
+    }
+  }, []);
+
+  const handleOpenArtifactJournal = useCallback(() => {
+    setVictoryOpen(false);
+    setJournalOpen(true);
+  }, []);
 
   useEffect(() => {
     sceneRef.current?.setPaused(paused);
@@ -232,7 +313,7 @@ export function AbyssalExplorer({
       return undefined;
     }
 
-    const timer = window.setTimeout(() => setNotification(''), 1800);
+    const timer = window.setTimeout(() => setNotification(null), 3200);
     return () => window.clearTimeout(timer);
   }, [notification]);
 
@@ -284,18 +365,40 @@ export function AbyssalExplorer({
 
   return (
     <div className={`abyssal-explorer ${className}`.trim()}>
-      {!started && (
+      {missionOpen && !started && (
         <div className="abyssal-intro-overlay">
           <div className="abyssal-intro-card">
-            <p className="abyssal-intro-kicker">LITFEST 2.0</p>
-            <h1>THE ABYSSAL VOYAGE</h1>
-            <p className="abyssal-intro-copy">Pilot the current. Discover the stories beneath the surface.</p>
-            <p className="abyssal-intro-controls">
-              W / A / S / D or arrows to steer · Shift to boost · Space for sonar · E to explore
+            <p className="abyssal-intro-kicker">LITFEST 2.0 · ABYSSAL VOYAGE</p>
+            <h1>THE SEVEN SACRED ARTIFACTS</h1>
+            <p className="abyssal-intro-subtitle">Seven relics. Seven destinations. One unforgettable voyage.</p>
+            <p className="abyssal-intro-copy">
+              Ancient treasures lie hidden throughout the sunken world of LITFEST. Pilot your submarine,
+              discover the glowing artifacts, and unlock every destination. Collect all seven to claim victory.
             </p>
-            <button type="button" className="abyssal-begin-btn" onClick={() => setStarted(true)}>
-              BEGIN YOUR VOYAGE
-            </button>
+            <div className="abyssal-mission-progress" aria-label={`${collection.length} of 7 artifacts already collected`}>
+              {relics.map((artifact) => (
+                <span key={artifact.id} className={collection.includes(artifact.id) ? 'collected' : ''} style={{ '--artifact-color': artifact.color } as React.CSSProperties} title={artifact.name} />
+              ))}
+              <strong>{collection.length} / 7</strong>
+            </div>
+            <p className="abyssal-intro-controls">
+              WASD / arrows · Navigate &nbsp; Shift · Boost &nbsp; Space · Sonar &nbsp; E · Collect
+              <br />Destination Journal · Review discovered locations
+            </p>
+            {howToPlayOpen && (
+              <p className="abyssal-how-to-play">
+                Follow the compass, pilot close to each landmark, then collect its artifact with E or the on-screen button.
+                Each recovered artifact unlocks one destination in your journal.
+              </p>
+            )}
+            <div className="abyssal-mission-actions">
+              <button type="button" className="abyssal-begin-btn" onClick={handleBeginHunt}>
+                {collection.length ? 'RESUME THE HUNT' : 'BEGIN THE HUNT'}
+              </button>
+              <button type="button" className="abyssal-secondary-btn" onClick={() => setHowToPlayOpen((open) => !open)}>
+                {howToPlayOpen ? 'HIDE INSTRUCTIONS' : 'HOW TO PLAY'}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -318,6 +421,7 @@ export function AbyssalExplorer({
           sonarReady={telemetry.sonarReady}
           discoveryCount={collection.length}
           interactionLabel={telemetry.interactionLabel}
+          nearbyArtifact={telemetry.nearbyArtifact}
           nearbyLandmark={landmark ?? telemetry.nearbyLandmark}
           navigationTarget={telemetry.navigationTarget}
           navigationDistance={telemetry.navigationDistance}
@@ -326,7 +430,12 @@ export function AbyssalExplorer({
           paused={paused}
           soundEnabled={soundEnabled}
           discoveredLandmarkIds={discoveredLandmarkIds}
+          collectedArtifactIds={collection}
+          journalOpen={journalOpen}
           selectedLandmarkId={telemetry.navigationTarget?.id}
+          onOpenJournal={handleOpenArtifactJournal}
+          onCloseJournal={() => setJournalOpen(false)}
+          onNavigate={(target) => navigateRef.current?.(target)}
           onTogglePause={handlePauseToggle}
           onToggleSound={() => setSoundEnabled((current) => !current)}
           onExit={handleExit}
@@ -336,6 +445,28 @@ export function AbyssalExplorer({
           onSonar={handleSonar}
           onSelectLandmark={(id) => sceneRef.current?.selectNavigationTarget(id)}
         />
+      )}
+
+      {started && victoryOpen && (
+        <div className="abyssal-victory-overlay" role="dialog" aria-modal="true" aria-labelledby="abyssal-victory-title">
+          <section className="abyssal-victory-card">
+            <span className="abyssal-eyebrow">THE ABYSSAL VOYAGE IS COMPLETE</span>
+            <h2 id="abyssal-victory-title">CONGRATULATIONS!</h2>
+            <h3>YOU WON THE GAME!</h3>
+            <p>You discovered all seven sacred artifacts and unlocked every LITFEST destination.</p>
+            <div className="abyssal-mission-progress victory-progress" aria-label="7 of 7 artifacts collected">
+              {relics.map((artifact) => (
+                <span key={artifact.id} className="collected" style={{ '--artifact-color': artifact.color } as React.CSSProperties} title={artifact.name} />
+              ))}
+            </div>
+            <strong className="abyssal-victory-count">7 / 7 ARTIFACTS COLLECTED</strong>
+            <div className="abyssal-victory-actions">
+              <button type="button" className="abyssal-begin-btn" onClick={handleOpenArtifactJournal}>EXPLORE UNLOCKED DESTINATIONS</button>
+              <button type="button" className="abyssal-secondary-btn" onClick={() => setVictoryOpen(false)}>CONTINUE EXPLORING</button>
+              <button type="button" className="abyssal-secondary-btn" onClick={handleExit}>RETURN TO LITFEST</button>
+            </div>
+          </section>
+        </div>
       )}
 
       {started && paused && (
@@ -355,9 +486,20 @@ export function AbyssalExplorer({
 
       {storageWarning && <div className="abyssal-storage-warning" role="status">{storageWarning}</div>}
 
-      {notification && <div className="abyssal-notification">{notification}</div>}
+          {notification && (
+            <div className="abyssal-notification" role="status" aria-live="polite">
+              <strong>{notification.title}</strong>
+              {notification.description && <span>{notification.description}</span>}
+              {notification.destinationStatus && <span>{notification.destinationStatus}</span>}
+              {notification.destinationHref && (
+                <a href={notification.destinationHref} target="_blank" rel="noopener noreferrer">
+                  OPEN DESTINATION
+                </a>
+              )}
+            </div>
+          )}
 
-      {started && (
+      {started && !journalOpen && !paused && !victoryOpen && (
         <div className="abyssal-mobile-controls" aria-label="Touch controls">
           <div className="abyssal-dpad" aria-label="Directional controls">
             <button type="button" className="abyssal-touch-btn" aria-label="Move forward" onPointerDown={() => handleMove('forward', true)} onPointerUp={() => handleMove('forward', false)} onPointerLeave={() => handleMove('forward', false)} onPointerCancel={() => handleMove('forward', false)}>↑</button>
@@ -368,6 +510,9 @@ export function AbyssalExplorer({
           <div className="abyssal-touch-actions">
             <button type="button" className="abyssal-touch-btn" onPointerDown={() => handleMove('boost', true)} onPointerUp={() => handleMove('boost', false)} onPointerLeave={() => handleMove('boost', false)} onPointerCancel={() => handleMove('boost', false)}>BOOST</button>
             <button type="button" className="abyssal-touch-btn" onClick={handleSonar}>SONAR</button>
+            {telemetry.nearbyArtifact && (
+              <button type="button" className="abyssal-touch-btn abyssal-touch-collect" onClick={handleInteract}>COLLECT</button>
+            )}
           </div>
         </div>
       )}

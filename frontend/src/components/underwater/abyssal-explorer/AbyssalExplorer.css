@@ -69,12 +69,74 @@
 
 .abyssal-intro-card {
   width: min(520px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
   padding: 32px 28px;
   background: rgba(6, 23, 34, 0.72);
   border: 1px solid rgba(126, 228, 255, 0.25);
   border-radius: 22px;
   text-align: center;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.abyssal-intro-subtitle {
+  margin: 8px 0 0;
+  color: #afe9f1;
+  font-size: 0.96rem;
+}
+
+.abyssal-mission-progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  margin: 16px 0;
+}
+
+.abyssal-mission-progress > span,
+.abyssal-artifact-dots > span {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(210, 242, 250, 0.48);
+  border-radius: 50%;
+  background: rgba(151, 192, 206, 0.18);
+}
+
+.abyssal-mission-progress > span.collected,
+.abyssal-artifact-dots > span.collected {
+  border-color: var(--artifact-color, #a7f3ff);
+  background: var(--artifact-color, #a7f3ff);
+  box-shadow: 0 0 12px var(--artifact-color, #a7f3ff);
+}
+
+.abyssal-mission-progress strong {
+  margin-left: 4px;
+  color: #d8f5f8;
+  font-size: 0.76rem;
+}
+
+.abyssal-how-to-play {
+  margin: 0 auto 14px;
+  max-width: 400px;
+  color: #d6eef0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.abyssal-mission-actions,
+.abyssal-victory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+}
+
+.abyssal-secondary-btn {
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  color: #eafcff;
+  background: rgba(13, 30, 42, 0.76);
 }
 
 .abyssal-intro-kicker {
@@ -141,6 +203,40 @@
   pointer-events: none;
   z-index: 15;
   padding: 18px;
+}
+
+.abyssal-artifact-progress {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  padding: 7px 11px;
+  border: 1px solid rgba(153, 225, 238, 0.18);
+  border-radius: 999px;
+  color: #eaf9f9;
+  background: rgba(4, 24, 36, 0.56);
+  backdrop-filter: blur(9px);
+  pointer-events: none;
+  font-size: 0.69rem;
+  letter-spacing: 0.08em;
+}
+
+.abyssal-artifact-dots {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.abyssal-artifact-dots > span {
+  width: 9px;
+  height: 9px;
+}
+
+.abyssal-artifact-progress strong {
+  white-space: nowrap;
 }
 
 .abyssal-explorer-topbar,
@@ -443,6 +539,57 @@
   cursor: pointer;
 }
 
+.abyssal-destination-row {
+  display: grid;
+  grid-template-columns: 26px minmax(120px, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(153, 225, 238, 0.12);
+  border-radius: 12px;
+  background: rgba(13, 44, 57, 0.55);
+}
+
+.abyssal-destination-row.unlocked {
+  border-color: rgba(145, 229, 237, 0.42);
+}
+
+.abyssal-destination-details strong,
+.abyssal-destination-details small {
+  display: block;
+}
+
+.abyssal-destination-details small {
+  margin-top: 3px;
+  color: rgba(220, 242, 244, 0.68);
+  line-height: 1.35;
+}
+
+.abyssal-journal-action {
+  padding: 7px 9px;
+  border: 1px solid rgba(153, 225, 238, 0.25);
+  border-radius: 999px;
+  color: #eaf9f9;
+  background: rgba(7, 34, 45, 0.8);
+  cursor: pointer;
+}
+
+.abyssal-journal-action.selected {
+  border-color: #8de6ec;
+  color: #b8f7f4;
+}
+
+.abyssal-journal-action.open-destination:not(:disabled) {
+  border-color: rgba(139, 240, 222, 0.58);
+  color: #c8fff2;
+  background: rgba(27, 91, 79, 0.56);
+}
+
+.abyssal-journal-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .abyssal-destination:hover,
 .abyssal-destination.selected {
   border-color: rgba(145, 229, 237, 0.52);
@@ -473,14 +620,42 @@
 .abyssal-notification {
   position: absolute;
   left: 50%;
-  bottom: 24px;
+  top: 146px;
   transform: translateX(-50%);
   z-index: 22;
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
+  display: grid;
+  gap: 4px;
+  max-width: min(380px, calc(100% - 32px));
+  padding: 0.7rem 1rem;
+  border-radius: 14px;
   background: rgba(6, 30, 44, 0.8);
   border: 1px solid rgba(150, 226, 255, 0.22);
   color: #eeffff;
+  text-align: center;
+  pointer-events: none;
+  animation: abyssal-notice-in 0.22s ease-out, abyssal-notice-out 0.35s ease-in 2.8s forwards;
+}
+
+.abyssal-notification span {
+  color: rgba(220, 242, 244, 0.82);
+  font-size: 0.82rem;
+}
+
+.abyssal-notification a {
+  justify-self: center;
+  color: #a8f0ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  pointer-events: auto;
+}
+
+@keyframes abyssal-notice-in {
+  from { opacity: 0; translate: 0 -5px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes abyssal-notice-out {
+  to { opacity: 0; }
 }
 
 .abyssal-mobile-controls {
@@ -501,6 +676,10 @@
   touch-action: none;
 }
 
+.abyssal-secondary-btn {
+  border: 1px solid rgba(127, 216, 255, 0.3);
+}
+
 .abyssal-pause-overlay {
   position: absolute;
   inset: 0;
@@ -510,6 +689,64 @@
   padding: 20px;
   background: rgba(1, 10, 18, 0.54);
   backdrop-filter: blur(5px);
+}
+
+.abyssal-victory-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: 18px;
+  background: rgba(1, 12, 20, 0.58);
+  backdrop-filter: blur(7px);
+  pointer-events: auto;
+}
+
+.abyssal-victory-card {
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  padding: clamp(20px, 5vw, 36px);
+  border: 1px solid rgba(158, 236, 245, 0.42);
+  border-radius: 24px;
+  color: #eaf9f9;
+  text-align: center;
+  background: radial-gradient(circle at 50% 0, rgba(89, 198, 216, 0.25), rgba(5, 25, 37, 0.97) 65%);
+  box-shadow: 0 25px 90px rgba(0, 0, 0, 0.4);
+}
+
+.abyssal-victory-card h2 {
+  margin: 12px 0 4px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.abyssal-victory-card h3 {
+  margin: 0;
+  color: #9feeff;
+  letter-spacing: 0.12em;
+}
+
+.abyssal-victory-card p {
+  color: rgba(226, 242, 255, 0.82);
+  line-height: 1.55;
+}
+
+.abyssal-victory-count {
+  display: block;
+  margin: -5px 0 20px;
+  color: #b8f7f4;
+  letter-spacing: 0.1em;
+}
+
+.abyssal-victory-actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.abyssal-victory-actions > button {
+  width: 100%;
 }
 
 .abyssal-pause-card {
@@ -588,6 +825,16 @@
     padding: 11px 13px;
   }
 
+  .abyssal-artifact-progress {
+    top: 108px;
+    font-size: 0.58rem;
+  }
+
+  .abyssal-notification {
+    top: 150px;
+    max-width: calc(100% - 24px);
+  }
+
   .abyssal-compass-control {
     right: 12px;
     bottom: 68px;
@@ -648,9 +895,34 @@
   .abyssal-destination {
     padding: 8px;
   }
+
+  .abyssal-destination-row {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+  }
+
+  .abyssal-destination-row .open-destination {
+    grid-column: 2 / 4;
+    justify-self: stretch;
+  }
+
+  .abyssal-intro-card {
+    padding: 22px 18px;
+  }
+
+  .abyssal-intro-card h1 {
+    font-size: clamp(1.65rem, 8vw, 2.4rem);
+  }
+
+  .abyssal-mission-actions > button {
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .abyssal-notification {
+    animation: none;
+  }
+
   .abyssal-begin-btn,
   .abyssal-primary-btn,
   .abyssal-secondary-btn,

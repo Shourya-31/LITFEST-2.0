@@ -6,20 +6,35 @@ import type { ExplorerTelemetry, LandmarkDefinition } from './types';
 
 export interface ExplorerSceneCallbacks {
   onTelemetry?: (telemetry: ExplorerTelemetry) => void;
-  onLandmarkInteract?: (landmark: LandmarkDefinition) => void;
   onLandmarkDiscovered?: (landmark: LandmarkDefinition) => void;
-  onRelicCollected?: (relicId: string) => void;
+  onArtifactCollected?: (artifactId: string) => boolean;
+  onVictory?: () => void;
 }
 
 export interface ExplorerSceneOptions {
   container: HTMLDivElement;
   callbacks?: ExplorerSceneCallbacks;
-  collectedRelicIds?: string[];
+  collectedArtifactIds?: string[];
   discoveredLandmarkIds?: string[];
 }
 
 const SONAR_COOLDOWN_MS = 1400;
 const LANDMARK_INTERACTION_RADIUS = 13;
+const ARTIFACT_INTERACTION_RADIUS = 7.5;
+
+interface ObjectTransform {
+  position: THREE.Vector3;
+  rotation: THREE.Euler;
+  scale: THREE.Vector3;
+}
+
+interface ArtifactAnimationParts {
+  core?: THREE.Mesh;
+  halo?: THREE.Object3D;
+  light?: THREE.PointLight;
+}
+
+const relicById = new Map(relics.map((artifact) => [artifact.id, artifact]));
 
 export class ExplorerScene {
   private container: HTMLDivElement;
@@ -48,6 +63,7 @@ export class ExplorerScene {
   private lastInteractTime = -Infinity;
   private lastSonarTime = -Infinity;
   private nearbyLandmark?: LandmarkDefinition;
+  private nearbyArtifactId?: string;
   private navigationTarget?: LandmarkDefinition;
   private selectedNavigationTargetId?: string;
   private navigationDistance = 0;
@@ -57,16 +73,24 @@ export class ExplorerScene {
   private wakePositions!: THREE.BufferAttribute;
   private wakeMaterial!: THREE.PointsMaterial;
   private sonarWave: THREE.Mesh;
+  private victoryWave: THREE.Mesh;
+  private victoryStartedAt?: number;
+  private victoryArtifactId?: string;
+  private victoryCallbackFired = false;
   private sonarOrigin = new THREE.Vector3();
   private sonarActive = false;
   private particleField: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>;
   private particleBasePositions: Float32Array;
-  private relicCollected: Set<string>;
+  private artifactCollected: Set<string>;
   private callbacks: ExplorerSceneCallbacks;
   private discoveredLandmarkIds: Set<string>;
   private landmarkPositions = new Map<string, THREE.Vector3>();
   private landmarkMarkers = new Map<string, THREE.Mesh>();
-  private relicMeshes: Map<string, THREE.Object3D>;
+  private artifactMeshes: Map<string, THREE.Group>;
+  private artifactPositions = new Map<string, THREE.Vector3>();
+  private artifactAnimationParts = new Map<string, ArtifactAnimationParts>();
+  private artifactInitialTransforms = new Map<string, Map<THREE.Object3D, ObjectTransform>>();
+  private artifactCollectionStart = new Map<string, number>();
   private animatedLights: THREE.Object3D[];
   private causticTime: { value: number };
   private swimmingSchools: Array<{ group: THREE.Group; x: number; y: number; z: number; phase: number }>;
@@ -92,10 +116,10 @@ export class ExplorerScene {
     this.reducedMotion = event.matches;
   };
 
-  constructor({ container, callbacks = {}, collectedRelicIds = [], discoveredLandmarkIds = [] }: ExplorerSceneOptions) {
+  constructor({ container, callbacks = {}, collectedArtifactIds = [], discoveredLandmarkIds = [] }: ExplorerSceneOptions) {
     this.container = container;
     this.callbacks = callbacks;
-    this.relicCollected = new Set(collectedRelicIds);
+    this.artifactCollected = new Set(collectedArtifactIds);
     this.discoveredLandmarkIds = new Set(discoveredLandmarkIds);
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.reducedMotion = this.motionQuery.matches;
@@ -107,7 +131,7 @@ export class ExplorerScene {
     this.camera.position.set(0, 12, 23);
 
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: window.innerWidth > 768,
       alpha: false,
       powerPreference: 'high-performance',
     });
@@ -115,7 +139,7 @@ export class ExplorerScene {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.22;
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    this.renderer.setPixelRatio(this.getPixelRatio());
     this.renderer.setSize(this.container.clientWidth || 960, this.container.clientHeight || 540);
     this.container.appendChild(this.renderer.domElement);
 
@@ -131,7 +155,7 @@ export class ExplorerScene {
 
     const world = createUnderwaterWorld();
     this.scene.add(world.root);
-    this.relicMeshes = world.relicMeshes;
+    this.artifactMeshes = world.artifactMeshes;
     this.animatedLights = world.animatedLights;
     this.causticTime = world.causticTime;
     this.swimmingSchools = world.swimmingSchools;
@@ -148,6 +172,29 @@ export class ExplorerScene {
         this.landmarkMarkers.set(landmark.id, marker);
       }
     }
+    world.root.updateMatrixWorld(true);
+    for (const artifact of relics) {
+      const mesh = this.artifactMeshes.get(artifact.id);
+      if (!mesh) continue;
+      this.artifactPositions.set(artifact.id, mesh.getWorldPosition(new THREE.Vector3()));
+      const core = mesh.getObjectByName('artifactCore');
+      const halo = mesh.getObjectByName('artifactHalo');
+      const light = mesh.getObjectByName('artifactLight');
+      this.artifactAnimationParts.set(artifact.id, {
+        core: core instanceof THREE.Mesh ? core : undefined,
+        halo,
+        light: light instanceof THREE.PointLight ? light : undefined,
+      });
+      const transforms = new Map<THREE.Object3D, ObjectTransform>();
+      mesh.traverse((object) => {
+        transforms.set(object, {
+          position: object.position.clone(),
+          rotation: object.rotation.clone(),
+          scale: object.scale.clone(),
+        });
+      });
+      this.artifactInitialTransforms.set(artifact.id, transforms);
+    }
 
     this.submarine = this.createSubmarine();
     this.scene.add(this.submarine);
@@ -163,6 +210,13 @@ export class ExplorerScene {
     this.sonarWave = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 14), waveMaterial);
     this.sonarWave.visible = false;
     this.scene.add(this.sonarWave);
+    this.victoryWave = new THREE.Mesh(
+      new THREE.TorusGeometry(1, 0.13, 8, 64),
+      new THREE.MeshBasicMaterial({ color: '#c4faff', transparent: true, opacity: 0, depthWrite: false })
+    );
+    this.victoryWave.rotation.x = Math.PI / 2;
+    this.victoryWave.visible = false;
+    this.scene.add(this.victoryWave);
 
     const particleCount = 240;
     this.particleBasePositions = new Float32Array(particleCount * 3);
@@ -195,8 +249,8 @@ export class ExplorerScene {
     );
     this.scene.add(this.particleField);
 
-    this.relicCollected.forEach((id) => {
-      const mesh = this.relicMeshes.get(id);
+    this.artifactCollected.forEach((id) => {
+      const mesh = this.artifactMeshes.get(id);
       if (mesh) mesh.visible = false;
     });
 
@@ -265,8 +319,36 @@ export class ExplorerScene {
   }
 
   public resetCollectedRelics() {
-    this.relicCollected.clear();
-    for (const mesh of this.relicMeshes.values()) mesh.visible = true;
+    this.artifactCollected.clear();
+    this.artifactCollectionStart.clear();
+    this.discoveredLandmarkIds.clear();
+    this.victoryStartedAt = undefined;
+    this.victoryArtifactId = undefined;
+    this.victoryCallbackFired = false;
+    this.victoryWave.visible = false;
+    for (const [id, mesh] of this.artifactMeshes) {
+      for (const [object, transform] of this.artifactInitialTransforms.get(id) ?? []) {
+        object.position.copy(transform.position);
+        object.rotation.copy(transform.rotation);
+        object.scale.copy(transform.scale);
+      }
+      mesh.visible = true;
+      mesh.userData.sonarUntil = undefined;
+      const parts = this.artifactAnimationParts.get(id);
+      if (parts?.core?.material instanceof THREE.MeshStandardMaterial) {
+        parts.core.material.emissiveIntensity = 0.92;
+      }
+      if (parts?.light) parts.light.intensity = 5.5;
+    }
+    for (const [id, marker] of this.landmarkMarkers) {
+      marker.visible = false;
+      (marker.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.15;
+      this.sonarHighlight.delete(id);
+    }
+    this.sonarTimeouts.forEach((timeout) => window.clearTimeout(timeout));
+    this.sonarTimeouts.clear();
+    this.sonarActive = false;
+    this.sonarWave.visible = false;
     this.emitTelemetry();
   }
 
@@ -317,7 +399,7 @@ export class ExplorerScene {
   private readonly animate = (time: number) => {
     if (!this.running || this.disposed) return;
     if (this.lastFrameTime === 0) this.lastFrameTime = time;
-    const delta = Math.min((time - this.lastFrameTime) / 1000, 0.033);
+    const delta = THREE.MathUtils.clamp((time - this.lastFrameTime) / 1000, 0, 0.033);
     this.lastFrameTime = time;
     this.update(delta);
     this.renderer.render(this.scene, this.camera);
@@ -340,8 +422,12 @@ export class ExplorerScene {
     if (width < 1 || height < 1) return;
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    this.renderer.setPixelRatio(this.getPixelRatio());
     this.renderer.setSize(width, height);
+  }
+
+  private getPixelRatio() {
+    return Math.min(window.devicePixelRatio || 1, window.innerWidth <= 768 ? 1.25 : 1.5);
   }
 
   private triggerSonar() {
@@ -358,34 +444,52 @@ export class ExplorerScene {
 
   private tryInteract() {
     const now = performance.now();
-    if (!this.nearbyLandmark || now - this.lastInteractTime < 800) return;
+    const artifactId = this.nearbyArtifactId;
+    if (!artifactId || this.artifactCollected.has(artifactId) || now - this.lastInteractTime < 800) return;
+    const artifact = relics.find((entry) => entry.id === artifactId);
+    const position = this.artifactPositions.get(artifactId);
+    if (!artifact || !position || position.distanceTo(this.submarine.position) > ARTIFACT_INTERACTION_RADIUS) {
+      this.nearbyArtifactId = undefined;
+      return;
+    }
     this.lastInteractTime = now;
-    this.callbacks.onLandmarkInteract?.(this.nearbyLandmark);
+    this.artifactCollected.add(artifactId);
+    this.artifactCollectionStart.set(artifactId, this.elapsed);
+    this.callbacks.onArtifactCollected?.(artifactId);
+    if (this.artifactCollected.size === relics.length && this.victoryStartedAt === undefined) {
+      this.victoryStartedAt = this.elapsed;
+      this.victoryArtifactId = artifactId;
+      if (position) this.victoryWave.position.copy(position);
+      this.victoryWave.scale.setScalar(0.12);
+      this.victoryWave.visible = true;
+    }
   }
 
   private update(delta: number) {
     this.elapsed += delta;
     if (!this.reducedMotion) {
       this.causticTime.value = this.elapsed;
-      this.swimmingSchools.forEach(({ group, x, y, z, phase }) => {
+      for (const { group, x, y, z, phase } of this.swimmingSchools) {
         group.position.set(
           x + Math.sin(this.elapsed * 0.12 + phase) * 10,
           y + Math.sin(this.elapsed * 0.35 + phase) * 1.2,
           z + Math.cos(this.elapsed * 0.1 + phase) * 7
         );
         group.rotation.y = Math.sin(this.elapsed * 0.16 + phase) * 0.11;
-      });
-      this.swayingKelp.forEach(({ group, phase }) => {
+      }
+      for (const { group, phase } of this.swayingKelp) {
         group.rotation.z = Math.sin(this.elapsed * 0.48 + phase) * 0.055;
-      });
+      }
     }
     this.vehicle.update(delta, this.input);
     this.updateVehicleTransform();
     this.updatePropellers(delta);
     this.updateParticles();
     this.updateSonar();
-    this.updateRelics(delta);
+    this.updateArtifacts(delta);
+    this.updateCollectionAnimations();
     this.updateLandmarkProximity();
+    this.updateVictorySequence();
     this.updateCamera(delta);
     this.telemetryAccumulator += delta;
     if (this.telemetryAccumulator >= 0.12) {
@@ -404,9 +508,10 @@ export class ExplorerScene {
   private updatePropellers(delta: number) {
     const rotationSpeed = Math.abs(this.vehicle.velocity.z) * 0.9 + 0.3;
     const reducedFactor = this.reducedMotion ? 0.25 : 1;
-    this.propellers.forEach((propeller, index) => {
+    for (let index = 0; index < this.propellers.length; index += 1) {
+      const propeller = this.propellers[index];
       propeller.rotation.z += rotationSpeed * delta * reducedFactor * (index ? -1 : 1);
-    });
+    }
     for (let index = 0; index < this.animatedLights.length; index += 1) {
       this.animatedLights[index].rotation.y += delta * (this.reducedMotion ? 0.08 : 0.22);
     }
@@ -469,24 +574,91 @@ export class ExplorerScene {
         this.sonarTimeouts.add(timeout);
       }
     }
+    for (const artifact of relics) {
+      if (this.artifactCollected.has(artifact.id)) continue;
+      const position = this.artifactPositions.get(artifact.id);
+      const mesh = this.artifactMeshes.get(artifact.id);
+      if (position && mesh && position.distanceTo(this.sonarOrigin) <= radius) {
+        mesh.userData.sonarUntil = this.elapsed + 1.3;
+      }
+    }
     if (progress >= 1) this.sonarActive = false;
   }
 
-  private updateRelics(delta: number) {
-    for (const relic of relics) {
-      if (this.relicCollected.has(relic.id)) continue;
-      const mesh = this.relicMeshes.get(relic.id);
-      if (!mesh) continue;
-
-      if (!this.reducedMotion) {
-        mesh.rotation.y += 0.45 * delta;
-        mesh.position.y = relic.position[1] + Math.sin(this.elapsed * 1.4 + relic.position[0]) * 0.18;
+  private updateArtifacts(delta: number) {
+    let nearestId: string | undefined;
+    let nearestDistance = ARTIFACT_INTERACTION_RADIUS;
+    for (const artifact of relics) {
+      if (this.artifactCollected.has(artifact.id)) continue;
+      const position = this.artifactPositions.get(artifact.id);
+      const mesh = this.artifactMeshes.get(artifact.id);
+      if (!position || !mesh) continue;
+      const distance = position.distanceTo(this.submarine.position);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestId = artifact.id;
       }
+      if (!this.reducedMotion) {
+        mesh.rotation.y += delta * 0.32;
+        mesh.position.y = artifact.position[1] + Math.sin(this.elapsed * 1.25 + position.x) * 0.13;
+        const parts = this.artifactAnimationParts.get(artifact.id);
+        if (parts?.core) parts.core.rotation.y += delta * 0.34;
+        if (parts?.halo) parts.halo.rotation.z += delta * 0.2;
+        if (parts?.light) {
+          const revealed = (mesh.userData.sonarUntil as number | undefined) ?? -Infinity;
+          parts.light.intensity = this.elapsed < revealed ? 6 : 5.5;
+        }
+      }
+    }
+    this.nearbyArtifactId = nearestId;
+  }
 
-      if (mesh.position.distanceTo(this.submarine.position) < 4.5) {
-        this.relicCollected.add(relic.id);
+  private updateCollectionAnimations() {
+    for (const [id, startedAt] of this.artifactCollectionStart) {
+      const mesh = this.artifactMeshes.get(id);
+      if (!mesh) continue;
+      const progress = Math.min((this.elapsed - startedAt) / 0.72, 1);
+      mesh.scale.setScalar(1 + progress * 0.45);
+      const artifact = relicById.get(id);
+      if (artifact && id === 'pearl-of-passage') mesh.position.y = artifact.position[1] + progress * 1.1;
+      const light = this.artifactAnimationParts.get(id)?.light;
+      if (light) light.intensity = 5.5 + progress * 8;
+      if (progress >= 1) {
         mesh.visible = false;
-        this.callbacks.onRelicCollected?.(relic.id);
+        this.artifactCollectionStart.delete(id);
+      }
+    }
+  }
+
+  private updateVictorySequence() {
+    if (this.victoryStartedAt === undefined) return;
+    const progress = Math.min((this.elapsed - this.victoryStartedAt) / 2.4, 1);
+    const waveMaterial = this.victoryWave.material as THREE.MeshBasicMaterial;
+    this.victoryWave.scale.setScalar(0.12 + progress * 13);
+    waveMaterial.opacity = (1 - progress) * 0.7;
+
+    const core = this.victoryArtifactId
+      ? this.artifactAnimationParts.get(this.victoryArtifactId)?.core
+      : undefined;
+    if (core?.material instanceof THREE.MeshStandardMaterial) {
+      core.material.emissiveIntensity = 0.9 + Math.sin(progress * Math.PI) * 2.4;
+    }
+    let index = 0;
+    for (const artifact of relics) {
+      const marker = this.landmarkMarkers.get(artifact.landmarkId);
+      if (marker) {
+        const beat = progress * relics.length - index;
+        marker.visible = beat >= 0 && beat < 0.8;
+        (marker.material as THREE.MeshStandardMaterial).emissiveIntensity = marker.visible ? 1.4 : 0.15;
+      }
+      index += 1;
+    }
+
+    if (progress >= 1) {
+      this.victoryWave.visible = false;
+      if (!this.victoryCallbackFired) {
+        this.victoryCallbackFired = true;
+        this.callbacks.onVictory?.();
       }
     }
   }
@@ -515,7 +687,7 @@ export class ExplorerScene {
     const targetPosition = this.navigationTarget && this.landmarkPositions.get(this.navigationTarget.id);
     this.navigationDistance = targetPosition ? targetPosition.distanceTo(this.submarine.position) : nearestDistance;
     this.nearbyLandmark = nearbyLandmark;
-    this.landmarkMarkers.forEach((marker, id) => {
+    for (const [id, marker] of this.landmarkMarkers) {
       if (id === nearbyLandmark?.id) {
         marker.visible = true;
         (marker.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.42;
@@ -530,7 +702,7 @@ export class ExplorerScene {
         marker.visible = false;
         (marker.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.15;
       }
-    });
+    }
     if (targetPosition) {
       const dx = targetPosition.x - this.submarine.position.x;
       const dz = targetPosition.z - this.submarine.position.z;
@@ -707,8 +879,11 @@ export class ExplorerScene {
       heading: (360 - THREE.MathUtils.radToDeg(this.vehicle.yaw) + 360) % 360,
       boost: this.input.boost,
       sonarReady: performance.now() - this.lastSonarTime >= SONAR_COOLDOWN_MS,
-      discoveryCount: this.relicCollected.size,
-      interactionLabel: this.nearbyLandmark ? 'PRESS E TO EXPLORE' : 'APPROACH TO EXPLORE',
+      discoveryCount: this.artifactCollected.size,
+      interactionLabel: this.nearbyArtifactId ? 'PRESS E TO COLLECT' : 'APPROACH AN ARTIFACT',
+      nearbyArtifact: this.nearbyArtifactId
+        ? relics.find((artifact) => artifact.id === this.nearbyArtifactId)
+        : undefined,
       nearbyLandmark: this.nearbyLandmark,
       navigationTarget: this.navigationTarget,
       navigationDistance: this.navigationDistance,

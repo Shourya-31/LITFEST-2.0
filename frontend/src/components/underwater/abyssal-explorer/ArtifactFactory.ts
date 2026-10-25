@@ -89,9 +89,11 @@ export function createArtifact(definition: RelicDefinition): THREE.Group {
   );
   particles.name = 'artifactParticles';
   group.add(particles);
-  const light = new THREE.PointLight(color, definition.id === 'pearl-of-passage' ? 5.5 : 3, 10, 2);
-  light.name = 'artifactLight';
-  group.add(light);
+  if (definition.id === 'pearl-of-passage') {
+    const light = new THREE.PointLight(color, 5.5, 10, 2);
+    light.name = 'artifactLight';
+    group.add(light);
+  }
   group.userData.artifactColor = color;
   return group;
 }
