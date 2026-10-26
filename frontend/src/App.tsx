@@ -5,11 +5,12 @@ import { LitfestUnderwaterHome } from './features/home';
 import ContactUs from './features/contact/ContactUs';
 import SponsorPage from './SponsorPageStandalone';
 
-// Auth Pages
+// Auth & User Pages
 import LoginPage from './features/auth/LoginPage';
 import SignupPage from './features/auth/SignupPage';
 import ForgotPasswordPage from './features/auth/ForgotPasswordPage';
 import ResetPasswordPage from './features/auth/ResetPasswordPage';
+import ParticipantDashboard from './features/participant/ParticipantDashboard';
 
 import './App.css';
 
@@ -31,6 +32,7 @@ export const App: React.FC = () => {
           <Route path="/contactus.html" element={<ContactUs />} />
           <Route path="/sponsors" element={<SponsorPage />} />
           <Route path="/sponsors.html" element={<SponsorPage />} />
+          <Route path="/dashboard" element={<ParticipantDashboard />} />
 
           {/* Auth Feature Screens */}
           <Route path="/login" element={<LoginPage />} />

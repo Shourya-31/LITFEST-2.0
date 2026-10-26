@@ -34,7 +34,7 @@ export const SignupPage: React.FC = () => {
   const { register } = useAuth();
 
   const queryParams = new URLSearchParams(location.search);
-  const redirectPath = queryParams.get('redirect') || '/dashboard';
+  const redirectPath = queryParams.get('redirect') || '/';
 
   const [formData, setFormData] = useState({
     name: '',

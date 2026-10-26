@@ -1,0 +1,246 @@
+/* ==========================================================================
+   LitFest 2.0 - AuthNavWidget Styles
+   Portable, modern glassmorphic auth action widget.
+   Compatible with Mediterranean Sunset & Deep Ocean palettes.
+   ========================================================================== */
+
+.auth-nav-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  font-family: var(--font-body, 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+/* =========================================
+   1. SKELETON / LOADING STATE
+   ========================================= */
+.auth-nav-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: authSkeletonShimmer 1.6s infinite ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-skeleton-btn {
+  width: 90px;
+  height: 38px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: authSkeletonShimmer 1.6s infinite ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes authSkeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* =========================================
+   2. LOGGED-IN STATE
+   ========================================= */
+.auth-user-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Minimalist Avatar Button */
+.auth-avatar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  background: linear-gradient(135deg, #082567 0%, #1e3a8a 45%, #0284c7 100%);
+  border: 2px solid rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25), 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  text-decoration: none;
+  color: #ffffff;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.auth-avatar-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  border-color: #38bdf8;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.55), 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.auth-avatar-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.auth-avatar-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.5);
+}
+
+/* Initials text inside avatar */
+.auth-avatar-initials {
+  font-family: var(--font-body, 'Manrope', sans-serif);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Admin / Staff role indicator dot */
+.auth-role-indicator {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f59e0b; /* Amber */
+  border: 2px solid #010610;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.auth-role-indicator.role-admin {
+  background: #ef4444; /* Coral Red for Admin */
+  box-shadow: 0 0 10px #ef4444;
+}
+
+/* User Name Pill (Optional on wide screens or mobile) */
+.auth-user-name {
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Logout Icon Button */
+.auth-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  outline: none;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.auth-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #fca5a5;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.3);
+  transform: translateY(-1px);
+}
+
+.auth-logout-btn:active {
+  transform: translateY(0);
+}
+
+.auth-logout-btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+/* =========================================
+   3. LOGGED-OUT STATE
+   ========================================= */
+.auth-guest-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.auth-login-link {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.22s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.auth-login-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+.auth-register-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  padding: 9px 24px;
+  border-radius: 9999px;
+  background: rgba(14, 165, 233, 0.16);
+  border: 1.5px solid rgba(56, 189, 248, 0.65);
+  color: #f0f9ff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
+  white-space: nowrap;
+}
+
+.auth-register-btn:hover {
+  background: rgba(14, 165, 233, 0.35);
+  border-color: #7dd3fc;
+  color: #ffffff;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.5);
+  transform: translateY(-2px);
+}
+
+.auth-register-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   4. RESPONSIVE OPTIMIZATION
+   ========================================= */
+@media (max-width: 860px) {
+  .auth-guest-container .auth-login-link {
+    display: none;
+  }
+}
+
