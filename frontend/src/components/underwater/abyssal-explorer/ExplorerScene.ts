@@ -155,8 +155,8 @@ export class ExplorerScene {
     this.renderer.setSize(this.container.clientWidth || 960, this.container.clientHeight || 540);
     this.container.appendChild(this.renderer.domElement);
 
-    const hemisphere = new THREE.HemisphereLight('#a8eff5', '#24434a', 1.8);
-    const sun = new THREE.DirectionalLight('#d7f5e9', 2.6);
+    const hemisphere = new THREE.HemisphereLight('#a8eff5', '#55412f', 1.8);
+    const sun = new THREE.DirectionalLight('#fff5e3', 2.6);
     sun.position.set(-30, 62, -42);
     sun.castShadow = false;
     const fill = new THREE.PointLight('#55c8d8', 54, 145, 2);
