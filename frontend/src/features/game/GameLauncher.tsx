@@ -60,38 +60,100 @@ export function GameLauncher() {
         <span className="ocean-game-bubble" /><span className="ocean-game-bubble" />
         <span className="ocean-game-bubble" /><span className="ocean-game-bubble" />
       </div>
-      <h2 className="ocean-game-mobile-heading">Blue Pulse Arcade</h2>
+
+      <div className="ocean-arcade-header">
+        <h2 className="ocean-arcade-title">
+          Sunken Arcade &amp; Minigames
+        </h2>
+        <p className="ocean-arcade-desc">
+          Take a break from the sessions. Test your reflexes, explore lost literary chambers, or stack crystalline blocks below the surface.
+        </p>
+      </div>
+
       <div className="ocean-game-grid">
-      <h2 className="ocean-game-heading">
-        <button type="button" className="ocean-game-card" aria-haspopup="dialog"
-          aria-labelledby="ocean-game-title" aria-describedby="ocean-game-tagline" onClick={openGame}>
-          <span className="ocean-game-eyebrow">BLUE PULSE ARCADE</span>
-          <span id="ocean-game-title" className="ocean-game-title">
-            Ocean Rush
-          </span>
-          <span id="ocean-game-tagline" className="ocean-game-tagline">
-            Ride the waves or explore the reef. Two modes, one endless adventure.
-          </span>
-        </button>
-      </h2>
-      <h2 className="ocean-game-heading">
-        <button type="button" className="ocean-game-card" aria-haspopup="dialog"
-          aria-labelledby="ocean-game-2-title" aria-describedby="ocean-game-2-status"
-          onClick={event => { void atlantisRef.current?.open(event.currentTarget); }}>
-          <span className="ocean-game-eyebrow">LITERARY QUIZ ADVENTURE</span>
-          <span id="ocean-game-2-title" className="ocean-game-title">The Sunken City of Atlantis</span>
-          <span id="ocean-game-2-status" className="ocean-game-tagline">Ten lost chambers. Test your literary knowledge and awaken Atlantis.</span>
-        </button>
-      </h2>
-      <h2 className="ocean-game-heading">
-        <button type="button" className="ocean-game-card" aria-haspopup="dialog"
-          aria-labelledby="ocean-game-3-title" aria-describedby="ocean-game-3-status"
-          onClick={event => { void aquaSplashRef.current?.open(event.currentTarget); }}>
-          <span className="ocean-game-eyebrow">UNDERWATER TETRIS ARCADE</span>
-          <span id="ocean-game-3-title" className="ocean-game-title">Aqua Spash</span>
-          <span id="ocean-game-3-status" className="ocean-game-tagline">Dive into the sunken ruins. Stack crystal blocks, hold pieces, and earn credits.</span>
-        </button>
-      </h2>
+        <h2 className="ocean-game-heading">
+          <button
+            type="button"
+            className="ocean-game-card ocean-game-card-rush"
+            aria-haspopup="dialog"
+            aria-labelledby="ocean-game-title"
+            aria-describedby="ocean-game-tagline"
+            onClick={openGame}
+          >
+            <span className="ocean-game-eyebrow">BLUE PULSE ARCADE</span>
+            <span id="ocean-game-title" className="ocean-game-title">
+              <span>Ocean Rush</span>
+              <span className="game-status-badge rush-status">READY</span>
+            </span>
+            <span id="ocean-game-tagline" className="ocean-game-tagline">
+              Ride the waves or explore the reef. Two modes, one endless adventure.
+            </span>
+
+            <div className="ocean-game-card-footer">
+              <span className="ocean-game-play-btn rush-play-btn">
+                <span className="play-triangle" aria-hidden="true">▶</span>
+                <span>PLAY NOW</span>
+              </span>
+              <span className="ocean-game-meta">Endless Waves</span>
+            </div>
+          </button>
+        </h2>
+
+        <h2 className="ocean-game-heading">
+          <button
+            type="button"
+            className="ocean-game-card ocean-game-card-atlantis"
+            aria-haspopup="dialog"
+            aria-labelledby="ocean-game-2-title"
+            aria-describedby="ocean-game-2-status"
+            onClick={event => { void atlantisRef.current?.open(event.currentTarget); }}
+          >
+            <span className="ocean-game-eyebrow">LITERARY QUIZ ADVENTURE</span>
+            <span id="ocean-game-2-title" className="ocean-game-title">
+              <span>The Sunken City of Atlantis</span>
+              <span className="game-status-badge atlantis-status">10 LEVELS</span>
+            </span>
+            <span id="ocean-game-2-status" className="ocean-game-tagline">
+              Ten lost chambers. Test your literary knowledge and awaken Atlantis.
+            </span>
+
+            <div className="ocean-game-card-footer">
+              <span className="ocean-game-play-btn atlantis-play-btn">
+                <span className="play-triangle" aria-hidden="true">▶</span>
+                <span>ENTER RUINS</span>
+              </span>
+              <span className="ocean-game-meta">Trivia &amp; Lore</span>
+            </div>
+          </button>
+        </h2>
+
+        <h2 className="ocean-game-heading">
+          <button
+            type="button"
+            className="ocean-game-card ocean-game-card-aqua"
+            aria-haspopup="dialog"
+            aria-labelledby="ocean-game-3-title"
+            aria-describedby="ocean-game-3-status"
+            onClick={event => { void aquaSplashRef.current?.open(event.currentTarget); }}
+          >
+            <span className="ocean-game-eyebrow">UNDERWATER TETRIS ARCADE</span>
+            <span id="ocean-game-3-title" className="ocean-game-title">
+              <span>Aqua Splash</span>
+              <span className="game-status-badge aqua-status">ARCADE</span>
+            </span>
+            <span id="ocean-game-3-status" className="ocean-game-tagline">
+              Dive into the sunken ruins. Stack crystal blocks, hold pieces, and earn credits.
+            </span>
+
+            <div className="ocean-game-card-footer">
+              <span className="ocean-game-play-btn aqua-play-btn">
+                <span className="play-triangle" aria-hidden="true">▶</span>
+                <span>DROP IN</span>
+              </span>
+              <span className="ocean-game-meta">Puzzle Challenge</span>
+            </div>
+          </button>
+        </h2>
       </div>
     </section>
   );
