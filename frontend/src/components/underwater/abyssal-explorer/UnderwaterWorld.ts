@@ -1200,9 +1200,9 @@ export function createUnderwaterWorld(): WorldAssembly {
   const terrain = new THREE.PlaneGeometry(360, 360, 132, 132);
   const positions = terrain.attributes.position;
   const colors: number[] = [];
-  const deep = new THREE.Color('#153e4a');
-  const shelf = new THREE.Color('#3d686b');
-  const crest = new THREE.Color('#789284');
+  const deep = new THREE.Color('#af8c68');
+  const shelf = new THREE.Color('#cbb18f');
+  const crest = new THREE.Color('#ebd9bf');
   for (let index = 0; index < positions.count; index += 1) {
     const x = positions.getX(index);
     const z = -positions.getY(index);
@@ -1242,7 +1242,7 @@ export function createUnderwaterWorld(): WorldAssembly {
           float causticB = sin(causticUv.y * 11.0 - sin(causticUv.x * 3.5 - uCausticTime * 0.08) * 1.5);
           float causticC = sin((causticUv.x + causticUv.y) * 7.0 + uCausticTime * 0.05);
           float caustics = pow(max(0.0, causticA * causticB + causticC * 0.18), 7.0);
-          diffuseColor.rgb += vec3(0.08, 0.3, 0.34) * caustics * 0.22;`
+          diffuseColor.rgb += vec3(0.36, 0.32, 0.22) * caustics * 0.24;`
       );
   };
   terrainMesh.rotation.x = -Math.PI / 2;
@@ -1252,7 +1252,7 @@ export function createUnderwaterWorld(): WorldAssembly {
 
   const rockInstances = new THREE.InstancedMesh(rockGeometry, rockMaterial, 24);
   const dummy = new THREE.Object3D();
-  const rockColors = ['#54747b', '#6a8178', '#476b79', '#8a8270'].map((color) => new THREE.Color(color));
+  const rockColors = ['#876f53', '#9e8568', '#7c6448', '#af977a'].map((color) => new THREE.Color(color));
   for (let index = 0; index < 24; index += 1) {
     const angle = index * 2.399963 + Math.sin(index * 4.7) * 0.24;
     const radius = 54 + (index % 6) * 8.8 + Math.sin(index * 12.2) * 3.8;
