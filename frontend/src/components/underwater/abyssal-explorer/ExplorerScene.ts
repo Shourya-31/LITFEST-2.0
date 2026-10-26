@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { abyssalLandmarks, relics } from './Landmarks';
-import { createUnderwaterWorld, type WhaleController } from './UnderwaterWorld';
+import { createUnderwaterWorld, type FishSchoolController, type SharkController, type WhaleController } from './UnderwaterWorld';
 import { VehicleController, type PlayerInput } from './VehicleController';
 import type { ExplorerTelemetry, LandmarkDefinition } from './types';
 
@@ -96,6 +96,8 @@ export class ExplorerScene {
   private swimmingSchools: Array<{ group: THREE.Group; x: number; y: number; z: number; phase: number }>;
   private swayingKelp: Array<{ group: THREE.Group; phase: number }>;
   private blueWhales: WhaleController[] = [];
+  private fishSchools: FishSchoolController[] = [];
+  private sharks: SharkController[] = [];
   private nemoSwimmers: Array<{
     group: THREE.Group;
     centerX: number;
@@ -139,11 +141,11 @@ export class ExplorerScene {
     this.scene.background = new THREE.Color('#176078');
     this.scene.fog = new THREE.FogExp2('#164a60', 0.0046);
 
-    this.camera = new THREE.PerspectiveCamera(54, 1, 0.1, 380);
+    this.camera = new THREE.PerspectiveCamera(54, 1, 0.1, 260);
     this.camera.position.set(0, 12, 23);
 
     this.renderer = new THREE.WebGLRenderer({
-      antialias: window.innerWidth > 768,
+      antialias: false,
       alpha: false,
       powerPreference: 'high-performance',
     });
@@ -173,6 +175,8 @@ export class ExplorerScene {
     this.swimmingSchools = world.swimmingSchools;
     this.swayingKelp = world.swayingKelp;
     this.blueWhales = world.blueWhales ?? [];
+    this.fishSchools = world.fishSchools ?? [];
+    this.sharks = world.sharks ?? [];
     this.nemoSwimmers = world.nemoSwimmers ?? [];
 
     for (const landmark of abyssalLandmarks) {
@@ -380,6 +384,8 @@ export class ExplorerScene {
     this.stopLoop();
     this.sonarTimeouts.forEach((timeout) => window.clearTimeout(timeout));
     this.sonarTimeouts.clear();
+    this.fishSchools.forEach((school) => school.mixer?.stopAllAction());
+    this.sharks.forEach((shark) => shark.mixer?.stopAllAction());
 
     const geometries = new Set<THREE.BufferGeometry>();
     const materials = new Set<THREE.Material>();
@@ -441,7 +447,7 @@ export class ExplorerScene {
   }
 
   private getPixelRatio() {
-    return Math.min(window.devicePixelRatio || 1, window.innerWidth <= 768 ? 1.25 : 1.5);
+    return Math.min(window.devicePixelRatio || 1, 1.0);
   }
 
   private triggerSonar() {
@@ -532,6 +538,58 @@ export class ExplorerScene {
           heading + waggle,
           Math.sin(this.elapsed * 4.5 + nemo.phase) * 0.06
         );
+      }
+      for (const school of this.fishSchools) {
+        if (!this.reducedMotion) {
+          const t = this.elapsed * school.speed + school.phase;
+          const posX = school.centerX + Math.cos(t) * school.radiusX;
+          const posZ = school.centerZ + Math.sin(t) * school.radiusZ;
+          const vertAmp = school.verticalAmplitude ?? 1.6;
+          const vertFreq = school.verticalFrequency ?? 1.4;
+          const posY = school.centerY + Math.sin(t * vertFreq) * vertAmp;
+
+          const dx = -Math.sin(t) * school.radiusX;
+          const dz = Math.cos(t) * school.radiusZ;
+          const heading = Math.atan2(dx, dz);
+          const pitch = -Math.cos(t * vertFreq) * 0.08;
+          const roll = -Math.sin(t) * 0.12;
+
+          school.group.position.set(posX, posY, posZ);
+          school.group.rotation.set(pitch, heading, roll);
+        }
+        if (school.mixer) {
+          // Distance-based skeletal animation culling: only update bone matrices if within 75m of submarine
+          const distSq = school.group.position.distanceToSquared(this.submarine.position);
+          if (distSq < 5625) {
+            school.mixer.update(delta);
+          }
+        }
+      }
+      for (const s of this.sharks) {
+        if (!this.reducedMotion) {
+          const t = this.elapsed * s.speed + s.phase;
+          const posX = s.centerX + Math.cos(t) * s.radiusX;
+          const posZ = s.centerZ + Math.sin(t) * s.radiusZ;
+          const vertAmp = s.verticalAmplitude ?? 1.6;
+          const vertFreq = s.verticalFrequency ?? 1.1;
+          const posY = s.centerY + Math.sin(t * vertFreq) * vertAmp;
+
+          const dx = -Math.sin(t) * s.radiusX;
+          const dz = Math.cos(t) * s.radiusZ;
+          const heading = Math.atan2(dx, dz);
+          const pitch = -Math.cos(t * vertFreq) * 0.07;
+          const roll = -Math.sin(t) * 0.12;
+
+          s.group.position.set(posX, posY, posZ);
+          s.group.rotation.set(pitch, heading, roll);
+        }
+        if (s.mixer) {
+          // Distance-based animation culling: only run skinning if within 80m of submarine
+          const distSq = s.group.position.distanceToSquared(this.submarine.position);
+          if (distSq < 6400) {
+            s.mixer.update(delta);
+          }
+        }
       }
     }
     this.vehicle.update(delta, this.input);

@@ -3,11 +3,13 @@ import { abyssalLandmarks, relics } from './Landmarks';
 import { createArtifact } from './ArtifactFactory';
 import type { RelicDefinition } from './types';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import plantPackUrl from '../../../assets/media/underwater_plant_pack.glb';
-import coralReefUrl from '../../../assets/media/underwater_coral_reef.glb';
-import rocksUrl from '../../../assets/media/underwater_rocks.glb';
 import whaleUrl from '../../../assets/media/blue_whale_-_textured.glb';
 import columnUrl from '../../../assets/media/greek_underwater_column_2.glb';
+import schoolOfFishUrl from '../../../assets/media/school_of_fish.glb';
+import wreckedShipUrl from '../../../assets/media/wrecked_ship.glb';
+import sharkUrl from '../../../assets/media/shark.glb';
 import aboutImg from '../../../assets/media/about_clean.png';
 import scheduleImg from '../../../assets/media/schedule_clean.png';
 import nemoImg from '../../../assets/media/nemo.png';
@@ -25,6 +27,36 @@ export interface WhaleController {
   scale?: number;
 }
 
+export interface FishSchoolController {
+  group: THREE.Group;
+  mixer?: THREE.AnimationMixer;
+  centerX: number;
+  centerY: number;
+  centerZ: number;
+  radiusX: number;
+  radiusZ: number;
+  speed: number;
+  phase: number;
+  scale: number;
+  verticalAmplitude?: number;
+  verticalFrequency?: number;
+}
+
+export interface SharkController {
+  group: THREE.Group;
+  mixer?: THREE.AnimationMixer;
+  centerX: number;
+  centerY: number;
+  centerZ: number;
+  radiusX: number;
+  radiusZ: number;
+  speed: number;
+  phase: number;
+  scale?: number;
+  verticalAmplitude?: number;
+  verticalFrequency?: number;
+}
+
 export interface WorldAssembly {
   root: THREE.Group;
   landmarkMeshes: Map<string, THREE.Group>;
@@ -34,6 +66,8 @@ export interface WorldAssembly {
   swimmingSchools: Array<{ group: THREE.Group; x: number; y: number; z: number; phase: number }>;
   swayingKelp: Array<{ group: THREE.Group; phase: number }>;
   blueWhales?: WhaleController[];
+  fishSchools?: FishSchoolController[];
+  sharks?: SharkController[];
   nemoSwimmers?: Array<{
     group: THREE.Group;
     centerX: number;
@@ -169,125 +203,6 @@ function loadUnderwaterPlants(parent: THREE.Group) {
   }
 }
 
-function loadUnderwaterCoralReefs(parent: THREE.Group) {
-  if (typeof window === 'undefined') return;
-  try {
-    const loader = new GLTFLoader();
-    loader.load(
-      coralReefUrl,
-      (gltf) => {
-        gltf.scene.updateMatrixWorld(true);
-        const box = new THREE.Box3().setFromObject(gltf.scene);
-        const center = box.getCenter(new THREE.Vector3());
-        const minY = box.min.y;
-
-        gltf.scene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            if (child.material) {
-              const materials = Array.isArray(child.material) ? child.material : [child.material];
-              materials.forEach((mat) => {
-                if (mat instanceof THREE.MeshStandardMaterial) {
-                  mat.roughness = 0.52;
-                  mat.metalness = 0.1;
-                  mat.emissive = new THREE.Color('#0c3a38');
-                  mat.emissiveIntensity = 0.28;
-                }
-              });
-            }
-          }
-        });
-
-        const coralPoints = [
-          { x: 22, z: -12, scale: 0.44, rotY: 0.8 },
-          { x: -28, z: -34, scale: 0.48, rotY: 2.4 },
-          { x: -36, z: 38, scale: 0.42, rotY: 4.1 },
-          { x: 44, z: 22, scale: 0.46, rotY: 1.6 },
-          { x: 26, z: -58, scale: 0.5, rotY: 5.2 },
-        ];
-
-        for (const pt of coralPoints) {
-          const pivot = new THREE.Group();
-          const clone = gltf.scene.clone(true);
-          clone.position.set(-center.x, -minY, -center.z);
-          pivot.add(clone);
-
-          const y = getTerrainHeight(pt.x, pt.z);
-          pivot.position.set(pt.x, y, pt.z);
-          pivot.scale.setScalar(pt.scale);
-          pivot.rotation.y = pt.rotY;
-          parent.add(pivot);
-        }
-      },
-      undefined,
-      (err) => {
-        console.warn('Failed to load underwater coral reef 3D model:', err);
-      }
-    );
-  } catch (err) {
-    console.warn('GLTFLoader error (coral reef):', err);
-  }
-}
-
-function loadUnderwaterRocks(parent: THREE.Group) {
-  if (typeof window === 'undefined') return;
-  try {
-    const loader = new GLTFLoader();
-    loader.load(
-      rocksUrl,
-      (gltf) => {
-        gltf.scene.updateMatrixWorld(true);
-        const box = new THREE.Box3().setFromObject(gltf.scene);
-        const center = box.getCenter(new THREE.Vector3());
-        const minY = box.min.y;
-
-        gltf.scene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            if (child.material) {
-              const materials = Array.isArray(child.material) ? child.material : [child.material];
-              materials.forEach((mat) => {
-                if (mat instanceof THREE.MeshStandardMaterial) {
-                  mat.roughness = 0.88;
-                  mat.metalness = 0.05;
-                }
-              });
-            }
-          }
-        });
-
-        const rockPoints = [
-          { x: -18, z: 6, scale: 0.75, rotY: 1.1 },
-          { x: -58, z: 22, scale: 0.9, rotY: 3.5 },
-          { x: 50, z: -68, scale: 0.82, rotY: 0.4 },
-          { x: -14, z: 68, scale: 0.85, rotY: 4.8 },
-          { x: 28, z: 46, scale: 0.78, rotY: 2.2 },
-        ];
-
-        for (const pt of rockPoints) {
-          const pivot = new THREE.Group();
-          const clone = gltf.scene.clone(true);
-          clone.position.set(-center.x, -minY, -center.z);
-          pivot.add(clone);
-
-          const y = getTerrainHeight(pt.x, pt.z);
-          pivot.position.set(pt.x, y, pt.z);
-          pivot.scale.setScalar(pt.scale);
-          pivot.rotation.y = pt.rotY;
-          parent.add(pivot);
-        }
-      },
-      undefined,
-      (err) => {
-        console.warn('Failed to load underwater rocks 3D model:', err);
-      }
-    );
-  } catch (err) {
-    console.warn('GLTFLoader error (rocks):', err);
-  }
-}
 
 function loadGreekColumns(parent: THREE.Group) {
   if (typeof window === 'undefined') return;
@@ -305,6 +220,7 @@ function loadGreekColumns(parent: THREE.Group) {
           if (child instanceof THREE.Mesh) {
             child.castShadow = true;
             child.receiveShadow = true;
+            child.frustumCulled = true;
             if (child.material) {
               const materials = Array.isArray(child.material) ? child.material : [child.material];
               materials.forEach((mat) => {
@@ -740,49 +656,73 @@ function addGateway(group: THREE.Group, animatedLights: THREE.Object3D[]) {
   animatedLights.push(innerArch);
 }
 
-function addGalleon(group: THREE.Group) {
-  const hullWood = new THREE.MeshStandardMaterial({ color: '#55443a', roughness: 0.96 });
-  const timber = new THREE.MeshStandardMaterial({ color: '#77604a', roughness: 0.92 });
-  const hull = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 14), hullWood);
-  hull.scale.set(10, 2.2, 3.25);
-  hull.position.y = 0;
-  group.add(hull);
-  const deck = new THREE.Mesh(new THREE.BoxGeometry(13.5, 0.9, 5.1), timber);
-  deck.position.y = 2;
-  group.add(deck);
-  const prow = new THREE.Mesh(new THREE.ConeGeometry(2.2, 5, 6), hullWood);
-  prow.rotation.z = -Math.PI / 2;
-  prow.position.set(-11.2, 0.1, 0);
-  group.add(prow);
-  const stern = new THREE.Mesh(new THREE.BoxGeometry(3.8, 3.3, 4.2), timber);
-  stern.position.set(8.1, 2.4, 0);
-  group.add(stern);
-  for (let index = 0; index < 7; index += 1) {
-    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 6.2, 7), timber);
-    beam.rotation.z = Math.PI / 2;
-    beam.position.set(-7 + index * 2.15, 0.15, 0);
-    group.add(beam);
-  }
-  for (const mastPosition of [-4.8, 2.4]) {
-    const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.42, 14, 8), timber);
-    mast.position.set(mastPosition, 8.5, 0);
-    group.add(mast);
-    const yard = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 7.5, 7), timber);
-    yard.rotation.z = Math.PI / 2;
-    yard.position.set(mastPosition, 10, 0);
-    group.add(yard);
-    const sail = new THREE.Mesh(
-      new THREE.PlaneGeometry(5.8, 5.5),
-      new THREE.MeshStandardMaterial({ color: '#b7b8a2', roughness: 1, side: THREE.DoubleSide, transparent: true, opacity: 0.72 })
+function loadWreckedShip(parent: THREE.Group) {
+  if (typeof window === 'undefined') return;
+  try {
+    const loader = new GLTFLoader();
+    loader.load(
+      wreckedShipUrl,
+      (gltf) => {
+        gltf.scene.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const center = box.getCenter(new THREE.Vector3());
+        const minY = box.min.y;
+
+        gltf.scene.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            child.frustumCulled = true;
+            if (child.material) {
+              const oldMat = child.material as THREE.MeshBasicMaterial;
+              child.material = new THREE.MeshStandardMaterial({
+                map: oldMat.map ?? null,
+                roughness: 0.82,
+                metalness: 0.08,
+                emissive: new THREE.Color('#08242a'),
+                emissiveIntensity: 0.22,
+                side: THREE.DoubleSide,
+              });
+            }
+          }
+        });
+
+        const pivot = new THREE.Group();
+        // Center horizontally and align keel to base
+        gltf.scene.position.set(-center.x, -minY, -center.z);
+        pivot.add(gltf.scene);
+
+        // Scale to ~24m length, 13m height
+        pivot.scale.setScalar(0.045);
+        // Tilt realistically into the trench sand
+        pivot.rotation.set(-0.06, 0.38, 0.12);
+        pivot.position.set(0, -0.4, 0);
+
+        // Ambient bioluminescent lantern glow inside the sunken ship hold
+        const holdGlow = new THREE.PointLight('#70c9e6', 2.8, 28);
+        holdGlow.position.set(0, 4.5, 0);
+        pivot.add(holdGlow);
+
+        parent.add(pivot);
+      },
+      undefined,
+      (err) => {
+        console.warn('Failed to load wrecked ship 3D model:', err);
+      }
     );
-    sail.position.set(mastPosition, 7, 0.12);
-    group.add(sail);
+  } catch (err) {
+    console.warn('GLTFLoader error (wrecked ship):', err);
   }
+}
+
+function addGalleon(group: THREE.Group) {
+  loadWreckedShip(group);
+
   const chestWood = new THREE.MeshStandardMaterial({ color: '#8d7045', roughness: 0.72, metalness: 0.18 });
   const chestTrim = new THREE.MeshStandardMaterial({ color: '#c3a266', roughness: 0.42, metalness: 0.56 });
   for (const side of [-1, 1]) {
     const chest = new THREE.Group();
-    chest.position.set(side * 3, 2.8, -1.45);
+    chest.position.set(side * 3.8, 0.8, -2.2);
     const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.05, 1.3), chestWood);
     chest.add(body);
     const band = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.14, 1.38), chestTrim);
@@ -807,6 +747,9 @@ function addGalleon(group: THREE.Group) {
       lidBand.position.set(0, 1.05, -0.67);
       lidBand.rotation.x = 0.88;
       chest.add(lidBand);
+      const chestLight = new THREE.PointLight('#38bdf8', 2.2, 10);
+      chestLight.position.set(0, 1.2, 0);
+      chest.add(chestLight);
     } else {
       const closedLid = new THREE.Mesh(new THREE.BoxGeometry(1.84, 0.3, 1.36), chestWood);
       closedLid.position.y = 0.67;
@@ -1011,6 +954,133 @@ function loadBlueWhale(parent: THREE.Group, controller: WhaleController) {
   }
 }
 
+function loadFishSchools(parent: THREE.Group, controllers: FishSchoolController[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    const loader = new GLTFLoader();
+    loader.load(
+      schoolOfFishUrl,
+      (gltf) => {
+        gltf.scene.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const center = box.getCenter(new THREE.Vector3());
+
+        gltf.scene.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            child.frustumCulled = true;
+            if (child.material) {
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+              materials.forEach((mat) => {
+                if (mat instanceof THREE.MeshStandardMaterial) {
+                  mat.roughness = 0.42;
+                  mat.metalness = 0.12;
+                  mat.emissive = new THREE.Color('#082e38');
+                  mat.emissiveIntensity = 0.18;
+                }
+              });
+            }
+          }
+        });
+
+        const clip = gltf.animations.find((a) => a.name.toLowerCase().includes('swim')) || gltf.animations[0];
+
+        controllers.forEach((ctrl, idx) => {
+          const clonedScene = cloneSkeleton(gltf.scene);
+          // Pivot precisely around center of the fish school cluster
+          clonedScene.position.set(-center.x, -center.y, -center.z);
+          ctrl.group.add(clonedScene);
+          ctrl.group.scale.setScalar(ctrl.scale);
+
+          // Initial placement
+          const t = ctrl.phase;
+          const posX = ctrl.centerX + Math.cos(t) * ctrl.radiusX;
+          const posZ = ctrl.centerZ + Math.sin(t) * ctrl.radiusZ;
+          const posY = ctrl.centerY;
+          ctrl.group.position.set(posX, posY, posZ);
+
+          if (clip) {
+            const mixer = new THREE.AnimationMixer(clonedScene);
+            const action = mixer.clipAction(clip);
+            action.setEffectiveTimeScale(0.85 + (idx % 3) * 0.08);
+            action.play();
+            ctrl.mixer = mixer;
+          }
+        });
+      },
+      undefined,
+      (err) => {
+        console.warn('Failed to load school of fish 3D model:', err);
+      }
+    );
+  } catch (err) {
+    console.warn('GLTFLoader error (school of fish):', err);
+  }
+}
+
+function loadShark(parent: THREE.Group, controller: SharkController) {
+  if (typeof window === 'undefined') return;
+  try {
+    const loader = new GLTFLoader();
+    loader.load(
+      sharkUrl,
+      (gltf) => {
+        gltf.scene.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const center = box.getCenter(new THREE.Vector3());
+
+        // Center mesh around its pivot so rotational swimming is natural
+        const sharkMesh = gltf.scene;
+        sharkMesh.position.set(-center.x, -center.y, -center.z);
+
+        sharkMesh.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+              materials.forEach((mat) => {
+                if (mat instanceof THREE.MeshStandardMaterial) {
+                  mat.roughness = 0.38;
+                  mat.metalness = 0.08;
+                }
+              });
+            }
+          }
+        });
+
+        const pivot = new THREE.Group();
+        pivot.add(sharkMesh);
+        pivot.scale.setScalar(controller.scale ?? 0.007);
+
+        // Soft predatory deep-water ambient point light
+        const sharkGlow = new THREE.PointLight('#38bdf8', 1.0, 22);
+        sharkGlow.position.set(0, 0, 2);
+        pivot.add(sharkGlow);
+
+        // Setup skeletal swimming animation
+        if (gltf.animations.length > 0) {
+          const mixer = new THREE.AnimationMixer(sharkMesh);
+          const swimClip = gltf.animations.find((a) => a.name.toLowerCase().includes('swim')) || gltf.animations[0];
+          const action = mixer.clipAction(swimClip);
+          action.setEffectiveTimeScale(1.15); // Predatory tail stroke rate
+          action.play();
+          controller.mixer = mixer;
+        }
+
+        parent.add(pivot);
+      },
+      undefined,
+      (err) => {
+        console.warn('Failed to load shark 3D model:', err);
+      }
+    );
+  } catch (err) {
+    console.warn('GLTFLoader error (shark):', err);
+  }
+}
+
 function createNemoSwimmer(
   parent: THREE.Group,
   centerX: number,
@@ -1144,8 +1214,6 @@ export function createUnderwaterWorld(): WorldAssembly {
 
   // Load the 3D Underwater models
   loadUnderwaterPlants(root);
-  loadUnderwaterCoralReefs(root);
-  loadUnderwaterRocks(root);
   loadGreekColumns(root);
 
   // Spawn pair of majestic 3D Blue Whales
@@ -1181,6 +1249,107 @@ export function createUnderwaterWorld(): WorldAssembly {
     loadBlueWhale(whale.group, whale);
   }
 
+  // Spawn 5 distinct 3D Schools of Fish (school_of_fish.glb)
+  const fishSchools: FishSchoolController[] = [
+    // School 1: Central coral garden & sunlit shallows (near start gateway arch)
+    {
+      group: new THREE.Group(),
+      centerX: 6,
+      centerY: 3.5,
+      centerZ: 38,
+      radiusX: 17,
+      radiusZ: 14,
+      speed: 0.22,
+      phase: 0,
+      scale: 4.8,
+      verticalAmplitude: 1.6,
+      verticalFrequency: 1.4,
+    },
+    // School 2: The Sunken Galleon & Deep Trench canyon
+    {
+      group: new THREE.Group(),
+      centerX: -48,
+      centerY: 1.2,
+      centerZ: -20,
+      radiusX: 20,
+      radiusZ: 16,
+      speed: 0.18,
+      phase: 1.3,
+      scale: 5.2,
+      verticalAmplitude: 1.8,
+      verticalFrequency: 1.2,
+    },
+    // School 3: Lost Temple of Atlantis Ruined Colonnade
+    {
+      group: new THREE.Group(),
+      centerX: 35,
+      centerY: 3.2,
+      centerZ: 24,
+      radiusX: 18,
+      radiusZ: 15,
+      speed: 0.21,
+      phase: 3.8,
+      scale: 5.0,
+      verticalAmplitude: 1.7,
+      verticalFrequency: 1.3,
+    },
+    // School 4: Coral Amphitheatre & Kelp Forest
+    {
+      group: new THREE.Group(),
+      centerX: 28,
+      centerY: 4.0,
+      centerZ: -40,
+      radiusX: 22,
+      radiusZ: 18,
+      speed: 0.20,
+      phase: 2.6,
+      scale: 4.6,
+      verticalAmplitude: 1.5,
+      verticalFrequency: 1.6,
+    },
+    // School 5: Oracle of Poseidon Reef & Shimmering Waters
+    {
+      group: new THREE.Group(),
+      centerX: -36,
+      centerY: 2.6,
+      centerZ: 28,
+      radiusX: 19,
+      radiusZ: 17,
+      speed: 0.19,
+      phase: 5.1,
+      scale: 4.5,
+      verticalAmplitude: 1.4,
+      verticalFrequency: 1.5,
+    },
+  ];
+
+  for (const school of fishSchools) {
+    root.add(school.group);
+  }
+  loadFishSchools(root, fishSchools);
+
+  // Spawn 1 apex predator Shark cruising the sunken galleon shipwreck trench
+  const sharks: SharkController[] = [
+    {
+      group: new THREE.Group(),
+      centerX: -48,
+      centerY: 4.5,
+      centerZ: -18,
+      radiusX: 32,
+      radiusZ: 38,
+      speed: 0.16,
+      phase: 0.5,
+      scale: 0.007,
+      verticalAmplitude: 1.6,
+      verticalFrequency: 1.1,
+    },
+  ];
+
+  for (const shark of sharks) {
+    root.add(shark.group);
+    loadShark(shark.group, shark);
+  }
+
   const nemoTexture = loadTextureSafely(nemoImg);
   const nemoSwimmers = [
     // Hero Nemo: playful loop right in front of start gateway / coral garden
@@ -1197,7 +1366,7 @@ export function createUnderwaterWorld(): WorldAssembly {
     createNemoSwimmer(root, 24, 3.2, -42, 9.5, 8, 0.5, 5.2, 1.0, nemoTexture),
   ];
 
-  const terrain = new THREE.PlaneGeometry(360, 360, 132, 132);
+  const terrain = new THREE.PlaneGeometry(360, 360, 72, 72);
   const positions = terrain.attributes.position;
   const colors: number[] = [];
   const deep = new THREE.Color('#af8c68');
@@ -1301,12 +1470,14 @@ export function createUnderwaterWorld(): WorldAssembly {
   for (const landmark of abyssalLandmarks) {
     const group = new THREE.Group();
     group.position.set(landmark.position[0], -8.8, landmark.position[2]);
-    if (landmark.kind === 'galleon') group.position.y = -2.2;
+    if (landmark.kind === 'galleon') group.position.y = -10.5;
     group.rotation.y = Math.atan2(-landmark.position[0], -landmark.position[2]);
 
-    const foundation = new THREE.Mesh(new THREE.CylinderGeometry(7, 8, 1.1, 24), darkStoneMaterial);
-    foundation.position.y = 0;
-    group.add(foundation);
+    if (landmark.kind !== 'galleon') {
+      const foundation = new THREE.Mesh(new THREE.CylinderGeometry(7, 8, 1.1, 24), darkStoneMaterial);
+      foundation.position.y = 0;
+      group.add(foundation);
+    }
 
     if (landmark.kind === 'gateway') addGateway(group, animatedLights);
     if (landmark.kind === 'archive') addArchive(group);
@@ -1329,7 +1500,7 @@ export function createUnderwaterWorld(): WorldAssembly {
       new THREE.MeshStandardMaterial({ color: landmark.accent, emissive: landmark.accent, emissiveIntensity: 0.15, roughness: 0.62 })
     );
     marker.name = 'discoveryMarker';
-    marker.position.set(0, landmark.kind === 'lighthouse' ? 15.5 : 1.8, 0);
+    marker.position.set(0, landmark.kind === 'lighthouse' ? 15.5 : landmark.kind === 'galleon' ? 6.5 : 1.8, 0);
     marker.rotation.x = Math.PI / 2;
     marker.visible = false;
     group.add(marker);
@@ -1338,5 +1509,5 @@ export function createUnderwaterWorld(): WorldAssembly {
     root.add(group);
   }
 
-  return { root, landmarkMeshes, artifactMeshes, animatedLights, causticTime, swimmingSchools, swayingKelp, blueWhales, nemoSwimmers };
+  return { root, landmarkMeshes, artifactMeshes, animatedLights, causticTime, swimmingSchools, swayingKelp, blueWhales, fishSchools, nemoSwimmers, sharks };
 }
