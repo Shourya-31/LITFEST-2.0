@@ -78,6 +78,9 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       scrollToSection('home');
     } else if (sec === 'about') {
       scrollToSection('about');
+    } else if (sec === '3d' || sec === 'abyss') {
+      if (onExploreAbyss) onExploreAbyss();
+      else setAbyssalExplorerOpen(true);
     } else if (sec === 'events' || sec === 'schedule' || sec === 'speakers' || sec === 'gallery') {
       setActiveModal('events');
     }
@@ -233,18 +236,21 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
 
       <GameLauncher />
 
-      <section className="abyss-entry-section" aria-label="Abyssal Voyage">
+      <section className="abyss-entry-section" aria-label="3D Underwater Experience">
         <div className="abyss-entry-copy">
-          <span>THE ABYSSAL VOYAGE</span>
-          <h2>Explore the stories beneath the surface.</h2>
-          <p>Begin your underwater literary voyage.</p>
+          <h2>Explore The Stories Beneath The Surface in 3D</h2>
+          <p>
+            Dive into an interactive, real-time 3D simulation of Litfest 2.0. Pilot an abyssal submersible, discover sunken literary monuments, and recover lost relics in the deep.
+          </p>
         </div>
         <button
           type="button"
           className="abyss-entry-button"
           onClick={() => onExploreAbyss ? onExploreAbyss() : setAbyssalExplorerOpen(true)}
+          id="abyss-launch-3d-btn"
         >
-          EXPLORE THE ABYSS <span aria-hidden="true">↗</span>
+          <span>ENTER 3D EXPERIENCE</span>
+          <span className="abyss-btn-arrow" aria-hidden="true">↗</span>
         </button>
       </section>
 

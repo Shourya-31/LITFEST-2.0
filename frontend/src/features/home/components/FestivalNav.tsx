@@ -82,6 +82,15 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             Gallery
           </a>
           <a
+            href="#3d"
+            className="nav-item nav-item-3d"
+            id="nav-link-3d"
+            onClick={(e) => handleLink('3d', e)}
+          >
+            <span className="nav-3d-badge">3D</span>
+            Voyage
+          </a>
+          <a
             href="#about"
             className="nav-item"
             id="nav-link-about"

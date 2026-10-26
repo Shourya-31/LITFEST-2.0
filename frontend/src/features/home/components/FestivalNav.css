@@ -100,6 +100,25 @@
   width: 100%;
 }
 
+.nav-item-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #7dd3fc;
+}
+
+.nav-3d-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.25);
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+  letter-spacing: 0.05em;
+}
+
 /* =========================================
    RIGHT ACTIONS & REGISTER CTA (Anchored Right)
    ========================================= */
