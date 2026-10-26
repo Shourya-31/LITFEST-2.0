@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { abyssalLandmarks, relics } from './Landmarks';
-import { createUnderwaterWorld } from './UnderwaterWorld';
+import { createUnderwaterWorld, type WhaleController } from './UnderwaterWorld';
 import { VehicleController, type PlayerInput } from './VehicleController';
 import type { ExplorerTelemetry, LandmarkDefinition } from './types';
 
@@ -95,6 +95,18 @@ export class ExplorerScene {
   private causticTime: { value: number };
   private swimmingSchools: Array<{ group: THREE.Group; x: number; y: number; z: number; phase: number }>;
   private swayingKelp: Array<{ group: THREE.Group; phase: number }>;
+  private blueWhales: WhaleController[] = [];
+  private nemoSwimmers: Array<{
+    group: THREE.Group;
+    centerX: number;
+    centerY: number;
+    centerZ: number;
+    radiusX: number;
+    radiusZ: number;
+    speed: number;
+    phase: number;
+    scale: number;
+  }> = [];
   private cameraPositionTarget = new THREE.Vector3();
   private cameraLookTarget = new THREE.Vector3();
   private readonly forward = new THREE.Vector3();
@@ -160,6 +172,8 @@ export class ExplorerScene {
     this.causticTime = world.causticTime;
     this.swimmingSchools = world.swimmingSchools;
     this.swayingKelp = world.swayingKelp;
+    this.blueWhales = world.blueWhales ?? [];
+    this.nemoSwimmers = world.nemoSwimmers ?? [];
 
     for (const landmark of abyssalLandmarks) {
       this.landmarkPositions.set(
@@ -479,6 +493,45 @@ export class ExplorerScene {
       }
       for (const { group, phase } of this.swayingKelp) {
         group.rotation.z = Math.sin(this.elapsed * 0.48 + phase) * 0.055;
+      }
+      for (const w of this.blueWhales) {
+        if (w.mixer) {
+          w.mixer.update(delta);
+        }
+        if (!this.reducedMotion) {
+          const phase = w.phase ?? 0;
+          const t = this.elapsed * w.speed + phase;
+          const posX = w.centerX + Math.cos(t) * w.radiusX;
+          const posZ = w.centerZ + Math.sin(t) * w.radiusZ;
+          const posY = w.centerY + Math.sin(t * 1.8) * 3.2;
+
+          const dx = -Math.sin(t) * w.radiusX;
+          const dz = Math.cos(t) * w.radiusZ;
+          const heading = Math.atan2(dx, dz);
+          const pitch = -Math.cos(t * 1.8) * 0.08;
+          const bank = -Math.sin(t) * 0.14;
+
+          w.group.position.set(posX, posY, posZ);
+          w.group.rotation.set(pitch, heading, bank);
+        }
+      }
+      for (const nemo of this.nemoSwimmers) {
+        const t = this.elapsed * nemo.speed + nemo.phase;
+        const posX = nemo.centerX + Math.cos(t) * nemo.radiusX;
+        const posZ = nemo.centerZ + Math.sin(t) * nemo.radiusZ;
+        const posY = nemo.centerY + Math.sin(t * 2.2) * 0.75 + Math.sin(this.elapsed * 4 + nemo.phase) * 0.12;
+
+        const dx = -Math.sin(t) * nemo.radiusX;
+        const dz = Math.cos(t) * nemo.radiusZ;
+        const heading = Math.atan2(dx, dz);
+        const waggle = Math.sin(this.elapsed * 8.5 + nemo.phase) * 0.14;
+
+        nemo.group.position.set(posX, posY, posZ);
+        nemo.group.rotation.set(
+          Math.cos(t * 2.2) * 0.08,
+          heading + waggle,
+          Math.sin(this.elapsed * 4.5 + nemo.phase) * 0.06
+        );
       }
     }
     this.vehicle.update(delta, this.input);
