@@ -2,24 +2,19 @@ import React, { useState, useMemo } from 'react';
 import {
   HelpCircle,
   Search,
-  ChevronDown,
-  MapPin,
-  Mail,
-  Instagram,
-  BookOpen,
-  MessageSquareQuote,
-  ShieldCheck,
-  Send
+  ChevronDown
 } from 'lucide-react';
 import { LITFEST_FAQS } from './faqData';
 import type { FaqCategory, FaqSectionProps } from '../../types/faq';
 import { soundEngine } from '../../utils/soundEngine';
+import '../../styles/faq.css';
 
 export const FaqSection: React.FC<FaqSectionProps> = ({
   faqs = LITFEST_FAQS,
   title = "Frequently Asked Questions",
   subtitle = "Everything you need to know regarding participation, events, guidelines, and logistics for LitFest 2.0 at NIT Raipur.",
-  className = ""
+  className = "",
+  onAscendClick,
 }) => {
   const [activeCategory, setActiveCategory] = useState<FaqCategory>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -68,10 +63,6 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
       <div className="faq-main-container">
         {/* Section Header */}
         <header className="faq-section-header">
-          <div className="faq-eyebrow">
-            <HelpCircle size={14} className="faq-eyebrow-icon" />
-            <span>THE CAPTAIN'S DESK & QUERIES</span>
-          </div>
           <h2 className="faq-title">{title}</h2>
           <p className="faq-subtitle">{subtitle}</p>
 
@@ -154,7 +145,6 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
                     >
                       <summary className="faq-summary interactive">
                         <div className="faq-summary-content">
-                          <span className="faq-tag-pill">{faq.tag}</span>
                           <span className="faq-question-title">{faq.question}</span>
                         </div>
                         <div className="faq-chevron-wrap">
@@ -171,79 +161,27 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
               </div>
             )}
           </div>
-
-          {/* RIGHT: Literati Captain's Office & Contact Info Card */}
-          <aside className="faq-support-column">
-            <div className="literati-office-card">
-              <div className="office-card-header">
-                <div className="office-insignia">
-                  <BookOpen size={22} />
-                </div>
-                <div>
-                  <h3 className="office-heading">Literati Secretariat</h3>
-                  <p className="office-sub">Official Literary Committee • NIT Raipur</p>
-                </div>
-              </div>
-
-              <p className="office-desc">
-                Have an inquiry about committee delegation rules, outstation stay, or sponsorship tie-ups? Reach our student coordinators directly.
-              </p>
-
-              <div className="office-details-list">
-                <div className="office-detail-row">
-                  <MapPin size={18} className="detail-icon" />
-                  <div>
-                    <strong>National Institute of Technology Raipur</strong>
-                    <p>G.E. Road, Raipur, Chhattisgarh – 492010, India</p>
-                  </div>
-                </div>
-
-                <div className="office-detail-row">
-                  <Mail size={18} className="detail-icon" />
-                  <div>
-                    <strong>Official Communication</strong>
-                    <p>literati@nitrr.ac.in • litfestnitrr@gmail.com</p>
-                  </div>
-                </div>
-
-                <div className="office-detail-row">
-                  <Instagram size={18} className="detail-icon" />
-                  <div>
-                    <strong>Instagram Updates</strong>
-                    <p>@literati_nitrr • @litfest_nitrr</p>
-                  </div>
-                </div>
-
-                <div className="office-detail-row">
-                  <ShieldCheck size={18} className="detail-icon" />
-                  <div>
-                    <strong>Shilpi Annual Magazine</strong>
-                    <p>Publisher of the official bilingual campus magazine</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="office-card-footer">
-                <a
-                  href="mailto:literati@nitrr.ac.in?subject=LitFest%202.0%20Inquiry"
-                  className="office-contact-btn interactive"
-                >
-                  <Send size={15} />
-                  <span>Send Direct Inquiry</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Quick Tips Callout */}
-            <div className="faq-quick-tip-card">
-              <MessageSquareQuote size={20} className="tip-icon" />
-              <div>
-                <strong>Need Immediate Assistance during Fest Days?</strong>
-                <p>Visit the Central Registration Desk at HIRA Hall entrance for spot entry passes and delegate badges.</p>
-              </div>
-            </div>
-          </aside>
         </div>
+
+        {onAscendClick && (
+          <div className="faq-surface-wrap" style={{ display: 'flex', justifyContent: 'center', marginTop: '3.5rem' }}>
+            <button
+              type="button"
+              className="about-surface-link"
+              onClick={onAscendClick}
+              title="Return to Upper Surface"
+            >
+              <svg viewBox="0 0 20 20" width="13" height="13" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>Return to Surface</span>
+            </button>
+          </div>
+        )}
 
       </div>
     </section>

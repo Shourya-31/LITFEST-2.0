@@ -14,4 +14,5 @@ export interface FaqSectionProps {
   title?: string;
   subtitle?: string;
   className?: string;
+  onAscendClick?: () => void;
 }

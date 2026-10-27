@@ -587,6 +587,7 @@ function addLighthouse(group: THREE.Group, animatedLights: THREE.Object3D[]) {
   const beaconLight = new THREE.PointLight('#ffe1a1', 3.5, 45);
   beaconLight.position.set(0, 13, 0);
   lantern.add(beaconLight);
+  animatedLights.push(beaconLight);
   group.add(lantern);
 
   const scheduleTexture = loadTextureSafely(scheduleImg);
@@ -954,7 +955,7 @@ function loadBlueWhale(parent: THREE.Group, controller: WhaleController) {
   }
 }
 
-function loadFishSchools(parent: THREE.Group, controllers: FishSchoolController[]) {
+function loadFishSchools(_parent: THREE.Group, controllers: FishSchoolController[]) {
   if (typeof window === 'undefined') return;
   try {
     const loader = new GLTFLoader();

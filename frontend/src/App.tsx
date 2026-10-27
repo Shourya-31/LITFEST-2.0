@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useState } from 'react';
 import { LitfestUnderwaterHome } from './features/home';
 import type { AbyssalNavigationTarget } from './components/underwater/abyssal-explorer';
 import './App.css';
@@ -8,6 +8,7 @@ const destinationTargets = new Set<string>([
   'timeline',
   'about',
   'arcade',
+  'sponsors',
   'faq',
   'events',
   'register',
@@ -27,32 +28,17 @@ const LazyPirateWheelTimeline = lazy(() =>
     default: PirateWheelTimeline,
   }))
 );
-const LazyFaqSection = lazy(() =>
-  import('./features/faq/FaqSection').then(({ FaqSection }) => ({ default: FaqSection }))
-);
 
 function App() {
   const [requestedDestination] = useState(readDestinationFromUrl);
-  const [activeDestination, setActiveDestination] = useState<'timeline' | 'faq' | null>(() =>
-    requestedDestination === 'timeline' || requestedDestination === 'faq'
+  const [activeDestination, setActiveDestination] = useState<'timeline' | null>(() =>
+    requestedDestination === 'timeline'
       ? requestedDestination
       : null
   );
 
-  useEffect(() => {
-    if (activeDestination !== 'faq') return undefined;
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousDocumentOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousDocumentOverflow;
-    };
-  }, [activeDestination]);
-
   const handleAbyssalNavigate = useCallback((target: AbyssalNavigationTarget) => {
-    if (target === 'timeline' || target === 'faq') {
+    if (target === 'timeline') {
       setActiveDestination(target);
     }
   }, []);
@@ -64,12 +50,12 @@ function App() {
         initialDestination={requestedDestination}
         isDestinationOpen={activeDestination !== null}
       />
-      {activeDestination && (
+      {activeDestination === 'timeline' && (
         <div
           className="abyssal-destination-overlay"
           role="dialog"
           aria-modal="true"
-          aria-label={activeDestination === 'timeline' ? 'Festival timeline' : 'Festival FAQs'}
+          aria-label="Festival timeline"
         >
           <button
             type="button"
@@ -80,11 +66,7 @@ function App() {
             Return to the ocean
           </button>
           <Suspense fallback={<div className="abyssal-loading" role="status">Opening festival destination…</div>}>
-            {activeDestination === 'timeline' ? (
-              <LazyPirateWheelTimeline onNavigateHome={() => setActiveDestination(null)} />
-            ) : (
-              <LazyFaqSection />
-            )}
+            <LazyPirateWheelTimeline onNavigateHome={() => setActiveDestination(null)} />
           </Suspense>
         </div>
       )}
