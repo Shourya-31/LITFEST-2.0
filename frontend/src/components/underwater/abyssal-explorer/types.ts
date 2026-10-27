@@ -15,6 +15,7 @@ export type AbyssalNavigationTarget =
   | 'arcade'
   | 'sponsors'
   | 'faq'
+  | 'contact'
   | 'events'
   | 'register';
 

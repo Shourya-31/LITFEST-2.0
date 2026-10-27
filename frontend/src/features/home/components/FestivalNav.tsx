@@ -104,9 +104,10 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             FAQ
           </a>
           <a
-            href="/ContactUs.html"
+            href="#contact"
             className="nav-item"
             id="nav-link-contact"
+            onClick={(e) => handleLink('contact', e)}
           >
             Contact
           </a>

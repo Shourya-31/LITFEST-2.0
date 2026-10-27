@@ -8,6 +8,7 @@ import { FestivalNav } from './components/FestivalNav';
 import { LitfestAboutSection } from '../about';
 import { SponsorsSection } from '../sponsors';
 import { FaqSection } from '../faq';
+import { ContactSection } from '../contact';
 import { GameLauncher } from '../game/GameLauncher';
 import type { AbyssalNavigationTarget } from '../../components/underwater/abyssal-explorer';
 import './LitfestUnderwaterHome.css';
@@ -90,6 +91,8 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       scrollToSection('sponsors');
     } else if (sec === 'faq') {
       scrollToSection('faq');
+    } else if (sec === 'contact') {
+      scrollToSection('contact');
     } else if (sec === 'schedule' || sec === 'gallery') {
       setActiveModal('events');
     }
@@ -180,6 +183,9 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       case 'faq':
         scrollToSection('faq');
         break;
+      case 'contact':
+        scrollToSection('contact');
+        break;
       case 'arcade':
         scrollToSection('arcade');
         break;
@@ -206,6 +212,8 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       scrollToSection('sponsors');
     } else if (initialDestination === 'faq') {
       scrollToSection('faq');
+    } else if (initialDestination === 'contact') {
+      scrollToSection('contact');
     }
   }, [initialDestination, scrollToSection]);
 
@@ -284,11 +292,17 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       <SponsorsSection
         id="sponsors"
         onAscendClick={() => scrollToSection('home')}
-        onContactClick={() => { window.location.href = '/ContactUs.html'; }}
+        onContactClick={() => scrollToSection('contact')}
       />
 
       {/* 5. Frequently Asked Questions Section */}
       <FaqSection
+        onAscendClick={() => scrollToSection('home')}
+      />
+
+      {/* 6. Contact & Direct Transmission Section */}
+      <ContactSection
+        id="contact"
         onAscendClick={() => scrollToSection('home')}
       />
 
