@@ -50,7 +50,7 @@ export function GameLauncher() {
   }, []);
 
   return (
-    <section className="ocean-game-entry" aria-label="Blue Pulse Arcade">
+    <section id="arcade" className="ocean-game-entry" aria-label="Blue Pulse Arcade">
       <div className="ocean-game-ambience" aria-hidden="true">
         <svg className="ocean-game-waves" viewBox="0 0 1440 320" preserveAspectRatio="none">
           <path className="ocean-game-wave ocean-game-wave-back" d="M-200 150 Q0 60 240 150 T720 150 T1200 150 T1680 150 L1680 320 H-200Z" />

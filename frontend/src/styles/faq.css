@@ -10,6 +10,7 @@
   background: linear-gradient(180deg, #052438 0%, #083c5e 50%, #052438 100%);
   overflow: visible;
   z-index: 2;
+  scroll-margin-top: 70px;
 }
 
 .faq-main-container {
@@ -174,10 +175,10 @@
    2-COLUMN FAQ CONTENT GRID
    ========================================================================== */
 .faq-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2.5rem;
-  align-items: start;
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -392,17 +393,24 @@
 }
 
 .office-insignia {
-  width: 46px;
-  height: 46px;
+  width: 54px;
+  height: 54px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--pirate-gold) 0%, var(--pirate-wood) 100%);
-  color: #1a0800;
+  background: rgba(2, 22, 46, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--pirate-gold-light);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.15);
   flex-shrink: 0;
+  padding: 4px;
+}
+
+.literati-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(45, 212, 191, 0.35));
 }
 
 .office-heading {

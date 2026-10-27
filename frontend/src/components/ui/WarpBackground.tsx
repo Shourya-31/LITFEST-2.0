@@ -93,7 +93,13 @@ function compileShader(
   return shader;
 }
 
-export default function WarpBackground() {
+export interface WarpBackgroundProps {
+  id?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export default function WarpBackground({ id = "warp", className, style }: WarpBackgroundProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -155,13 +161,24 @@ export default function WarpBackground() {
 
     const resize = (): void => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.floor(window.innerWidth * dpr);
-      canvas.height = Math.floor(window.innerHeight * dpr);
+      const parent = canvas.parentElement;
+      const width = parent && parent.clientWidth > 0 ? parent.clientWidth : window.innerWidth;
+      const height = parent && parent.clientHeight > 0 ? parent.clientHeight : window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(resolution, canvas.width, canvas.height);
     };
     window.addEventListener("resize", resize);
     resize();
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && canvas.parentElement) {
+      ro = new ResizeObserver(() => {
+        resize();
+      });
+      ro.observe(canvas.parentElement);
+    }
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
@@ -179,6 +196,7 @@ export default function WarpBackground() {
     animationFrame = requestAnimationFrame(render);
 
     return () => {
+      if (ro) ro.disconnect();
       cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", resize);
       gl.deleteBuffer(buffer);
@@ -188,5 +206,5 @@ export default function WarpBackground() {
     };
   }, []);
 
-  return <canvas id="warp" ref={canvasRef} aria-hidden="true" />;
+  return <canvas id={id} className={className} style={style} ref={canvasRef} aria-hidden="true" />;
 }

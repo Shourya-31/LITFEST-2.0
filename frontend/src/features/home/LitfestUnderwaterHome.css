@@ -19,6 +19,7 @@
   padding: clamp(28px, 5vw, 60px) max(8vw, 24px);
   border-block: 1px solid rgba(56, 189, 248, 0.2);
   color: #e9fbff;
+  scroll-margin-top: 70px;
   background:
     radial-gradient(ellipse at 18% 50%, rgba(33, 146, 166, 0.2), transparent 55%),
     linear-gradient(110deg, rgba(4, 25, 39, 0.98), rgba(3, 13, 28, 0.98));

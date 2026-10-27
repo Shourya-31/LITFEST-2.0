@@ -8,6 +8,7 @@ import './AbyssalExplorer.css';
 
 export interface AbyssalExplorerProps {
   className?: string;
+  autoplay?: boolean;
   onLandmarkNavigate?: (target: AbyssalNavigationTarget) => void;
   onExit?: () => void;
 }

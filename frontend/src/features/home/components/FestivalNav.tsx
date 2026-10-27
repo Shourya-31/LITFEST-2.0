@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import litfestLogo from '../../../assets/media/litfest-logo-transparent.png';
 import './FestivalNav.css';
 
 interface FestivalNavProps {
@@ -40,7 +41,11 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
           onClick={(e) => handleLink('home', e)}
           title="Return to Litfest 2.0 Surface"
         >
-          <span className="brand-primary">LITERATI</span>
+          <img
+            src={litfestLogo}
+            alt="LITFEST 2.0"
+            className="nav-brand-img"
+          />
         </a>
 
         {/* Center: Navigation Links */}
@@ -58,28 +63,12 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             Events
           </a>
           <a
-            href="#schedule"
+            href="#arcade"
             className="nav-item"
-            id="nav-link-schedule"
-            onClick={(e) => handleLink('schedule', e)}
+            id="nav-link-arcade"
+            onClick={(e) => handleLink('arcade', e)}
           >
-            Schedule
-          </a>
-          <a
-            href="#speakers"
-            className="nav-item"
-            id="nav-link-speakers"
-            onClick={(e) => handleLink('speakers', e)}
-          >
-            Speakers
-          </a>
-          <a
-            href="#gallery"
-            className="nav-item"
-            id="nav-link-gallery"
-            onClick={(e) => handleLink('gallery', e)}
-          >
-            Gallery
+            Arcade
           </a>
           <a
             href="#3d"
@@ -97,6 +86,22 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             onClick={(e) => handleLink('about', e)}
           >
             About
+          </a>
+          <a
+            href="#sponsors"
+            className="nav-item"
+            id="nav-link-sponsors"
+            onClick={(e) => handleLink('sponsors', e)}
+          >
+            Sponsors
+          </a>
+          <a
+            href="#faq"
+            className="nav-item"
+            id="nav-link-faq"
+            onClick={(e) => handleLink('faq', e)}
+          >
+            FAQ
           </a>
           <a
             href="/ContactUs.html"

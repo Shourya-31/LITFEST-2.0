@@ -13,6 +13,7 @@ export type AbyssalNavigationTarget =
   | 'timeline'
   | 'about'
   | 'arcade'
+  | 'sponsors'
   | 'faq'
   | 'events'
   | 'register';

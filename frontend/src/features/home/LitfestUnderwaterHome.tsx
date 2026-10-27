@@ -6,6 +6,8 @@ import { MarineVegetation } from './components/MarineVegetation';
 import { UnderwaterTitle } from './components/UnderwaterTitle';
 import { FestivalNav } from './components/FestivalNav';
 import { LitfestAboutSection } from '../about';
+import { SponsorsSection } from '../sponsors';
+import { FaqSection } from '../faq';
 import { GameLauncher } from '../game/GameLauncher';
 import type { AbyssalNavigationTarget } from '../../components/underwater/abyssal-explorer';
 import './LitfestUnderwaterHome.css';
@@ -76,12 +78,19 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   const handleNavClick = (sec: string) => {
     if (sec === 'home') {
       scrollToSection('home');
+    } else if (sec === 'events') {
+      setActiveModal('events');
+    } else if (sec === 'arcade') {
+      scrollToSection('arcade');
+    } else if (sec === '3d' || sec === 'abyss') {
+      scrollToSection('3d');
     } else if (sec === 'about') {
       scrollToSection('about');
-    } else if (sec === '3d' || sec === 'abyss') {
-      if (onExploreAbyss) onExploreAbyss();
-      else setAbyssalExplorerOpen(true);
-    } else if (sec === 'events' || sec === 'schedule' || sec === 'speakers' || sec === 'gallery') {
+    } else if (sec === 'sponsors') {
+      scrollToSection('sponsors');
+    } else if (sec === 'faq') {
+      scrollToSection('faq');
+    } else if (sec === 'schedule' || sec === 'gallery') {
       setActiveModal('events');
     }
   };
@@ -165,8 +174,14 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       case 'about':
         scrollToSection('about');
         break;
+      case 'sponsors':
+        scrollToSection('sponsors');
+        break;
+      case 'faq':
+        scrollToSection('faq');
+        break;
       case 'arcade':
-        document.querySelector('.ocean-game-entry')?.scrollIntoView({ behavior: 'smooth' });
+        scrollToSection('arcade');
         break;
       case 'events':
         setActiveModal('events');
@@ -175,7 +190,6 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
         setActiveModal('register');
         break;
       case 'timeline':
-      case 'faq':
         onAbyssalNavigate?.(target);
         break;
     }
@@ -184,10 +198,14 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   useEffect(() => {
     if (initialDestination === 'home') {
       scrollToSection('home');
+    } else if (initialDestination === 'arcade') {
+      scrollToSection('arcade');
     } else if (initialDestination === 'about') {
       scrollToSection('about');
-    } else if (initialDestination === 'arcade') {
-      document.querySelector('.ocean-game-entry')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (initialDestination === 'sponsors') {
+      scrollToSection('sponsors');
+    } else if (initialDestination === 'faq') {
+      scrollToSection('faq');
     }
   }, [initialDestination, scrollToSection]);
 
@@ -236,7 +254,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
 
       <GameLauncher />
 
-      <section className="abyss-entry-section" aria-label="3D Underwater Experience">
+      <section id="3d" className="abyss-entry-section" aria-label="3D Underwater Experience">
         <div className="abyss-entry-copy">
           <h2>Explore The Stories Beneath The Surface in 3D</h2>
           <p>
@@ -259,6 +277,18 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
         id="about"
         onExploreEvents={() => setActiveModal('events')}
         onRegisterClick={() => setActiveModal('register')}
+        onAscendClick={() => scrollToSection('home')}
+      />
+
+      {/* 4. Institutional Sponsors & Partners from sponsors.html */}
+      <SponsorsSection
+        id="sponsors"
+        onAscendClick={() => scrollToSection('home')}
+        onContactClick={() => { window.location.href = '/ContactUs.html'; }}
+      />
+
+      {/* 5. Frequently Asked Questions Section */}
+      <FaqSection
         onAscendClick={() => scrollToSection('home')}
       />
 
