@@ -21,6 +21,9 @@ const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
   email: z.string().trim().email().max(254).transform((v) => v.toLowerCase()),
   password: z.string().min(8).max(128),
+  phone: z.string().trim().max(20).optional().nullable(),
+  college: z.string().trim().max(100).optional().nullable(),
+  bio: z.string().trim().max(500).optional().nullable(),
 });
 
 const loginSchema = z.object({
@@ -79,12 +82,19 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 
   try {
-    const { name, email, password } = parsed.data;
+    const { name, email, password, phone, college, bio } = parsed.data;
 
     const passwordHash = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
-      data: { name, email, passwordHash },
+      data: {
+        name,
+        email,
+        passwordHash,
+        phone: phone || null,
+        college: college || null,
+        bio: bio || null,
+      },
       select: {
         id: true,
         name: true,

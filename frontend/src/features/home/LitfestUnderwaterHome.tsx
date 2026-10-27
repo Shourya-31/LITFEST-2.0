@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { OceanAtmosphere } from './components/OceanAtmosphere';
 import { MarineLife } from './components/MarineLife';
 import { MarineVegetation } from './components/MarineVegetation';
@@ -8,8 +9,9 @@ import { LitfestAboutSection } from '../about';
 import './LitfestUnderwaterHome.css';
 
 export const LitfestUnderwaterHome: React.FC = () => {
+  const navigate = useNavigate();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [activeModal, setActiveModal] = useState<'register' | 'events' | null>(null);
+  const [activeModal, setActiveModal] = useState<'events' | null>(null);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
@@ -114,7 +116,7 @@ export const LitfestUnderwaterHome: React.FC = () => {
     >
       {/* 1. Global Navigation Header (Floating, fixed with glassmorphism on scroll) */}
       <FestivalNav
-        onRegisterClick={() => setActiveModal('register')}
+        onRegisterClick={() => navigate('/signup')}
         onNavClick={handleNavClick}
       />
 
@@ -144,7 +146,7 @@ export const LitfestUnderwaterHome: React.FC = () => {
       <LitfestAboutSection
         id="about"
         onExploreEvents={() => setActiveModal('events')}
-        onRegisterClick={() => setActiveModal('register')}
+        onRegisterClick={() => navigate('/signup')}
         onAscendClick={() => scrollToSection('home')}
       />
 
@@ -196,59 +198,12 @@ export const LitfestUnderwaterHome: React.FC = () => {
               &times;
             </button>
 
-            {activeModal === 'register' ? (
-              <div className="modal-body">
-                <span className="modal-eyebrow">LITFEST 2.0 &bull; PARTICIPANT ACCESS</span>
-                <h3>Festival Registration</h3>
-                <p>
-                  Join Literati at NIT Raipur for flagship debates, spoken word, creative writing
-                  symposiums, and literary quests.
-                </p>
-                <div className="registration-perks">
-                  <div className="perk-item">
-                    <span className="perk-check">&bull;</span>
-                    <span>Exclusive entry to all flagship competitive events</span>
-                  </div>
-                  <div className="perk-item">
-                    <span className="perk-check">&bull;</span>
-                    <span>National guest speaker panels & workshops</span>
-                  </div>
-                  <div className="perk-item">
-                    <span className="perk-check">&bull;</span>
-                    <span>Official certificate of participation & merit prizes</span>
-                  </div>
-                </div>
-                <div className="modal-cta-group">
-                  <a
-                    href="/login"
-                    className="modal-primary-btn"
-                    id="modal-register-link"
-                  >
-                    Register Now
-                  </a>
-                  <a
-                    href="/login"
-                    className="modal-secondary-btn"
-                    id="modal-login-link"
-                  >
-                    Login
-                  </a>
-                  <button
-                    type="button"
-                    className="modal-secondary-btn"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="modal-body">
-                <span className="modal-eyebrow">FESTIVAL LINEUP</span>
-                <h3>Featured Arenas</h3>
-                <p>
-                  Discover the literary and expressive categories configured for Litfest 2.0.
-                </p>
+            <div className="modal-body">
+              <span className="modal-eyebrow">FESTIVAL LINEUP</span>
+              <h3>Featured Arenas</h3>
+              <p>
+                Discover the literary and expressive categories configured for Litfest 2.0.
+              </p>
                 <div className="events-grid-preview">
                   <div className="event-preview-card">
                     <h4>Verbatim</h4>
@@ -267,7 +222,10 @@ export const LitfestUnderwaterHome: React.FC = () => {
                   <button
                     type="button"
                     className="modal-primary-btn"
-                    onClick={() => setActiveModal('register')}
+                    onClick={() => {
+                      setActiveModal(null);
+                      navigate('/signup');
+                    }}
                   >
                     Register for Events
                   </button>
@@ -280,10 +238,9 @@ export const LitfestUnderwaterHome: React.FC = () => {
                   </button>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </main>
   );
 };

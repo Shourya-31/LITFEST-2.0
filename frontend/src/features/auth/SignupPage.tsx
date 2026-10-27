@@ -181,11 +181,11 @@ export const SignupPage: React.FC = () => {
 
       navigate(redirectPath);
     } catch (err: any) {
-      const status = err?.response?.status;
+      const status = err?.statusCode || err?.response?.status || err?.status;
       const rawMsg =
+        err?.message ||
         err?.response?.data?.error?.message ||
         err?.response?.data?.message ||
-        err?.message ||
         '';
 
       if (
