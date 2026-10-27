@@ -64,7 +64,7 @@ export class AtlantisDialog {
       }
       if (!popup || event.key !== "Tab") return;
       const buttons = [...popup.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")];
-      const first = buttons[0], last = buttons.at(-1)!;
+      const first = buttons[0], last = buttons[buttons.length - 1]!;
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }, {signal});

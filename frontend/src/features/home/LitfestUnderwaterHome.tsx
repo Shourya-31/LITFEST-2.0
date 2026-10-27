@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { OceanAtmosphere } from './components/OceanAtmosphere';
 import { MarineLife } from './components/MarineLife';
@@ -36,11 +37,10 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
   onAbyssalNavigate,
   initialDestination = null,
 }) => {
+  const navigate = useNavigate();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [activeModal, setActiveModal] = useState<'register' | 'events' | null>(() =>
-    initialDestination === 'register' || initialDestination === 'events'
-      ? initialDestination
-      : null
+  const [activeModal, setActiveModal] = useState<'events' | null>(() =>
+    initialDestination === 'events' ? initialDestination : null
   );
   const [abyssalExplorerOpen, setAbyssalExplorerOpen] = useState(false);
   const homeRef = useRef<HTMLElement | null>(null);
@@ -193,13 +193,13 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
         setActiveModal('events');
         break;
       case 'register':
-        setActiveModal('register');
+        navigate('/signup');
         break;
       case 'timeline':
         onAbyssalNavigate?.(target);
         break;
     }
-  }, [onAbyssalNavigate, scrollToSection]);
+  }, [navigate, onAbyssalNavigate, scrollToSection]);
 
   useEffect(() => {
     if (initialDestination === 'home') {
@@ -228,7 +228,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
     >
       {/* 1. Global Navigation Header (Floating, fixed with glassmorphism on scroll) */}
       <FestivalNav
-        onRegisterClick={() => setActiveModal('register')}
+        onRegisterClick={() => navigate('/signup')}
         onNavClick={handleNavClick}
       />
 
@@ -284,7 +284,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
       <LitfestAboutSection
         id="about"
         onExploreEvents={() => setActiveModal('events')}
-        onRegisterClick={() => setActiveModal('register')}
+        onRegisterClick={() => navigate('/signup')}
         onAscendClick={() => scrollToSection('home')}
       />
 
@@ -354,52 +354,12 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
               &times;
             </button>
 
-            {activeModal === 'register' ? (
-              <div className="modal-body">
-                <span className="modal-eyebrow">LITFEST 2.0 &bull; PARTICIPANT ACCESS</span>
-                <h3>Festival Registration</h3>
-                <p>
-                  Join Literati at NIT Raipur for flagship debates, spoken word, creative writing
-                  symposiums, and literary quests.
-                </p>
-                <div className="registration-perks">
-                  <div className="perk-item">
-                    <span className="perk-check">&bull;</span>
-                    <span>Exclusive entry to all flagship competitive events</span>
-                  </div>
-                  <div className="perk-item">
-                    <span className="perk-check">&bull;</span>
-                    <span>National guest speaker panels & workshops</span>
-                  </div>
-                  <div className="perk-item">
-                    <span className="perk-check">&bull;</span>
-                    <span>Official certificate of participation & merit prizes</span>
-                  </div>
-                </div>
-                <div className="modal-cta-group">
-                  <a
-                    href="/ContactUs.html"
-                    className="modal-primary-btn"
-                    id="modal-contact-link"
-                  >
-                    Contact Organizing Committee
-                  </a>
-                  <button
-                    type="button"
-                    className="modal-secondary-btn"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Return to Ocean
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="modal-body">
-                <span className="modal-eyebrow">FESTIVAL LINEUP</span>
-                <h3>Featured Arenas</h3>
-                <p>
-                  Discover the literary and expressive categories configured for Litfest 2.0.
-                </p>
+            <div className="modal-body">
+              <span className="modal-eyebrow">FESTIVAL LINEUP</span>
+              <h3>Featured Arenas</h3>
+              <p>
+                Discover the literary and expressive categories configured for Litfest 2.0.
+              </p>
                 <div className="events-grid-preview">
                   <div className="event-preview-card">
                     <h4>Verbatim</h4>
@@ -418,7 +378,10 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
                   <button
                     type="button"
                     className="modal-primary-btn"
-                    onClick={() => setActiveModal('register')}
+                    onClick={() => {
+                      setActiveModal(null);
+                      navigate('/signup');
+                    }}
                   >
                     Register for Events
                   </button>
@@ -431,10 +394,9 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
                   </button>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       {abyssalExplorerOpen &&
         createPortal(
           <div className="abyssal-explorer-overlay" role="dialog" aria-modal="true" aria-label="Abyssal Voyage">

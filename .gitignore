@@ -1,23 +1,30 @@
+# Dependencies
 node_modules/
-.output/
-.wrangler/
-dist/
+**/node_modules/
+
+# Environment
 .env
 .env.*
 !.env.example
-# Dependencies
-node_modules/
-*/node_modules/
 
 # Production builds
 dist/
 */dist/
 build/
 */build/
+.output/
+.wrangler/
+coverage/
 
-# Cache
+# Cache & Build Info
 *.tsbuildinfo
 .cache/
+
+# Databases
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
 
 # Logs
 *.log

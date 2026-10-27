@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../state/AuthContext';
+import { AuthNavWidget } from '../../../components/navigation/AuthNavWidget';
 import litfestLogo from '../../../assets/media/litfest-logo-transparent.png';
 import './FestivalNav.css';
 
@@ -13,6 +15,7 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -112,26 +115,40 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             Contact
           </a>
 
-          {/* Mobile-only register button in drawer */}
-          <button
-            type="button"
-            className="nav-register-btn mobile-register"
-            onClick={onRegisterClick}
-          >
-            Register
-          </button>
+          {/* Conditional drawer links based on auth state */}
+          {!isAuthenticated ? (
+            <>
+              <a
+                href="/login"
+                className="nav-item"
+                id="nav-link-login"
+              >
+                Login
+              </a>
+
+              {/* Mobile-only register button in drawer */}
+              <button
+                type="button"
+                className="nav-register-btn mobile-register"
+                onClick={onRegisterClick}
+              >
+                Register
+              </button>
+            </>
+          ) : (
+            <a
+              href="/dashboard"
+              className="nav-item"
+              id="nav-link-dashboard"
+            >
+              Dashboard
+            </a>
+          )}
         </nav>
 
-        {/* Right: Registration CTA & Mobile Toggle */}
+        {/* Right: Auth Action Widget & Mobile Toggle */}
         <div className="nav-right-actions">
-          <button
-            type="button"
-            className="nav-register-btn desktop-register"
-            onClick={onRegisterClick}
-            id="nav-register-btn"
-          >
-            <span>Register</span>
-          </button>
+          <AuthNavWidget onRegisterClick={onRegisterClick} />
 
           <button
             type="button"
