@@ -9,6 +9,74 @@
   user-select: none;
 }
 
+.abyss-entry-section {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(28px, 5vw, 60px) max(8vw, 24px);
+  border-block: 1px solid rgba(56, 189, 248, 0.2);
+  color: #e9fbff;
+  scroll-margin-top: 70px;
+  background:
+    radial-gradient(ellipse at 18% 50%, rgba(33, 146, 166, 0.2), transparent 55%),
+    linear-gradient(110deg, rgba(4, 25, 39, 0.98), rgba(3, 13, 28, 0.98));
+}
+
+.abyss-entry-copy>span {
+  color: #89e7e6;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.abyss-entry-copy h2 {
+  margin: 9px 0 6px;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+}
+
+.abyss-entry-copy p {
+  margin: 0;
+  color: #a8c5d2;
+}
+
+.abyss-entry-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border: 1px solid rgba(147, 235, 255, 0.46);
+  border-radius: 999px;
+  color: #eafcff;
+  background: linear-gradient(135deg, rgba(38, 153, 174, 0.58), rgba(10, 74, 102, 0.78));
+  box-shadow: 0 7px 30px rgba(18, 149, 179, 0.16);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.abyss-entry-button:hover,
+.abyss-entry-button:focus-visible {
+  transform: translateY(-2px);
+  border-color: #b6f7ff;
+  background: linear-gradient(135deg, rgba(47, 184, 199, 0.72), rgba(13, 93, 125, 0.88));
+}
+
+.abyss-entry-button:focus-visible {
+  outline: 2px solid #b6f7ff;
+  outline-offset: 4px;
+}
+
+.abyss-entry-button span {
+  font-size: 1rem;
+}
+
 /* Upper Illuminated Ocean Viewport (Hero Homepage) */
 .hero-underwater-viewport {
   position: relative;
@@ -81,6 +149,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -90,11 +159,9 @@
   position: relative;
   max-width: 520px;
   width: 100%;
-  background: radial-gradient(
-    circle at 50% 0%,
-    rgba(14, 46, 82, 0.95) 0%,
-    rgba(2, 14, 30, 0.98) 100%
-  );
+  background: radial-gradient(circle at 50% 0%,
+      rgba(14, 46, 82, 0.95) 0%,
+      rgba(2, 14, 30, 0.98) 100%);
   border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 20px;
   padding: 36px 32px;
@@ -241,5 +308,17 @@
     bottom: 16px;
     left: 16px;
     padding: 6px 12px;
+  }
+
+  .abyss-entry-section {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    padding-inline: 24px;
+  }
+
+  .abyss-entry-button {
+    width: 100%;
+    justify-content: center;
   }
 }

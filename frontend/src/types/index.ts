@@ -1,3 +1,6 @@
+export * from './timeline';
+export * from './faq';
+
 export type UserRole = 'PARTICIPANT' | 'ADMIN';
 
 export type EventCategory =

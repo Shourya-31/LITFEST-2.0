@@ -1,0 +1,77 @@
+import type { LandmarkDefinition, RelicDefinition } from './types';
+
+export const abyssalLandmarks: LandmarkDefinition[] = [
+  {
+    id: 'home',
+    kind: 'gateway',
+    name: 'The Surface Gateway',
+    description: 'Rise through a sunlit arch to return to the Litfest home.',
+    position: [2, 5.7, 74],
+    accent: '#8eeaff',
+    route: 'home',
+  },
+  {
+    id: 'archive',
+    kind: 'archive',
+    name: 'The Lost Temple',
+    description: 'A quiet, ancient place where the story of LITFEST begins.',
+    position: [39, 3.9, 29],
+    accent: '#8ae0ff',
+    route: 'about',
+  },
+  {
+    id: 'amphitheatre',
+    kind: 'amphitheatre',
+    name: 'Coral Amphitheatre',
+    description: 'An open stone arena where the festival comes together.',
+    position: [33, 5, -51],
+    accent: '#7ef6c9',
+    route: 'events',
+  },
+  {
+    id: 'beacon',
+    kind: 'lighthouse',
+    name: 'Lighthouse of Stories',
+    description: 'A turning beacon marks the festival timeline.',
+    position: [50, 4.2, -15],
+    accent: '#f7d27a',
+    route: 'timeline',
+  },
+  {
+    id: 'trench',
+    kind: 'galleon',
+    name: 'The Sunken Galleon',
+    description: 'A forgotten shipwreck hides the entrance to the Blue Pulse Arcade.',
+    position: [-59, 1.9, -26],
+    accent: '#70c9e6',
+    route: 'arcade',
+  },
+  {
+    id: 'oracle',
+    kind: 'oracle',
+    name: 'Oracle of Poseidon',
+    description: 'An ancient sea-king watches over answers to festival questions.',
+    position: [-46, 3, 34],
+    accent: '#87d9d0',
+    route: 'faq',
+  },
+  {
+    id: 'festival',
+    kind: 'festival',
+    name: 'Pearl of Passage',
+    description: 'A luminous pearl rests within an ancient oyster, welcoming you to LITFEST.',
+    position: [7.5, 5.9, -20],
+    accent: '#a7f3ff',
+    route: 'register',
+  },
+];
+
+export const relics: RelicDefinition[] = [
+  { id: 'surface-current', name: 'Surface Current', landmarkId: 'home', destination: 'Home', route: 'home', position: [0, 14.5, 0.8], color: '#70dcff' },
+  { id: 'lost-temple-relic', name: 'Lost Temple Relic', landmarkId: 'archive', destination: 'About LITFEST', route: 'about', position: [0, 12.7, -0.8], color: '#71f1e5' },
+  { id: 'lighthouse-heart', name: 'Lighthouse Heart', landmarkId: 'beacon', destination: 'Timeline', route: 'timeline', position: [0, 13, 0.1], color: '#77caff' },
+  { id: 'galleon-treasure', name: 'Galleon Treasure', landmarkId: 'trench', destination: 'Blue Pulse Arcade', route: 'arcade', position: [3, 4.1, -1.45], color: '#ffc875' },
+  { id: 'oracles-orb', name: "Oracle's Orb", landmarkId: 'oracle', destination: 'Festival FAQs', route: 'faq', position: [0, 11.8, 0.6], color: '#9cf2d9' },
+  { id: 'amphitheatre-core', name: 'Amphitheatre Core', landmarkId: 'amphitheatre', destination: 'Events / Arenas', route: 'events', position: [0, 13.8, -3], color: '#f2a8e9' },
+  { id: 'pearl-of-passage', name: 'Pearl of Passage', landmarkId: 'festival', destination: 'Registration', route: 'register', position: [0, 14.7, 0.7], color: '#b5f5ff' },
+];

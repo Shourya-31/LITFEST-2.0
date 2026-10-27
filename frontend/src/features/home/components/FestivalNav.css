@@ -4,17 +4,17 @@
   left: 0;
   width: 100%;
   z-index: 50;
-  padding: 24px 48px;
+  padding: 16px 48px;
   pointer-events: none; /* Let empty space pass through */
   transition: background-color 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease, padding 0.3s ease, box-shadow 0.3s ease;
 }
 
 .festival-nav-header.nav-scrolled {
-  background: rgba(1, 6, 16, 0.75);
+  background: rgba(1, 6, 16, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(56, 189, 248, 0.16);
-  padding: 16px 48px;
+  padding: 8px 48px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
 }
 
@@ -33,21 +33,39 @@
 .nav-brand-logo {
   display: inline-flex;
   align-items: center;
+  gap: 12px;
   text-decoration: none;
   justify-self: start;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .nav-brand-logo:hover {
-  opacity: 0.9;
+  opacity: 0.95;
   transform: translateY(-1px);
+}
+
+.nav-brand-img {
+  height: clamp(66px, 6.8vw, 88px);
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(56, 189, 248, 0.5));
+  transition: transform 0.3s ease, height 0.3s ease, filter 0.3s ease;
+}
+
+.festival-nav-header.nav-scrolled .nav-brand-img {
+  height: clamp(52px, 5vw, 68px);
+}
+
+.nav-brand-logo:hover .nav-brand-img {
+  transform: scale(1.08) rotate(-1.5deg);
+  filter: drop-shadow(0 6px 22px rgba(56, 189, 248, 0.75));
 }
 
 .brand-primary {
   font-family: var(--font-display);
-  font-size: clamp(22px, 2.2vw, 28px);
+  font-size: clamp(20px, 2vw, 26px);
   font-weight: 800;
-  letter-spacing: 3.5px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 45%, #7dd3fc 100%);
   -webkit-background-clip: text;
@@ -63,7 +81,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 34px;
+  gap: clamp(14px, 2vw, 28px);
 }
 
 .nav-item {
@@ -98,6 +116,25 @@
 
 .nav-item:hover::after {
   width: 100%;
+}
+
+.nav-item-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #7dd3fc;
+}
+
+.nav-3d-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.25);
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+  letter-spacing: 0.05em;
 }
 
 /* =========================================
@@ -161,7 +198,15 @@
    ========================================= */
 @media (max-width: 860px) {
   .festival-nav-header {
-    padding: 18px 24px;
+    padding: 12px 20px;
+  }
+
+  .nav-brand-img {
+    height: clamp(52px, 11vw, 68px);
+  }
+
+  .festival-nav-header.nav-scrolled .nav-brand-img {
+    height: 48px;
   }
 
   .nav-inner-container {

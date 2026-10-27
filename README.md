@@ -86,6 +86,12 @@ See `docs/architecture/` for future architecture documentation and
 
 The frontend pages are runnable from `frontend/` using `npm install` and
 `npm run dev`. The rest of this repository primarily provides the planned
-directory structure, and no test suite is configured yet. Implement features
-incrementally in their designated areas, and add the necessary project
+directory structure. Blue Pulse: Ocean Rush is available through its clickable card
+directly below the homepage hero. Run `npm test` for the game checks and
+`npm run build` for the complete React frontend. See
+[game development notes](docs/development/blue-pulse.md) for controls and adapters.
+Game 2 opens **The Sunken City of Atlantis — The Lost Literary Trials**, a ten-chamber literary quiz adventure
+with independent progress and leaderboard adapters. See
+[Atlantis development notes](docs/development/atlantis.md) for setup, scoring, and integration.
+Implement features incrementally in their designated areas, and add the necessary project
 configuration as implementation proceeds.

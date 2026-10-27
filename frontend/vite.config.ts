@@ -8,7 +8,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    assetsInclude: ['**/*.glb'],
     server: {
+      host: true,
       port: 5173,
       proxy: {
         '/api': {
@@ -16,15 +18,19 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
           configure: (proxy) => {
-            proxy.on('error', (err, _req, res) => {
-              if (res && !res.headersSent && typeof res.writeHead === 'function') {
-                res.writeHead(503, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: false, message: 'Backend is currently offline' }));
+            proxy.on('error', (_err, _req, res) => {
+              const httpRes = res as any;
+              if (httpRes && !httpRes.headersSent && typeof httpRes.writeHead === 'function') {
+                httpRes.writeHead(503, { 'Content-Type': 'application/json' });
+                httpRes.end(JSON.stringify({ success: false, message: 'Backend is currently offline' }));
               }
             });
           }
         }
       }
+    },
+    preview: {
+      host: true
     }
   };
 });

@@ -1,23 +1,71 @@
-import React, { useState, useRef } from 'react';
+import React, { Suspense, lazy, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { OceanAtmosphere } from './components/OceanAtmosphere';
 import { MarineLife } from './components/MarineLife';
 import { MarineVegetation } from './components/MarineVegetation';
 import { UnderwaterTitle } from './components/UnderwaterTitle';
 import { FestivalNav } from './components/FestivalNav';
 import { LitfestAboutSection } from '../about';
+import { SponsorsSection } from '../sponsors';
+import { FaqSection } from '../faq';
+import { ContactSection } from '../contact';
+import { GameLauncher } from '../game/GameLauncher';
+import type { AbyssalNavigationTarget } from '../../components/underwater/abyssal-explorer';
 import './LitfestUnderwaterHome.css';
 
-export const LitfestUnderwaterHome: React.FC = () => {
+const LazyAbyssalExplorer = lazy(() =>
+  import('../../components/underwater/abyssal-explorer').then(({ AbyssalExplorer }) => ({
+    default: AbyssalExplorer,
+  }))
+);
+
+interface LitfestUnderwaterHomeProps {
+  onExploreClick?: () => void;
+  onExploreAbyss?: () => void;
+  onAbyssalNavigate?: (target: AbyssalNavigationTarget) => void;
+  initialDestination?: AbyssalNavigationTarget | null;
+  isTimelineActive?: boolean;
+  isDestinationOpen?: boolean;
+}
+
+export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
+  onExploreClick,
+  onExploreAbyss,
+  isTimelineActive = false,
+  isDestinationOpen = false,
+  onAbyssalNavigate,
+  initialDestination = null,
+}) => {
   const navigate = useNavigate();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [activeModal, setActiveModal] = useState<'events' | null>(null);
+  const [activeModal, setActiveModal] = useState<'events' | null>(() =>
+    initialDestination === 'events' ? initialDestination : null
+  );
+  const [abyssalExplorerOpen, setAbyssalExplorerOpen] = useState(false);
+  const homeRef = useRef<HTMLElement | null>(null);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
 
+  useEffect(() => {
+    if (!abyssalExplorerOpen) return undefined;
+    const homeElement = homeRef.current;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousInert = homeElement?.inert ?? false;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    if (homeElement) homeElement.inert = true;
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      if (homeElement) homeElement.inert = previousInert;
+    };
+  }, [abyssalExplorerOpen]);
+
   // Smooth scroll handler for in-page oceanic descent navigation
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = React.useCallback((sectionId: string) => {
     if (sectionId === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -26,14 +74,26 @@ export const LitfestUnderwaterHome: React.FC = () => {
     if (elem) {
       elem.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   const handleNavClick = (sec: string) => {
     if (sec === 'home') {
       scrollToSection('home');
+    } else if (sec === 'events') {
+      setActiveModal('events');
+    } else if (sec === 'arcade') {
+      scrollToSection('arcade');
+    } else if (sec === '3d' || sec === 'abyss') {
+      scrollToSection('3d');
     } else if (sec === 'about') {
       scrollToSection('about');
-    } else if (sec === 'events' || sec === 'schedule' || sec === 'speakers' || sec === 'gallery') {
+    } else if (sec === 'sponsors') {
+      scrollToSection('sponsors');
+    } else if (sec === 'faq') {
+      scrollToSection('faq');
+    } else if (sec === 'contact') {
+      scrollToSection('contact');
+    } else if (sec === 'schedule' || sec === 'gallery') {
       setActiveModal('events');
     }
   };
@@ -108,11 +168,63 @@ export const LitfestUnderwaterHome: React.FC = () => {
     }
   };
 
+  const handleAbyssalNavigate = React.useCallback((target: AbyssalNavigationTarget) => {
+    setAbyssalExplorerOpen(false);
+    switch (target) {
+      case 'home':
+        scrollToSection('home');
+        break;
+      case 'about':
+        scrollToSection('about');
+        break;
+      case 'sponsors':
+        scrollToSection('sponsors');
+        break;
+      case 'faq':
+        scrollToSection('faq');
+        break;
+      case 'contact':
+        scrollToSection('contact');
+        break;
+      case 'arcade':
+        scrollToSection('arcade');
+        break;
+      case 'events':
+        setActiveModal('events');
+        break;
+      case 'register':
+        navigate('/signup');
+        break;
+      case 'timeline':
+        onAbyssalNavigate?.(target);
+        break;
+    }
+  }, [navigate, onAbyssalNavigate, scrollToSection]);
+
+  useEffect(() => {
+    if (initialDestination === 'home') {
+      scrollToSection('home');
+    } else if (initialDestination === 'arcade') {
+      scrollToSection('arcade');
+    } else if (initialDestination === 'about') {
+      scrollToSection('about');
+    } else if (initialDestination === 'sponsors') {
+      scrollToSection('sponsors');
+    } else if (initialDestination === 'faq') {
+      scrollToSection('faq');
+    } else if (initialDestination === 'contact') {
+      scrollToSection('contact');
+    }
+  }, [initialDestination, scrollToSection]);
+
   return (
     <main
+      ref={homeRef}
       className="litfest-underwater-root"
       role="main"
       aria-label="Litfest 2.0 Underwater Experience"
+      style={{ display: isTimelineActive ? 'none' : undefined }}
+      inert={isDestinationOpen}
     >
       {/* 1. Global Navigation Header (Floating, fixed with glassmorphism on scroll) */}
       <FestivalNav
@@ -137,9 +249,35 @@ export const LitfestUnderwaterHome: React.FC = () => {
 
         {/* Central Prominent Display Title & Interactive Descend Indicator */}
         <UnderwaterTitle
-          onExploreClick={() => setActiveModal('events')}
+          onExploreClick={() => {
+            if (onExploreClick) {
+              onExploreClick();
+            } else {
+              setActiveModal('events');
+            }
+          }}
           onDescendClick={() => scrollToSection('about')}
         />
+      </section>
+
+      <GameLauncher />
+
+      <section id="3d" className="abyss-entry-section" aria-label="3D Underwater Experience">
+        <div className="abyss-entry-copy">
+          <h2>Explore The Stories Beneath The Surface in 3D</h2>
+          <p>
+            Dive into an interactive, real-time 3D simulation of Litfest 2.0. Pilot an abyssal submersible, discover sunken literary monuments, and recover lost relics in the deep.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="abyss-entry-button"
+          onClick={() => onExploreAbyss ? onExploreAbyss() : setAbyssalExplorerOpen(true)}
+          id="abyss-launch-3d-btn"
+        >
+          <span>ENTER 3D EXPERIENCE</span>
+          <span className="abyss-btn-arrow" aria-hidden="true">↗</span>
+        </button>
       </section>
 
       {/* 3. Deeper Ocean Descent & Litfest 2.0 About Experience */}
@@ -147,6 +285,24 @@ export const LitfestUnderwaterHome: React.FC = () => {
         id="about"
         onExploreEvents={() => setActiveModal('events')}
         onRegisterClick={() => navigate('/signup')}
+        onAscendClick={() => scrollToSection('home')}
+      />
+
+      {/* 4. Institutional Sponsors & Partners from sponsors.html */}
+      <SponsorsSection
+        id="sponsors"
+        onAscendClick={() => scrollToSection('home')}
+        onContactClick={() => scrollToSection('contact')}
+      />
+
+      {/* 5. Frequently Asked Questions Section */}
+      <FaqSection
+        onAscendClick={() => scrollToSection('home')}
+      />
+
+      {/* 6. Contact & Direct Transmission Section */}
+      <ContactSection
+        id="contact"
         onAscendClick={() => scrollToSection('home')}
       />
 
@@ -240,6 +396,18 @@ export const LitfestUnderwaterHome: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+      {abyssalExplorerOpen &&
+        createPortal(
+          <div className="abyssal-explorer-overlay" role="dialog" aria-modal="true" aria-label="Abyssal Voyage">
+            <Suspense fallback={<div className="abyssal-loading" role="status">Preparing the abyssal voyage…</div>}>
+              <LazyAbyssalExplorer
+                onExit={() => setAbyssalExplorerOpen(false)}
+                onLandmarkNavigate={handleAbyssalNavigate}
+              />
+            </Suspense>
+          </div>,
+          document.body
         )}
     </main>
   );

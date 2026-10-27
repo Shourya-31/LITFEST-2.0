@@ -1,0 +1,683 @@
+/* ==========================================================================
+   3D Z-AXIS ZOOM IN / ZOOM OUT TIMELINE STYLES
+   Zoom-Through 3D Camera Engine with 14-Spoke Upright Pirate Ship Helm
+   ========================================================================== */
+
+.z-axis-interactive-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #082845 0%, #05162a 40%, #020b18 80%, #010610 100%);
+  user-select: none;
+  touch-action: pan-y;
+}
+
+/* ==========================================================================
+   3D OCEANIC STARFIELD & TUNNEL RINGS
+   ========================================================================== */
+.z-ocean-starfield {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.z-tunnel-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ring-1 {
+  width: 800px;
+  height: 800px;
+  margin-top: -400px;
+  margin-left: -400px;
+  border: 1.5px dashed rgba(128, 255, 213, 0.28);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
+}
+
+.ring-2 {
+  width: 1300px;
+  height: 1300px;
+  margin-top: -650px;
+  margin-left: -650px;
+  border: 1.5px solid rgba(251, 191, 36, 0.22);
+  box-shadow: 0 0 60px rgba(251, 191, 36, 0.1);
+}
+
+.ring-3 {
+  width: 1800px;
+  height: 1800px;
+  margin-top: -900px;
+  margin-left: -900px;
+  border: 2px dashed rgba(153, 255, 238, 0.16);
+}
+
+/* ==========================================================================
+   3D PERSPECTIVE STAGE & CAMERA RIG
+   ========================================================================== */
+.z-world-perspective-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.z-world-camera {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   INDIVIDUAL MILESTONE CHECKPOINT PLANES IN 3D SPACE
+   ========================================================================== */
+.z-milestone-checkpoint-plane {
+  position: absolute;
+  width: 520px;
+  max-width: 92vw;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  transition: opacity 0.25s ease-out;
+}
+
+.z-checkpoint-card {
+  background: linear-gradient(155deg, rgba(8, 54, 87, 0.94) 0%, rgba(5, 34, 55, 0.97) 100%);
+  border: 1px solid var(--border-ocean-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  box-shadow: 0 25px 60px rgba(2, 20, 34, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.z-milestone-checkpoint-plane.is-active-checkpoint .z-checkpoint-card {
+  border-color: var(--beach-seafoam);
+  box-shadow: 0 30px 80px rgba(2, 20, 34, 0.88), 0 0 35px rgba(128, 255, 213, 0.45), inset 0 0 25px rgba(128, 255, 213, 0.1);
+}
+
+.z-milestone-checkpoint-plane.is-active-checkpoint .z-checkpoint-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--pirate-gold), var(--beach-seafoam), var(--beach-sky));
+}
+
+/* Card Header */
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+
+.card-spoke-crest {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--pirate-gold-light);
+  background: rgba(212, 175, 55, 0.12);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-gold-subtle);
+}
+
+.crest-anchor {
+  color: var(--sea-cyan);
+}
+
+.crest-roman {
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.card-z-depth-pill {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--sea-cyan);
+  background: rgba(34, 211, 238, 0.12);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  font-weight: 600;
+}
+
+/* Card Title */
+.card-milestone-title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+  margin-bottom: 0.45rem;
+}
+
+/* Theme tag */
+.card-theme-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  color: var(--beach-water-shallow);
+  font-family: var(--font-mono);
+  margin-bottom: 1rem;
+}
+
+/* Voyage Meta Grid */
+.card-voyage-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.meta-tile {
+  background: rgba(6, 44, 71, 0.75);
+  border: 1px solid var(--border-ocean-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-tile-full {
+  grid-column: span 2;
+}
+
+.meta-tile-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.15rem;
+}
+
+.meta-tile-value {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Captain's Logbook Placeholder */
+.card-captains-log {
+  background: rgba(30, 20, 10, 0.45);
+  border-left: 3px solid var(--pirate-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.9rem;
+}
+
+.log-feather-icon {
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--pirate-gold);
+  margin-bottom: 0.2rem;
+}
+
+.log-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* Highlights Box */
+.card-highlights-box {
+  background: rgba(34, 211, 238, 0.04);
+  border: 1px solid rgba(34, 211, 238, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.highlights-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--sea-cyan);
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.highlights-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Footer Row */
+.card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.card-bounty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--pirate-gold-light);
+}
+
+.card-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(212, 175, 55, 0.15) 100%);
+  border: 1px solid var(--sea-cyan);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.45rem 1.05rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(34, 211, 238, 0.25);
+}
+
+.card-explore-btn:hover {
+  background: linear-gradient(135deg, var(--sea-cyan) 0%, var(--pirate-gold) 100%);
+  color: #030b14;
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.55);
+  transform: translateY(-2px);
+}
+
+.card-explore-btn .explore-arrow {
+  transition: transform 0.2s ease;
+}
+
+.card-explore-btn:hover .explore-arrow {
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   HEADS-UP DISPLAY (HUD) OVERLAY
+   ========================================================================= */
+.z-axis-hud-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+
+/* ==========================================================================
+   BOTTOM LEFT: PIRATE SHIP HELM (UNBOXED & FLOATING, NO CARD BACKGROUND)
+   ========================================================================== */
+.z-hud-helm-dock {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  width: 320px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
+}
+
+.helm-dock-header {
+  display: flex;
+  justify-content: space-between;
+  width: 86%;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--text-sand);
+  background: rgba(5, 36, 56, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(128, 255, 213, 0.25);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.85rem;
+  margin-bottom: 0.2rem;
+  box-shadow: 0 4px 14px rgba(2, 20, 34, 0.35);
+}
+
+.dock-sub {
+  color: var(--pirate-gold);
+  font-weight: 700;
+}
+
+/* Enlarged 300px x 300px Steering Wheel */
+.helm-dock-wheel-wrap {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0 auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.helm-dock-wheel-wrap:active,
+.helm-dock-wheel-wrap.is-steering {
+  cursor: grabbing;
+}
+
+.z-hud-helm-dock.is-steering {
+  border: none;
+  box-shadow: none;
+}
+
+/* Floating Helm Wrapper */
+.pirate-helm-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.helm-ambient-backlight {
+  display: none;
+}
+
+.pirate-helm-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.8));
+}
+
+.active-pulse-aura {
+  animation: activeAuraBreathe 1.8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes activeAuraBreathe {
+  0% {
+    opacity: 0.35;
+    stroke-width: 1.4px;
+  }
+  100% {
+    opacity: 1;
+    stroke-width: 2.8px;
+  }
+}
+
+.helm-drag-hint {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  background: rgba(5, 36, 56, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(128, 255, 213, 0.25);
+  border-radius: var(--radius-pill);
+  padding: 0.28rem 0.85rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.hint-compass-icon {
+  color: var(--beach-seafoam);
+  animation: rotateCompass 12s linear infinite;
+}
+
+@keyframes rotateCompass {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Helm Dock Controls */
+.helm-dock-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  gap: 0.8rem;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.dock-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dock-ctrl-btn.sound-btn {
+  flex: 0 0 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--pirate-gold-light);
+}
+
+.dock-ctrl-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.dock-ctrl-btn:not(:disabled):hover {
+  background: transparent;
+  color: var(--beach-seafoam);
+  text-shadow: 0 0 10px rgba(128, 255, 213, 0.6);
+  transform: translateY(-1px);
+}
+
+.dock-ctrl-btn.sound-btn:not(:disabled):hover {
+  color: var(--beach-sun-gold);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+}
+
+/* ==========================================================================
+   BOTTOM RIGHT: FLOATING ZOOM IN / OUT BUTTONS
+   ========================================================================== */
+.z-hud-zoom-controls {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  pointer-events: auto;
+}
+
+.zoom-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(7, 24, 41, 0.92);
+  border: 1px solid var(--border-ocean-glow);
+  border-radius: var(--radius-pill);
+  padding: 0.7rem 1.15rem;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
+}
+
+.zoom-action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.zoom-action-btn:not(:disabled):hover {
+  background: rgba(34, 211, 238, 0.2);
+  border-color: var(--sea-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
+}
+
+/* ==========================================================================
+   BOTTOM CENTER: MINIMAL LOADING PROGRESS BAR (NO TEXT)
+   ========================================================================== */
+.z-minimal-progress-dock {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(340px, calc(100vw - 360px));
+  background: rgba(3, 16, 36, 0.68);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  margin-bottom: 0.5rem;
+  transition: all 0.25s ease;
+}
+
+.z-minimal-progress-dock:hover {
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 16px rgba(56, 189, 248, 0.25);
+}
+
+/* Minimal track */
+.minimal-progress-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  overflow: visible;
+  padding: 4px 0;
+  background-clip: content-box;
+}
+
+.minimal-progress-fill {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pirate-gold) 0%, var(--sea-cyan) 100%);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.75);
+  transition: width 0.05s linear;
+  pointer-events: none;
+}
+
+/* Subtle notch tick dots along track */
+.minimal-progress-tick {
+  position: absolute;
+  top: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.minimal-progress-tick.active {
+  background: #ffffff;
+  box-shadow: 0 0 6px var(--sea-cyan);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 900px) {
+  .z-hud-helm-dock {
+    width: 220px;
+    bottom: 4.8rem;
+    left: 0.5rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .helm-dock-wheel-wrap {
+    width: 210px;
+    height: 210px;
+  }
+
+  .z-hud-zoom-controls {
+    bottom: 5.5rem;
+    right: 1rem;
+  }
+
+  .z-minimal-progress-dock {
+    width: calc(100% - 2rem);
+  }
+
+  .meta-event-title {
+    max-width: 160px;
+  }
+}

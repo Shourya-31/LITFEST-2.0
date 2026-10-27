@@ -1,16 +1,36 @@
+# Dependencies
 node_modules/
 **/node_modules/
+
+# Environment
 .env
 .env.*
 !.env.example
+
+# Production builds
 dist/
+*/dist/
+build/
+*/build/
+.output/
+.wrangler/
 coverage/
-*.log
+
+# Cache & Build Info
+*.tsbuildinfo
+.cache/
+
+# Databases
 *.db
 *.db-journal
 *.sqlite
 *.sqlite3
-.vscode/
-.idea/
+
+# Logs
+*.log
+
+# OS & Editor files
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/

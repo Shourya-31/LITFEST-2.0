@@ -1,3 +1,17 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production Build
+dist/
+dist-ssr/
+build/
+*.local
+
+# Cache and temporary build info
+*.tsbuildinfo
+.eslintcache
+
 # Logs
 logs
 *.log
@@ -17,6 +31,22 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+# Environment
+.env
+.env.*
+!.env.example
+node_modules
+dist
+dist-ssr
+.test-build/
+.npm-cache/
+*.local
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj

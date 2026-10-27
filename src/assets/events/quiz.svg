@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="qbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#082f49" />
+      <stop offset="50%" stop-color="#0c4a6e" />
+      <stop offset="100%" stop-color="#021f35" />
+    </linearGradient>
+    <radialGradient id="qglow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#0284c7" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#082f49" stop-opacity="0" />
+    </radialGradient>
+    <filter id="qblur">
+      <feGaussianBlur stdDeviation="6" />
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#qbg)" />
+  <circle cx="400" cy="230" r="180" fill="url(#qglow)" filter="url(#qblur)" />
+  
+  <!-- Ocean bubbles -->
+  <circle cx="200" cy="120" r="8" fill="#e0f2fe" opacity="0.3" />
+  <circle cx="650" cy="180" r="14" fill="#e0f2fe" opacity="0.25" />
+  <circle cx="150" cy="380" r="10" fill="#7dd3fc" opacity="0.4" />
+  <circle cx="680" cy="360" r="18" fill="#38bdf8" opacity="0.2" />
+
+  <!-- Trivia Scroll & Crystal Question -->
+  <g transform="translate(400, 220)">
+    <!-- Glowing Ring -->
+    <circle cx="0" cy="0" r="110" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="8 6" opacity="0.7" />
+    <circle cx="0" cy="0" r="95" fill="#0369a1" fill-opacity="0.25" stroke="#7dd3fc" stroke-width="1.5" />
+    
+    <!-- Question Mark Glyph -->
+    <path d="M-18,-45 C-18,-65 18,-65 18,-45 C18,-28 -2,-18 -2,-2 L-2,8" fill="none" stroke="#f0f9ff" stroke-width="12" stroke-linecap="round" />
+    <circle cx="-2" cy="32" r="7" fill="#f0f9ff" />
+    
+    <!-- Coral / Lore Scrolls on sides -->
+    <path d="M-80,45 C-105,30 -115,0 -95,-20 C-75,-40 -50,-20 -60,10 Z" fill="#0284c7" fill-opacity="0.4" stroke="#38bdf8" stroke-width="1.5" />
+    <path d="M80,45 C105,30 115,0 95,-20 C75,-40 50,-20 60,10 Z" fill="#0284c7" fill-opacity="0.4" stroke="#38bdf8" stroke-width="1.5" />
+  </g>
+  <text x="400" y="420" font-family="'Cormorant Garamond', Georgia, serif" font-size="34" font-weight="600" fill="#f0f9ff" text-anchor="middle" letter-spacing="3">THE QUIZ</text>
+  <text x="400" y="450" font-family="'Outfit', sans-serif" font-size="13" font-weight="500" fill="#7dd3fc" text-anchor="middle" letter-spacing="4">UNDERWATER LITERARY TRIVIA</text>
+</svg>

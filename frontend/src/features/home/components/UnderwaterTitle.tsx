@@ -72,19 +72,6 @@ export const UnderwaterTitle: React.FC<UnderwaterTitleProps> = ({
           <span className="accent-bar left-bar" />
           <div className="edition-text-wrapper">
             <span className="edition-number">2.0</span>
-            {/* 4-pointed sparkle star */}
-            <svg
-              className="celestial-spark"
-              viewBox="0 0 16 16"
-              width="12"
-              height="12"
-              aria-hidden="true"
-            >
-              <path
-                d="M8,0 Q8,8 16,8 Q8,8 8,16 Q8,8 0,8 Q8,8 8,0 Z"
-                fill="#7dd3fc"
-              />
-            </svg>
           </div>
           <span className="accent-bar right-bar" />
         </div>

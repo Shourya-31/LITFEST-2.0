@@ -1,0 +1,934 @@
+.abyssal-explorer {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  overflow: hidden;
+  border-radius: inherit;
+  background: radial-gradient(circle at top, rgba(54, 125, 182, 0.12), rgba(4, 16, 33, 0.9) 60%);
+  box-shadow: inset 0 0 32px rgba(52, 146, 219, 0.15);
+  pointer-events: auto;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.abyssal-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.abyssal-loading,
+.abyssal-error-notice,
+.abyssal-storage-warning {
+  position: absolute;
+  z-index: 24;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1rem;
+  color: #e9f8f7;
+  background: rgba(5, 25, 37, 0.88);
+  border: 1px solid rgba(142, 209, 213, 0.28);
+  border-radius: 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.abyssal-loading,
+.abyssal-error-notice {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.abyssal-error-notice p {
+  margin: 0 0 12px;
+}
+
+.abyssal-storage-warning {
+  top: 78px;
+  font-size: 0.78rem;
+}
+
+.abyssal-scene canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.abyssal-intro-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 12, 22, 0.56);
+  z-index: 20;
+}
+
+.abyssal-intro-card {
+  width: min(520px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 32px 28px;
+  background: rgba(6, 23, 34, 0.72);
+  border: 1px solid rgba(126, 228, 255, 0.25);
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.abyssal-intro-subtitle {
+  margin: 8px 0 0;
+  color: #afe9f1;
+  font-size: 0.96rem;
+}
+
+.abyssal-mission-progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  margin: 16px 0;
+}
+
+.abyssal-mission-progress > span,
+.abyssal-artifact-dots > span {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(210, 242, 250, 0.48);
+  border-radius: 50%;
+  background: rgba(151, 192, 206, 0.18);
+}
+
+.abyssal-mission-progress > span.collected,
+.abyssal-artifact-dots > span.collected {
+  border-color: var(--artifact-color, #a7f3ff);
+  background: var(--artifact-color, #a7f3ff);
+  box-shadow: 0 0 12px var(--artifact-color, #a7f3ff);
+}
+
+.abyssal-mission-progress strong {
+  margin-left: 4px;
+  color: #d8f5f8;
+  font-size: 0.76rem;
+}
+
+.abyssal-how-to-play {
+  margin: 0 auto 14px;
+  max-width: 400px;
+  color: #d6eef0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.abyssal-mission-actions,
+.abyssal-victory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+}
+
+.abyssal-secondary-btn {
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  color: #eafcff;
+  background: rgba(13, 30, 42, 0.76);
+}
+
+.abyssal-intro-kicker {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  letter-spacing: 0.32rem;
+  color: #a8ebff;
+}
+
+.abyssal-intro-card h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  letter-spacing: 0.08em;
+  color: #edfaff;
+}
+
+.abyssal-intro-copy {
+  margin: 18px 0 24px;
+  font-size: 1rem;
+  color: rgba(216, 243, 255, 0.8);
+}
+
+.abyssal-intro-controls {
+  margin: 0 auto 22px;
+  max-width: 390px;
+  color: rgba(216, 243, 255, 0.72);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.abyssal-begin-btn,
+.abyssal-primary-btn,
+.abyssal-secondary-btn,
+.abyssal-control-btn,
+.abyssal-mini-btn,
+.abyssal-touch-btn {
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.abyssal-begin-btn {
+  padding: 0.9rem 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #90dfff, #2cb2d8);
+  color: #021a2d;
+  box-shadow: 0 8px 20px rgba(80, 220, 255, 0.35);
+}
+
+.abyssal-begin-btn:hover,
+.abyssal-primary-btn:hover,
+.abyssal-secondary-btn:hover,
+.abyssal-control-btn:hover,
+.abyssal-mini-btn:hover,
+.abyssal-touch-btn:hover {
+  transform: translateY(-1px);
+}
+
+.abyssal-explorer-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  padding: 18px;
+}
+
+.abyssal-artifact-progress {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  padding: 7px 11px;
+  border: 1px solid rgba(153, 225, 238, 0.18);
+  border-radius: 999px;
+  color: #eaf9f9;
+  background: rgba(4, 24, 36, 0.56);
+  backdrop-filter: blur(9px);
+  pointer-events: none;
+  font-size: 0.69rem;
+  letter-spacing: 0.08em;
+}
+
+.abyssal-artifact-dots {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.abyssal-artifact-dots > span {
+  width: 9px;
+  height: 9px;
+}
+
+.abyssal-artifact-progress strong {
+  white-space: nowrap;
+}
+
+.abyssal-explorer-topbar,
+.abyssal-landmark-panel,
+.abyssal-compass-control,
+.abyssal-control-hint,
+.abyssal-status,
+.abyssal-journal-toggle {
+  pointer-events: auto;
+}
+
+.abyssal-explorer-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.abyssal-topbar-left {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.abyssal-explorer-brand {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(4, 24, 36, 0.48);
+  border: 1px solid rgba(153, 225, 238, 0.18);
+  backdrop-filter: blur(9px);
+}
+
+.abyssal-eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.22rem;
+  color: #9ee4ff;
+}
+
+.abyssal-explorer-brand h2 {
+  margin: 3px 0 0;
+  font-size: 0.77rem;
+  letter-spacing: 0.1em;
+  color: #effaff;
+}
+
+.abyssal-control-hint,
+.abyssal-status {
+  position: relative;
+  color: #e8f7f8;
+  font-size: 0.72rem;
+}
+
+.abyssal-control-hint summary,
+.abyssal-status summary,
+.abyssal-journal-toggle {
+  padding: 9px 12px;
+  border-radius: 999px;
+  list-style: none;
+  cursor: pointer;
+  color: #e8f7f8;
+  background: rgba(4, 24, 36, 0.5);
+  border: 1px solid rgba(153, 225, 238, 0.18);
+  backdrop-filter: blur(9px);
+}
+
+.abyssal-control-hint summary::-webkit-details-marker,
+.abyssal-status summary::-webkit-details-marker {
+  display: none;
+}
+
+.abyssal-control-hint p,
+.abyssal-status-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: max-content;
+  max-width: min(340px, calc(100vw - 48px));
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(153, 225, 238, 0.2);
+  border-radius: 12px;
+  background: rgba(4, 23, 34, 0.88);
+  backdrop-filter: blur(12px);
+  line-height: 1.55;
+}
+
+.abyssal-status-content {
+  z-index: 2;
+  display: grid;
+  gap: 6px;
+}
+
+.abyssal-status-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.abyssal-status-actions button {
+  padding: 6px 9px;
+  border: 1px solid rgba(153, 225, 238, 0.18);
+  border-radius: 999px;
+  color: #e8f7f8;
+  background: rgba(7, 34, 45, 0.8);
+  cursor: pointer;
+}
+
+.abyssal-explorer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.abyssal-mini-btn,
+.abyssal-touch-btn {
+  padding: 0.54rem 0.8rem;
+  border-radius: 999px;
+  color: #eafcff;
+  background: rgba(7, 28, 38, 0.64);
+  border: 1px solid rgba(127, 216, 255, 0.18);
+}
+
+.abyssal-danger {
+  color: #ffd9d9;
+}
+
+.abyssal-landmark-panel {
+  position: absolute;
+  left: 18px;
+  bottom: 22px;
+  max-width: 340px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(4, 22, 33, 0.68);
+  border: 1px solid rgba(138, 225, 255, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.abyssal-compass {
+  position: relative;
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(5, 35, 49, 0.58);
+  color: #93ebff;
+  border: 1px solid rgba(147, 235, 255, 0.4);
+}
+
+.abyssal-compass-needle {
+  position: absolute;
+  top: 7px;
+  left: 17px;
+  width: 3px;
+  height: 22px;
+  border-radius: 3px;
+  background: linear-gradient(#fff4cf 0 44%, transparent 45% 55%, #83e4ff 56%);
+  transform-origin: center;
+  box-shadow: 0 0 8px rgba(131, 228, 255, 0.75);
+  pointer-events: none;
+}
+
+.abyssal-landmark-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  color: rgba(183, 219, 255, 0.7);
+}
+
+.abyssal-navigation-distance {
+  display: block;
+  margin: -6px 0 8px;
+  color: #a8eff5;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.abyssal-landmark-panel h3 {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  color: #eefcff;
+}
+
+.abyssal-landmark-panel p {
+  margin: 8px 0 10px;
+  color: rgba(226, 242, 255, 0.8);
+  line-height: 1.5;
+}
+
+.abyssal-primary-btn {
+  padding: 0.7rem 0.95rem;
+  border-radius: 999px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7fe7ff, #4ec5e7);
+  color: #031927;
+  border: 0;
+  cursor: pointer;
+}
+
+.abyssal-compass-control {
+  position: absolute;
+  right: 20px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid rgba(153, 225, 238, 0.2);
+  border-radius: 999px;
+  background: rgba(4, 22, 33, 0.64);
+  backdrop-filter: blur(12px);
+}
+
+.abyssal-compass-control .abyssal-compass {
+  width: 36px;
+  height: 36px;
+}
+
+.abyssal-sonar-control {
+  min-width: 82px;
+  padding: 0.64rem 0.85rem;
+  border: 0;
+  border-radius: 999px;
+  color: #e8fcff;
+  background: rgba(57, 157, 175, 0.32);
+  cursor: pointer;
+}
+
+.abyssal-sonar-control:disabled {
+  opacity: 0.58;
+  cursor: default;
+}
+
+.abyssal-journal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 26;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(1, 12, 20, 0.32);
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+}
+
+.abyssal-journal {
+  width: min(560px, 100%);
+  max-height: min(720px, calc(100% - 24px));
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid rgba(153, 225, 238, 0.28);
+  border-radius: 18px;
+  color: #eaf9f9;
+  background: rgba(4, 23, 34, 0.94);
+  box-shadow: 0 24px 70px rgba(0, 13, 23, 0.3);
+}
+
+.abyssal-journal header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.abyssal-journal h2 {
+  margin: 6px 0 0;
+  font-size: 1.4rem;
+}
+
+.abyssal-journal p {
+  margin: 10px 0 14px;
+  color: rgba(220, 242, 244, 0.75);
+}
+
+.abyssal-journal ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abyssal-destination {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(153, 225, 238, 0.12);
+  border-radius: 12px;
+  text-align: left;
+  color: #eaf9f9;
+  background: rgba(13, 44, 57, 0.55);
+  cursor: pointer;
+}
+
+.abyssal-destination-row {
+  display: grid;
+  grid-template-columns: 26px minmax(120px, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(153, 225, 238, 0.12);
+  border-radius: 12px;
+  background: rgba(13, 44, 57, 0.55);
+}
+
+.abyssal-destination-row.unlocked {
+  border-color: rgba(145, 229, 237, 0.42);
+}
+
+.abyssal-destination-details strong,
+.abyssal-destination-details small {
+  display: block;
+}
+
+.abyssal-destination-details small {
+  margin-top: 3px;
+  color: rgba(220, 242, 244, 0.68);
+  line-height: 1.35;
+}
+
+.abyssal-journal-action {
+  padding: 7px 9px;
+  border: 1px solid rgba(153, 225, 238, 0.25);
+  border-radius: 999px;
+  color: #eaf9f9;
+  background: rgba(7, 34, 45, 0.8);
+  cursor: pointer;
+}
+
+.abyssal-journal-action.selected {
+  border-color: #8de6ec;
+  color: #b8f7f4;
+}
+
+.abyssal-journal-action.open-destination:not(:disabled) {
+  border-color: rgba(139, 240, 222, 0.58);
+  color: #c8fff2;
+  background: rgba(27, 91, 79, 0.56);
+}
+
+.abyssal-journal-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.abyssal-destination:hover,
+.abyssal-destination.selected {
+  border-color: rgba(145, 229, 237, 0.52);
+  background: rgba(22, 71, 84, 0.7);
+}
+
+.abyssal-destination-symbol {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 1.1rem;
+}
+
+.abyssal-destination strong,
+.abyssal-destination small {
+  display: block;
+}
+
+.abyssal-destination small {
+  margin-top: 3px;
+  color: rgba(220, 242, 244, 0.66);
+  line-height: 1.35;
+}
+
+.abyssal-notification {
+  position: absolute;
+  left: 50%;
+  top: 146px;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: grid;
+  gap: 4px;
+  max-width: min(380px, calc(100% - 32px));
+  padding: 0.7rem 1rem;
+  border-radius: 14px;
+  background: rgba(6, 30, 44, 0.8);
+  border: 1px solid rgba(150, 226, 255, 0.22);
+  color: #eeffff;
+  text-align: center;
+  pointer-events: none;
+  animation: abyssal-notice-in 0.22s ease-out, abyssal-notice-out 0.35s ease-in 2.8s forwards;
+}
+
+.abyssal-notification span {
+  color: rgba(220, 242, 244, 0.82);
+  font-size: 0.82rem;
+}
+
+.abyssal-notification a {
+  justify-self: center;
+  color: #a8f0ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  pointer-events: auto;
+}
+
+@keyframes abyssal-notice-in {
+  from { opacity: 0; translate: 0 -5px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes abyssal-notice-out {
+  to { opacity: 0; }
+}
+
+.abyssal-mobile-controls {
+  position: absolute;
+  right: 18px;
+  bottom: 22px;
+  display: none;
+  gap: 10px;
+  z-index: 18;
+}
+
+.abyssal-touch-btn {
+  min-width: 88px;
+  font-weight: 700;
+  color: #ebfdff;
+  background: rgba(7, 24, 35, 0.7);
+  border: 1px solid rgba(147, 232, 255, 0.18);
+  touch-action: none;
+}
+
+.abyssal-secondary-btn {
+  border: 1px solid rgba(127, 216, 255, 0.3);
+}
+
+.abyssal-pause-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(1, 10, 18, 0.54);
+  backdrop-filter: blur(5px);
+}
+
+.abyssal-victory-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: 18px;
+  background: rgba(1, 12, 20, 0.58);
+  backdrop-filter: blur(7px);
+  pointer-events: auto;
+}
+
+.abyssal-victory-card {
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  padding: clamp(20px, 5vw, 36px);
+  border: 1px solid rgba(158, 236, 245, 0.42);
+  border-radius: 24px;
+  color: #eaf9f9;
+  text-align: center;
+  background: radial-gradient(circle at 50% 0, rgba(89, 198, 216, 0.25), rgba(5, 25, 37, 0.97) 65%);
+  box-shadow: 0 25px 90px rgba(0, 0, 0, 0.4);
+}
+
+.abyssal-victory-card h2 {
+  margin: 12px 0 4px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.abyssal-victory-card h3 {
+  margin: 0;
+  color: #9feeff;
+  letter-spacing: 0.12em;
+}
+
+.abyssal-victory-card p {
+  color: rgba(226, 242, 255, 0.82);
+  line-height: 1.55;
+}
+
+.abyssal-victory-count {
+  display: block;
+  margin: -5px 0 20px;
+  color: #b8f7f4;
+  letter-spacing: 0.1em;
+}
+
+.abyssal-victory-actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.abyssal-victory-actions > button {
+  width: 100%;
+}
+
+.abyssal-pause-card {
+  width: min(410px, 100%);
+  padding: 26px;
+  border: 1px solid rgba(142, 209, 213, 0.3);
+  border-radius: 20px;
+  color: #e9f8f7;
+  background: rgba(5, 25, 37, 0.92);
+}
+
+.abyssal-pause-card h2 {
+  margin: 8px 0 20px;
+}
+
+.abyssal-pause-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.abyssal-pause-actions .abyssal-secondary-btn {
+  border: 1px solid rgba(127, 216, 255, 0.18);
+  border-radius: 999px;
+  color: #eafcff;
+  background: rgba(13, 30, 42, 0.7);
+  cursor: pointer;
+}
+
+.abyssal-mobile-controls {
+  align-items: flex-end;
+}
+
+.abyssal-dpad {
+  display: none;
+  grid-template-columns: repeat(2, 44px);
+  gap: 6px;
+}
+
+.abyssal-dpad .abyssal-touch-btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  font-size: 1.15rem;
+}
+
+.abyssal-touch-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .abyssal-explorer {
+    min-height: 420px;
+  }
+
+  .abyssal-explorer-hud {
+    padding: 12px;
+  }
+
+  .abyssal-explorer-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .abyssal-explorer-actions .abyssal-mini-btn {
+    padding: 0.45rem 0.62rem;
+    font-size: 0.72rem;
+  }
+
+  .abyssal-landmark-panel {
+    left: 12px;
+    right: 12px;
+    bottom: 116px;
+    max-width: min(360px, calc(100vw - 24px));
+    padding: 11px 13px;
+  }
+
+  .abyssal-artifact-progress {
+    top: 108px;
+    font-size: 0.58rem;
+  }
+
+  .abyssal-notification {
+    top: 150px;
+    max-width: calc(100% - 24px);
+  }
+
+  .abyssal-compass-control {
+    right: 12px;
+    bottom: 68px;
+  }
+
+  .abyssal-sonar-control {
+    display: none;
+  }
+
+  .abyssal-mobile-controls {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: space-between;
+    display: flex;
+  }
+
+  .abyssal-dpad {
+    display: grid;
+  }
+
+  .abyssal-touch-actions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .abyssal-touch-actions .abyssal-touch-btn {
+    min-width: 76px;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.72rem;
+  }
+
+  .abyssal-topbar-left {
+    max-width: calc(100% - 146px);
+  }
+
+  .abyssal-control-hint summary,
+  .abyssal-status summary,
+  .abyssal-journal-toggle {
+    padding: 8px 10px;
+    font-size: 0.68rem;
+  }
+
+  .abyssal-status-content {
+    left: auto;
+    right: 0;
+  }
+
+  .abyssal-control-hint p {
+    max-width: calc(100vw - 26px);
+    white-space: normal;
+  }
+
+  .abyssal-journal {
+    padding: 16px;
+  }
+
+  .abyssal-destination {
+    padding: 8px;
+  }
+
+  .abyssal-destination-row {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+  }
+
+  .abyssal-destination-row .open-destination {
+    grid-column: 2 / 4;
+    justify-self: stretch;
+  }
+
+  .abyssal-intro-card {
+    padding: 22px 18px;
+  }
+
+  .abyssal-intro-card h1 {
+    font-size: clamp(1.65rem, 8vw, 2.4rem);
+  }
+
+  .abyssal-mission-actions > button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abyssal-notification {
+    animation: none;
+  }
+
+  .abyssal-begin-btn,
+  .abyssal-primary-btn,
+  .abyssal-secondary-btn,
+  .abyssal-control-btn,
+  .abyssal-mini-btn,
+  .abyssal-touch-btn {
+    transition: none;
+  }
+}
