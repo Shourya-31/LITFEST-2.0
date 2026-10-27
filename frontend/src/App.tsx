@@ -10,6 +10,7 @@ const destinationTargets = new Set<string>([
   'arcade',
   'sponsors',
   'faq',
+  'contact',
   'events',
   'register',
 ]);
