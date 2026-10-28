@@ -51,6 +51,8 @@ export const SponsorsSection: React.FC<SponsorsSectionProps> = ({
                 className="sponsor-logo-img"
                 width="150"
                 height="150"
+                loading="lazy"
+                decoding="async"
               />
             </div>
 
@@ -83,6 +85,8 @@ export const SponsorsSection: React.FC<SponsorsSectionProps> = ({
                 className="sponsor-logo-img"
                 width="220"
                 height="120"
+                loading="lazy"
+                decoding="async"
               />
             </div>
 

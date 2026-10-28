@@ -10,9 +10,14 @@ import { LitfestAboutSection } from '../about';
 import { SponsorsSection } from '../sponsors';
 import { FaqSection } from '../faq';
 import { ContactSection } from '../contact';
-import { GameLauncher } from '../game/GameLauncher';
 import type { AbyssalNavigationTarget } from '../../components/underwater/abyssal-explorer';
 import './LitfestUnderwaterHome.css';
+
+const LazyGameLauncher = lazy(() =>
+  import('../game/GameLauncher').then(({ GameLauncher }) => ({
+    default: GameLauncher,
+  }))
+);
 
 const LazyAbyssalExplorer = lazy(() =>
   import('../../components/underwater/abyssal-explorer').then(({ AbyssalExplorer }) => ({
@@ -43,10 +48,41 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
     initialDestination === 'events' ? initialDestination : null
   );
   const [abyssalExplorerOpen, setAbyssalExplorerOpen] = useState(false);
+  const [loadArcade, setLoadArcade] = useState(() => typeof IntersectionObserver === 'undefined');
   const homeRef = useRef<HTMLElement | null>(null);
+  const arcadeRef = useRef<HTMLDivElement | null>(null);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
+
+  useEffect(() => {
+    if (loadArcade) return undefined;
+    const arcadeElement = arcadeRef.current;
+    if (!arcadeElement) return undefined;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting && entry.intersectionRatio > 0) {
+        setLoadArcade(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '0px' });
+    const handleScroll = () => {
+      const bounds = arcadeElement.getBoundingClientRect();
+      if (bounds.top < window.innerHeight && bounds.bottom > 0) {
+        setLoadArcade(true);
+        observer.disconnect();
+      }
+    };
+
+    observer.observe(arcadeElement);
+    document.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [loadArcade]);
 
   useEffect(() => {
     if (!abyssalExplorerOpen) return undefined;
@@ -82,6 +118,7 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
     } else if (sec === 'events') {
       setActiveModal('events');
     } else if (sec === 'arcade') {
+      setLoadArcade(true);
       scrollToSection('arcade');
     } else if (sec === '3d' || sec === 'abyss') {
       scrollToSection('3d');
@@ -260,7 +297,22 @@ export const LitfestUnderwaterHome: React.FC<LitfestUnderwaterHomeProps> = ({
         />
       </section>
 
-      <GameLauncher />
+      <div
+        ref={arcadeRef}
+        id="arcade"
+        className="arcade-deferred-boundary"
+        role="region"
+        aria-label="Blue Pulse Arcade"
+        aria-busy={!loadArcade}
+      >
+        {loadArcade ? (
+          <Suspense fallback={<div className="arcade-deferred-placeholder" role="status">Loading the sunken arcade…</div>}>
+            <LazyGameLauncher />
+          </Suspense>
+        ) : (
+          <div className="arcade-deferred-placeholder" aria-hidden="true" />
+        )}
+      </div>
 
       <section id="3d" className="abyss-entry-section" aria-label="3D Underwater Experience">
         <div className="abyss-entry-copy">

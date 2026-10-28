@@ -2,19 +2,22 @@ import React, { Suspense, lazy, useCallback, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './state/AuthContext';
 import { LitfestUnderwaterHome } from './features/home';
-import ContactUs from './features/contact/ContactUs';
-import SponsorPage from './SponsorPageStandalone';
-import { AbyssalExplorer } from './components/underwater/abyssal-explorer';
 import type { AbyssalNavigationTarget } from './components/underwater/abyssal-explorer';
 
-// Auth & User Pages
-import LoginPage from './features/auth/LoginPage';
-import SignupPage from './features/auth/SignupPage';
-import ForgotPasswordPage from './features/auth/ForgotPasswordPage';
-import ResetPasswordPage from './features/auth/ResetPasswordPage';
-import ParticipantDashboard from './features/participant/ParticipantDashboard';
-
 import './App.css';
+
+const LazyContactUs = lazy(() => import('./features/contact/ContactUs'));
+const LazySponsorPage = lazy(() => import('./SponsorPageStandalone'));
+const LazyLoginPage = lazy(() => import('./features/auth/LoginPage'));
+const LazySignupPage = lazy(() => import('./features/auth/SignupPage'));
+const LazyForgotPasswordPage = lazy(() => import('./features/auth/ForgotPasswordPage'));
+const LazyResetPasswordPage = lazy(() => import('./features/auth/ResetPasswordPage'));
+const LazyParticipantDashboard = lazy(() => import('./features/participant/ParticipantDashboard'));
+const LazyAbyssalExplorer = lazy(() =>
+  import('./components/underwater/abyssal-explorer').then(({ AbyssalExplorer }) => ({
+    default: AbyssalExplorer,
+  }))
+);
 
 const destinationTargets = new Set<string>([
   'home',
@@ -88,36 +91,38 @@ const HomeView: React.FC = () => {
 
 const AbyssalRouteView: React.FC = () => {
   const navigate = useNavigate();
-  return <AbyssalExplorer autoplay onExit={() => navigate('/')} />;
+  return <LazyAbyssalExplorer autoplay onExit={() => navigate('/')} />;
 };
 
 export const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          {/* Main Underwater Home View */}
-          <Route path="/" element={<HomeView />} />
+        <Suspense fallback={<div className="route-loading" role="status">Loading page…</div>}>
+          <Routes>
+            {/* Main Underwater Home View */}
+            <Route path="/" element={<HomeView />} />
 
-          {/* Standalone / Deep Pages */}
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/contactus.html" element={<ContactUs />} />
-          <Route path="/sponsors" element={<SponsorPage />} />
-          <Route path="/sponsors.html" element={<SponsorPage />} />
-          <Route path="/abyssal" element={<AbyssalRouteView />} />
-          <Route path="/explorer" element={<AbyssalRouteView />} />
-          <Route path="/dashboard" element={<ParticipantDashboard />} />
+            {/* Standalone / Deep Pages */}
+            <Route path="/contact" element={<LazyContactUs />} />
+            <Route path="/contactus.html" element={<LazyContactUs />} />
+            <Route path="/sponsors" element={<LazySponsorPage />} />
+            <Route path="/sponsors.html" element={<LazySponsorPage />} />
+            <Route path="/abyssal" element={<AbyssalRouteView />} />
+            <Route path="/explorer" element={<AbyssalRouteView />} />
+            <Route path="/dashboard" element={<LazyParticipantDashboard />} />
 
-          {/* Auth Feature Screens */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/register" element={<SignupPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+            {/* Auth Feature Screens */}
+            <Route path="/login" element={<LazyLoginPage />} />
+            <Route path="/signup" element={<LazySignupPage />} />
+            <Route path="/register" element={<LazySignupPage />} />
+            <Route path="/forgot-password" element={<LazyForgotPasswordPage />} />
+            <Route path="/reset-password" element={<LazyResetPasswordPage />} />
 
-          {/* Fallback to Home */}
-          <Route path="*" element={<HomeView />} />
-        </Routes>
+            {/* Fallback to Home */}
+            <Route path="*" element={<HomeView />} />
+          </Routes>
+        </Suspense>
       </Router>
     </AuthProvider>
   );
