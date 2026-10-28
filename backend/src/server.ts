@@ -9,7 +9,7 @@ import userRoutes from "./modules/users/users.routes.js";
 import passwordResetRoutes from "./modules/auth/password-reset.routes.js";
 
 const app = express();
-const port = Number(process.env.PORT) || 8000;
+const port = Number(process.env.BACKEND_PORT) || 8000;
 
 app.use(helmet());
 app.use(cors({
@@ -19,11 +19,7 @@ app.use(cors({
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
-app.get("/health", (_req, res) => {
-  res.json({ success: true, status: "ok" });
-});
-
-app.get("/health/ready", async (_req, res) => {
+const checkDatabase = async (_req: express.Request, res: express.Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     res.json({ success: true, message: "LitFest API is healthy", database: "connected" });
@@ -37,7 +33,10 @@ app.get("/health/ready", async (_req, res) => {
       message: "Database unavailable",
     });
   }
-});
+};
+
+app.get("/health", checkDatabase);
+app.get("/health/ready", checkDatabase);
 
 app.get("/api/v1", (_req, res) => {
   res.json({ success: true, message: "LitFest 2.0 API" });
