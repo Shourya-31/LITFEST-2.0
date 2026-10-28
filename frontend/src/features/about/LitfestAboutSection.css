@@ -1,19 +1,19 @@
 /* =========================================
-   CENTERED COMPACT ABOUT SECTION (BLUE PULSE THEME)
+   CENTERED BALANCED ABOUT SECTION (BLUE PULSE THEME)
    ========================================= */
 .about-deep-section {
   position: relative;
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  padding: clamp(70px, 9vh, 95px) clamp(16px, 3.5vw, 40px) clamp(45px, 6vh, 65px) clamp(16px, 3.5vw, 40px);
+  padding: clamp(165px, 19vh, 190px) clamp(20px, 4vw, 56px) clamp(36px, 4.5vh, 60px);
   overflow: hidden;
-  background-color: var(--color-abyss);
+  background-color: var(--color-abyss, #010610);
   color: var(--color-text-bright);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  scroll-margin-top: 60px;
 }
 
 /* ----------------------------------------------------
@@ -22,20 +22,20 @@
 .about-centered-content {
   position: relative;
   z-index: 10;
-  max-width: 860px;
+  max-width: 1180px;
   width: 100%;
   margin: 0 auto;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(16px, 2.4vh, 24px);
+  gap: clamp(18px, 2.6vh, 32px);
 }
 
 /* 1. Main Heading */
 .about-main-title {
   font-family: var(--font-display);
-  font-size: clamp(36px, 4.6vw, 52px);
+  font-size: clamp(38px, 4.5vw, 56px);
   font-weight: 800;
   letter-spacing: 2px;
   line-height: 1.1;
@@ -51,7 +51,7 @@
 /* 2. Subtitle */
 .about-subtitle {
   font-family: var(--font-serif);
-  font-size: clamp(14.5px, 1.8vw, 17.5px);
+  font-size: clamp(15.5px, 1.7vw, 19.5px);
   font-style: normal;
   letter-spacing: 0.8px;
   color: #7dd3fc;
@@ -62,10 +62,10 @@
 /* 3. Introductory Description */
 .about-intro-description {
   font-family: var(--font-sans);
-  font-size: clamp(14px, 1.45vw, 15.5px);
-  line-height: 1.65;
+  font-size: clamp(14.5px, 1.2vw, 16.5px);
+  line-height: 1.7;
   color: #cbd5e1;
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -80,17 +80,17 @@
 .about-feature-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: clamp(18px, 2.2vw, 30px);
   width: 100%;
-  max-width: 820px;
-  margin-top: 2px;
+  max-width: 1140px;
+  margin: 2px 0;
 }
 
 .feature-card {
   background: rgba(2, 14, 30, 0.55);
   border: 1px solid rgba(56, 189, 248, 0.22);
-  border-radius: 14px;
-  padding: 20px 18px;
+  border-radius: 16px;
+  padding: clamp(22px, 2.8vh, 32px) clamp(18px, 1.8vw, 26px);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 10px 30px rgba(0, 3, 10, 0.6);
@@ -98,7 +98,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 9px;
+  gap: 10px;
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   outline: none;
   cursor: default;
@@ -118,8 +118,8 @@
 }
 
 .feature-icon-wrap {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: rgba(14, 165, 233, 0.12);
   border: 1px solid rgba(56, 189, 248, 0.35);
@@ -127,8 +127,9 @@
   align-items: center;
   justify-content: center;
   color: #7dd3fc;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
   transition: transform 0.25s ease, color 0.25s ease;
+  margin-bottom: 2px;
 }
 
 .feature-card:hover .feature-icon-wrap,
@@ -139,9 +140,9 @@
 
 .feature-title {
   font-family: var(--font-display);
-  font-size: 14.5px;
+  font-size: clamp(15px, 1.25vw, 17.5px);
   font-weight: 800;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.8px;
   color: #ffffff;
   margin: 0;
   transition: color 0.25s ease;
@@ -155,8 +156,8 @@
 
 .feature-desc {
   font-family: var(--font-sans);
-  font-size: 12.5px;
-  line-height: 1.52;
+  font-size: clamp(13px, 1.05vw, 14.5px);
+  line-height: 1.6;
   color: #94a3b8;
   margin: 0;
 }
@@ -169,14 +170,14 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 800px;
-  margin: 4px 0;
+  max-width: 960px;
+  margin: 2px 0;
 }
 
 .about-stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: clamp(24px, 3.5vw, 56px);
   width: 100%;
 }
 
@@ -185,27 +186,27 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 4px 8px;
+  padding: 4px 10px;
 }
 
 .stat-value {
   font-family: var(--font-display);
-  font-size: clamp(38px, 4.2vw, 48px);
+  font-size: clamp(42px, 4.6vw, 56px);
   font-weight: 900;
   line-height: 1;
   background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 45%, #38bdf8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.4));
+  filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.4));
   margin-bottom: 4px;
 }
 
 .stat-name {
   font-family: var(--font-serif);
-  font-size: 14.5px;
+  font-size: clamp(13.5px, 1.15vw, 16px);
   font-weight: 700;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.5px;
   color: #bae6fd;
   text-transform: uppercase;
 }
@@ -215,10 +216,10 @@
    ---------------------------------------------------- */
 .about-legacy-paragraph {
   font-family: var(--font-sans);
-  font-size: clamp(13px, 1.35vw, 14.5px);
-  line-height: 1.65;
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  line-height: 1.7;
   color: #94a3b8;
-  max-width: 720px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -234,44 +235,22 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin-top: 6px;
+  margin-top: 2px;
   width: 100%;
 }
 
 .closing-dive-quote {
   font-family: var(--font-serif);
-  font-size: clamp(16px, 2vw, 20px);
+  font-size: clamp(16.5px, 1.8vw, 21px);
   font-style: normal;
   font-weight: 500;
   letter-spacing: 0.5px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: #bae6fd;
   text-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
   margin: 0 auto;
-  max-width: 640px;
+  max-width: 820px;
   text-align: center;
-}
-
-.about-surface-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  color: #94a3b8;
-  font-family: var(--font-sans);
-  font-size: 11px;
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 100px;
-  transition: all 0.2s ease;
-  margin-top: 4px;
-}
-
-.about-surface-link:hover {
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.45);
-  background: rgba(14, 165, 233, 0.08);
 }
 
 /* ----------------------------------------------------

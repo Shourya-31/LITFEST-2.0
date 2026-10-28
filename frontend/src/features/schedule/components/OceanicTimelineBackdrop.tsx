@@ -9,9 +9,9 @@ interface OceanicTimelineBackdropProps {
 
 export const OceanicTimelineBackdrop: React.FC<OceanicTimelineBackdropProps> = ({
   currentZ,
-  maxCameraZ = 15600,
+  maxCameraZ = 10800,
 }) => {
-  // Normalize scroll depth from 0 (Event 1, upper reef) to 1 (Event 14, deep abyssal trench)
+  // Normalize scroll depth from 0 (Event 1, upper reef) to 1 (Event 10, deep abyssal trench)
   const progress = Math.max(0, Math.min(1, currentZ / maxCameraZ));
 
   // Parallax offsets computed from current 3D voyage Z-traversal
@@ -357,7 +357,7 @@ export const OceanicTimelineBackdrop: React.FC<OceanicTimelineBackdropProps> = (
         </div>
       </div>
 
-      {/* D. Deep Sea Lanternfish / Anglerfish with Glowing Esca Lure (Deep Abyss events 7-14) */}
+      {/* D. Deep Sea Lanternfish / Anglerfish with Glowing Esca Lure (Deep Abyss events 7-10) */}
       <div
         className="timeline-lanternfish"
         style={{

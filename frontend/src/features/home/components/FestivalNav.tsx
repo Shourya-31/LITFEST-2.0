@@ -7,23 +7,29 @@ import './FestivalNav.css';
 interface FestivalNavProps {
   onRegisterClick?: () => void;
   onNavClick?: (section: string) => void;
+  activeSection?: string;
+  isScrolled?: boolean;
 }
 
 export const FestivalNav: React.FC<FestivalNavProps> = ({
   onRegisterClick,
   onNavClick,
+  activeSection = 'home',
+  isScrolled: controlledScrolled,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [internalScrolled, setInternalScrolled] = useState(false);
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setInternalScrolled(window.scrollY > 40);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const isScrolled = controlledScrolled !== undefined ? controlledScrolled : internalScrolled;
 
   const handleLink = (section: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -58,41 +64,41 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
           aria-label="Main Navigation"
         >
           <a
-            href="#events"
-            className="nav-item"
-            id="nav-link-events"
-            onClick={(e) => handleLink('events', e)}
+            href="#home"
+            className={`nav-item ${activeSection === 'home' ? 'active' : ''}`}
+            id="nav-link-home"
+            onClick={(e) => handleLink('home', e)}
           >
-            Events
+            Home
           </a>
           <a
             href="#arcade"
-            className="nav-item"
+            className={`nav-item nav-item-3d ${activeSection === 'arcade' || activeSection === '3d' ? 'active' : ''}`}
             id="nav-link-arcade"
             onClick={(e) => handleLink('arcade', e)}
           >
-            Arcade
-          </a>
-          <a
-            href="#3d"
-            className="nav-item nav-item-3d"
-            id="nav-link-3d"
-            onClick={(e) => handleLink('3d', e)}
-          >
             <span className="nav-3d-badge">3D</span>
-            Voyage
+            Arcade &amp; Voyage
           </a>
           <a
             href="#about"
-            className="nav-item"
+            className={`nav-item ${activeSection === 'about' ? 'active' : ''}`}
             id="nav-link-about"
             onClick={(e) => handleLink('about', e)}
           >
             About
           </a>
           <a
+            href="#timeline"
+            className={`nav-item ${activeSection === 'timeline' ? 'active' : ''}`}
+            id="nav-link-timeline"
+            onClick={(e) => handleLink('timeline', e)}
+          >
+            Timeline
+          </a>
+          <a
             href="#sponsors"
-            className="nav-item"
+            className={`nav-item ${activeSection === 'sponsors' ? 'active' : ''}`}
             id="nav-link-sponsors"
             onClick={(e) => handleLink('sponsors', e)}
           >
@@ -100,41 +106,22 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
           </a>
           <a
             href="#faq"
-            className="nav-item"
+            className={`nav-item ${activeSection === 'faq' ? 'active' : ''}`}
             id="nav-link-faq"
             onClick={(e) => handleLink('faq', e)}
           >
             FAQ
           </a>
-          <a
-            href="#contact"
-            className="nav-item"
-            id="nav-link-contact"
-            onClick={(e) => handleLink('contact', e)}
-          >
-            Contact
-          </a>
 
           {/* Conditional drawer links based on auth state */}
           {!isAuthenticated ? (
-            <>
-              <a
-                href="/login"
-                className="nav-item"
-                id="nav-link-login"
-              >
-                Login
-              </a>
-
-              {/* Mobile-only register button in drawer */}
-              <button
-                type="button"
-                className="nav-register-btn mobile-register"
-                onClick={onRegisterClick}
-              >
-                Register
-              </button>
-            </>
+            <button
+              type="button"
+              className="nav-register-btn mobile-register"
+              onClick={onRegisterClick}
+            >
+              Register
+            </button>
           ) : (
             <a
               href="/dashboard"

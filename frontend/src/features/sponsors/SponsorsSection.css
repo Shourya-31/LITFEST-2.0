@@ -1,11 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@400;500;600;700&display=swap");
 
+/* =========================================
+   SPONSORS SECTION (THEMED TO MATCH ABOUT PAGE)
+   ========================================= */
 .sponsors-section {
   position: relative;
   width: 100%;
   margin: 0;
-  padding: 4.5rem 1.5rem 5rem;
-  background: linear-gradient(180deg, #052438 0%, #083c5e 50%, #052438 100%);
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: clamp(165px, 19vh, 190px) 1.5rem 5rem;
+  background-color: var(--color-abyss, #010610);
+  background-image:
+    radial-gradient(ellipse at 50% 15%, rgba(14, 165, 233, 0.15) 0%, rgba(2, 14, 32, 0.95) 45%, var(--color-abyss, #010610) 100%);
   color: #ffffff;
   font-family: var(--font-sans, 'Poppins', system-ui, -apple-system, sans-serif);
   overflow: hidden;
@@ -13,7 +20,7 @@
   scroll-margin-top: 70px;
 }
 
-/* Blend top & bottom into adjacent oceanic sections */
+/* Subtle top & bottom blending gradients */
 .sponsors-section::before {
   content: "";
   position: absolute;
@@ -43,68 +50,74 @@
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1180px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Section Header */
+/* Section Header - Styled exactly like About page title & subtitle */
 .sponsors-header {
   text-align: center;
-  max-width: 820px;
+  max-width: 860px;
   margin-bottom: clamp(32px, 5vw, 48px);
 }
 
 .sponsors-title {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.65rem;
   font-family: var(--font-display, 'Cinzel', Georgia, serif);
-  font-weight: 700;
-  font-size: clamp(2rem, 3.5vw, 2.75rem);
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-  background: linear-gradient(180deg, #ffffff 20%, #93c5fd 100%);
+  font-weight: 800;
+  font-size: clamp(36px, 4.4vw, 54px);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  color: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 50%, #7dd3fc 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.4));
 }
 
 .sponsors-subtitle {
   margin: 0 auto;
-  font-family: var(--font-sans, 'Poppins', system-ui, sans-serif);
-  font-weight: 400;
-  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-size: clamp(15px, 1.6vw, 19px);
+  font-style: normal;
+  letter-spacing: 0.8px;
+  color: #7dd3fc;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
   line-height: 1.6;
-  color: #94a3b8;
-  max-width: 640px;
+  max-width: 760px;
 }
 
 /* Cards Grid */
 .sponsors-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(24px, 3.5vw, 44px);
   width: 100%;
   margin-bottom: 2.5rem;
 }
 
-/* Single Sponsor Card */
+/* Single Sponsor Card - Matching About feature-card glassmorphism */
 .sponsor-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(165deg, rgba(2, 28, 58, 0.88) 0%, rgba(1, 15, 34, 0.95) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.38);
-  border-radius: 22px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: clamp(24px, 3.5vw, 36px);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.3s ease,
-              border-color 0.3s ease,
-              box-shadow 0.35s ease;
-  box-shadow: 0 18px 45px rgba(0, 10, 26, 0.65), inset 0 1px 1px rgba(125, 211, 252, 0.25);
+  background: rgba(2, 14, 30, 0.58);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: clamp(24px, 3.2vw, 36px);
+  box-shadow: 0 10px 30px rgba(0, 3, 10, 0.6);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.28s ease,
+              border-color 0.28s ease,
+              box-shadow 0.28s ease;
   text-decoration: none;
   color: inherit;
   overflow: hidden;
@@ -114,19 +127,23 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.16), transparent 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12), transparent 70%);
   pointer-events: none;
   opacity: 0.7;
   transition: opacity 0.3s ease;
 }
 
-.sponsor-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  background: linear-gradient(165deg, rgba(3, 38, 78, 0.94) 0%, rgba(2, 20, 46, 0.98) 100%);
-  border-color: rgba(125, 211, 252, 0.75);
-  box-shadow: 0 24px 60px rgba(0, 12, 28, 0.75),
-              0 0 35px rgba(56, 189, 248, 0.35),
-              inset 0 1px 2px rgba(186, 230, 253, 0.4);
+.sponsor-card:hover,
+.sponsor-card:focus-visible {
+  transform: translateY(-4px);
+  background: rgba(3, 22, 48, 0.75);
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 16px 42px rgba(0, 3, 10, 0.75), 0 0 24px rgba(56, 189, 248, 0.25);
+}
+
+.sponsor-card:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 3px;
 }
 
 .sponsor-card:hover::before {
@@ -138,50 +155,65 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .sponsor-role-badge {
+  font-family: var(--font-sans, system-ui, sans-serif);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 4px 12px;
   border-radius: 999px;
-  background: rgba(14, 165, 233, 0.25);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(14, 165, 233, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.35);
   color: #7dd3fc;
 }
 
 .sponsor-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-sans, system-ui, sans-serif);
   font-size: 11px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(224, 242, 254, 0.75);
   letter-spacing: 0.05em;
+}
+
+.sponsor-ext-icon {
+  opacity: 0.7;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sponsor-card:hover .sponsor-ext-icon {
+  opacity: 1;
+  transform: translate(2px, -2px);
+  color: #38bdf8;
 }
 
 /* Logo / Emblem Presentation Area */
 .sponsor-logo-box {
   width: 100%;
   height: clamp(170px, 22vw, 220px);
-  background: #ffffff;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   transition: all 0.3s ease;
 }
 
 .sponsor-card:hover .sponsor-logo-box {
-  background: #ffffff;
-  border-color: rgba(56, 189, 248, 0.75);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(56, 189, 248, 0.35);
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.3);
 }
 
 .sponsor-logo-box svg,
@@ -207,18 +239,24 @@
 
 .sponsor-name {
   margin: 0;
-  font-family: 'Poppins', system-ui, sans-serif;
-  font-weight: 600;
-  font-size: clamp(20px, 2.4vw, 26px);
+  font-family: var(--font-display, 'Cinzel', Georgia, serif);
+  font-weight: 700;
+  font-size: clamp(20px, 2.2vw, 25px);
   line-height: 1.25;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #ffffff;
-  text-shadow: 0 2px 18px rgba(0, 40, 60, 0.5);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+  transition: color 0.25s ease;
+}
+
+.sponsor-card:hover .sponsor-name {
+  color: #bae6fd;
 }
 
 .sponsor-tagline {
   margin: 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
   font-size: 13.5px;
   font-weight: 500;
   color: #7dd3fc;
@@ -226,41 +264,65 @@
 }
 
 .sponsor-desc {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
   font-size: 14px;
-  line-height: 1.55;
-  color: rgba(240, 249, 255, 0.82);
+  line-height: 1.65;
+  color: #cbd5e1;
 }
 
-/* Surface Ascent Button */
+/* Action Buttons Container */
 .sponsors-surface-wrap {
   display: flex;
+  gap: 16px;
   justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
 }
 
 .sponsors-surface-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
+  padding: 10px 24px;
   border-radius: 999px;
-  background: rgba(3, 16, 36, 0.55);
+  background: rgba(14, 165, 233, 0.12);
   border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #94a3b8;
-  font-family: 'Poppins', system-ui, sans-serif;
+  color: #e0f2fe;
+  font-family: var(--font-sans, system-ui, sans-serif);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: all 0.25s ease;
+  outline: none;
 }
 
-.sponsors-surface-btn:hover {
-  color: #38bdf8;
-  border-color: #38bdf8;
-  background: rgba(14, 165, 233, 0.2);
+.sponsors-surface-btn:hover,
+.sponsors-surface-btn:focus-visible {
   transform: translateY(-2px);
+  background: rgba(14, 165, 233, 0.28);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+}
+
+.sponsors-contact-btn {
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+}
+
+.sponsors-top-btn {
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #cbd5e1;
+}
+
+.sponsors-top-btn:hover,
+.sponsors-top-btn:focus-visible {
+  color: #ffffff;
+  border-color: #38bdf8;
 }
 
 /* Responsive Breakpoints */

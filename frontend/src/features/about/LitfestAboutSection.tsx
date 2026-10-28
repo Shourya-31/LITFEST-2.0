@@ -14,6 +14,8 @@ interface LitfestAboutSectionProps {
 
 export const LitfestAboutSection: React.FC<LitfestAboutSectionProps> = ({
   id = 'about',
+  onExploreEvents,
+  onRegisterClick,
   onAscendClick,
 }) => {
   return (
@@ -128,20 +130,6 @@ export const LitfestAboutSection: React.FC<LitfestAboutSectionProps> = ({
           <p className="closing-dive-quote">
             &ldquo;Wishing you a happy and safe deep dive into the literary abyss.&rdquo;
           </p>
-
-          {onAscendClick && (
-            <button
-              type="button"
-              className="about-surface-link"
-              onClick={onAscendClick}
-              title="Return to Upper Surface"
-            >
-              <svg viewBox="0 0 20 20" width="13" height="13" fill="currentColor">
-                <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
-              </svg>
-              <span>Surface</span>
-            </button>
-          )}
         </div>
       </div>
     </section>

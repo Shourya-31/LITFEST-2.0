@@ -38,6 +38,36 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ==========================================================================
+   HIDE SCROLLBARS GLOBALLY ACROSS ALL BROWSERS (CHROME, SAFARI, FIREFOX, EDGE)
+   ========================================================================== */
+html,
+body,
+#root,
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE & Edge */
+}
+
+::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ultra-wide & 4K display optimizations */
+@media (min-width: 2560px) {
+  :root {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 3840px) {
+  :root {
+    font-size: 21px;
+  }
+}
+
 #root {
   width: 100%;
   min-height: 100vh;

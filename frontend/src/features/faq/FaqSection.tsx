@@ -18,7 +18,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState<FaqCategory>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [openFaqId, setOpenFaqId] = useState<string | null>(faqs[0]?.id || null);
+  const [openFaqId, setOpenFaqId] = useState<string | null>(null);
 
   const categories: { key: FaqCategory; label: string }[] = [
     { key: 'all', label: 'All Inquiries' },
@@ -43,9 +43,9 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
     });
   }, [faqs, activeCategory, searchQuery]);
 
-  const handleToggle = (id: string, isOpen: boolean) => {
+  const handleToggle = (id: string) => {
     soundEngine.playDroplet();
-    setOpenFaqId(isOpen ? id : null);
+    setOpenFaqId((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -135,15 +135,16 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
                   return (
                     <details
                       key={faq.id}
-                      name="litfest-faq-exclusive"
                       className={`faq-detail-item ${isOpen ? 'is-open' : ''}`}
                       open={isOpen}
-                      onToggle={(e) => {
-                        const target = e.currentTarget;
-                        handleToggle(faq.id, target.open);
-                      }}
                     >
-                      <summary className="faq-summary interactive">
+                      <summary
+                        className="faq-summary interactive"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleToggle(faq.id);
+                        }}
+                      >
                         <div className="faq-summary-content">
                           <span className="faq-question-title">{faq.question}</span>
                         </div>

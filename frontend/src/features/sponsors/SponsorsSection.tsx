@@ -1,3 +1,5 @@
+import React from 'react';
+import { Mail, ExternalLink } from 'lucide-react';
 import nitrrLogo from '../../assets/media/nitrr_new_logo_new.png';
 import sbiLogo from '../../assets/media/SBI-Logo.png';
 import './SponsorsSection.css';
@@ -11,17 +13,18 @@ interface SponsorsSectionProps {
 export const SponsorsSection: React.FC<SponsorsSectionProps> = ({
   id = 'sponsors',
   onAscendClick,
+  onContactClick,
 }) => {
   return (
     <section id={id} className="sponsors-section" aria-label="Our Sponsors">
-      {/* Background ambient lighting matching FAQ section */}
+      {/* Background ambient lighting matching About & ocean theme */}
       <div className="ocean-ambient-canvas" aria-hidden="true">
         <div className="ocean-wave-glow glow-1" />
         <div className="ocean-wave-glow glow-2" />
       </div>
 
       <div className="sponsors-container">
-        {/* Section Heading */}
+        {/* Section Heading matching About styling */}
         <div className="sponsors-header">
           <h2 className="sponsors-title">Our Sponsors</h2>
           <p className="sponsors-subtitle">
@@ -35,13 +38,23 @@ export const SponsorsSection: React.FC<SponsorsSectionProps> = ({
           {/* Sponsor 1: NIT Raipur */}
           <div
             className="sponsor-card"
-            role="region"
-            aria-label="NIT Raipur Sponsor Card"
+            role="link"
+            aria-label="NIT Raipur Sponsor Card - Open official portal"
             tabIndex={0}
+            onClick={() => window.open('https://www.nitrr.ac.in', '_blank', 'noopener,noreferrer')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.open('https://www.nitrr.ac.in', '_blank', 'noopener,noreferrer');
+              }
+            }}
           >
             <div className="sponsor-badge-wrap">
               <span className="sponsor-role-badge">Patron &amp; Host Institute</span>
-              <span className="sponsor-status-chip">Academic Partner</span>
+              <span className="sponsor-status-chip">
+                <span>Academic Partner</span>
+                <ExternalLink size={11} className="sponsor-ext-icon" aria-hidden="true" />
+              </span>
             </div>
 
             <div className="sponsor-logo-box" aria-label="National Institute of Technology Raipur Official Emblem">
@@ -69,13 +82,23 @@ export const SponsorsSection: React.FC<SponsorsSectionProps> = ({
           {/* Sponsor 2: SBI Bank */}
           <div
             className="sponsor-card"
-            role="region"
-            aria-label="SBI Bank Sponsor Card"
+            role="link"
+            aria-label="SBI Bank Sponsor Card - Open official portal"
             tabIndex={0}
+            onClick={() => window.open('https://sbi.bank.in/', '_blank', 'noopener,noreferrer')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.open('https://sbi.bank.in/', '_blank', 'noopener,noreferrer');
+              }
+            }}
           >
             <div className="sponsor-badge-wrap">
               <span className="sponsor-role-badge">Official Banking Partner</span>
-              <span className="sponsor-status-chip">Title Partner</span>
+              <span className="sponsor-status-chip">
+                <span>Title Partner</span>
+                <ExternalLink size={11} className="sponsor-ext-icon" aria-hidden="true" />
+              </span>
             </div>
 
             <div className="sponsor-logo-box" aria-label="State Bank of India Official Logo">
@@ -101,25 +124,39 @@ export const SponsorsSection: React.FC<SponsorsSectionProps> = ({
           </div>
         </div>
 
-        {/* Return to Surface */}
-        {onAscendClick && (
+        {/* Navigation Action Buttons */}
+        {(onAscendClick || onContactClick) && (
           <div className="sponsors-surface-wrap">
-            <button
-              type="button"
-              className="sponsors-surface-btn"
-              onClick={onAscendClick}
-              title="Return to Litfest 2.0 Surface"
-              aria-label="Return to surface"
-            >
-              <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor" aria-hidden="true">
-                <path
-                  fillRule="evenodd"
-                  d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span>Return to Surface</span>
-            </button>
+            {onContactClick && (
+              <button
+                type="button"
+                className="sponsors-surface-btn sponsors-contact-btn"
+                onClick={onContactClick}
+                title="Open FAQ & Contact Chamber"
+                aria-label="Contact organizing committee"
+              >
+                <Mail size={14} aria-hidden="true" />
+                <span>Contact Committee</span>
+              </button>
+            )}
+            {onAscendClick && (
+              <button
+                type="button"
+                className="sponsors-surface-btn sponsors-top-btn"
+                onClick={onAscendClick}
+                title="Return to Litfest 2.0 Surface (0m)"
+                aria-label="Back to top"
+              >
+                <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <path
+                    fillRule="evenodd"
+                    d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Back to Top</span>
+              </button>
+            )}
           </div>
         )}
       </div>

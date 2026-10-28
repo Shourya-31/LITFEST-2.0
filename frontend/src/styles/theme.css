@@ -114,7 +114,19 @@ body {
   background-attachment: fixed;
 }
 
-/* Custom Scrollbar with Deep Abyss & Cyan Bioluminescent Glow */
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Scrollbar hidden */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -131,7 +143,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #22d3ee;
+/* disabled */
 }
 
 /* Interactive helper */

@@ -19,7 +19,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
   onCenterClick
 }) => {
   const handleClick = onEventClick || onSpokeClick || (() => {});
-  const totalSpokes = 14;
+  const totalSpokes = milestones.length || 10;
 
   const spokes = Array.from({ length: totalSpokes }, (_, i) => {
     // Event 0 starts at 0 deg (12 o'clock / top)
@@ -95,7 +95,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
 
         {/* ROTATING GROUP: Rotates smoothly by rotationDeg */}
         <g transform={`rotate(${rotationDeg})`}>
-          {/* 1. 14 Spoke Shafts & Outer Handles */}
+          {/* 1. Spoke Shafts & Outer Handles */}
           <g className="wheel-spokes-group">
             {spokes.map(({ index, angleDeg, isActive }) => (
               <g
@@ -167,9 +167,9 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
             <circle cx="0" cy="0" r="98" fill="none" stroke="url(#biolumCyanGrad)" strokeWidth="2.8" />
             <circle cx="0" cy="0" r="102" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="1" />
 
-            {/* Joint straps */}
+            {/* Joint straps halfway between spokes */}
             {spokes.map(({ index, angleDeg }) => (
-              <g key={`joint-${index}`} transform={`rotate(${angleDeg + (360 / 28)})`}>
+              <g key={`joint-${index}`} transform={`rotate(${angleDeg + (360 / (totalSpokes * 2))})`}>
                 <line x1="0" y1="-98" x2="0" y2="-154" stroke="#010610" strokeWidth="1.2" />
                 <circle cx="0" cy="-144" r="2.4" fill="url(#biolumCyanGrad)" stroke="#010610" strokeWidth="0.5" />
                 <circle cx="0" cy="-108" r="2.4" fill="url(#biolumCyanGrad)" stroke="#010610" strokeWidth="0.5" />
@@ -188,7 +188,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
             />
           </g>
 
-          {/* 3. 14 SPOKE BADGES & UPRIGHT NUMERALS (Vector SVG elements)
+          {/* 3. SPOKE BADGES & UPRIGHT NUMERALS (Vector SVG elements)
               The text group is counter-rotated by -(angleDeg + rotationDeg)
               so EVERY numeral is ALWAYS 100% STRICTLY UPRIGHT at all times! */}
           <g className="wheel-spoke-badges-layer">
@@ -263,7 +263,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
             })}
           </g>
 
-          {/* 4. Massive Central Hub with 8-Pointed Celestial Compass Rose */}
+          {/* 4. Central Hub with Celestial Compass Rose */}
           <g
             className="wheel-central-hub"
             onClick={onCenterClick}
@@ -273,7 +273,7 @@ export const PirateWheelSvg: React.FC<PirateWheelSvgProps> = ({
             <circle cx="0" cy="0" r="48" fill="url(#abyssalRimGrad)" stroke="#010610" strokeWidth="2.5" />
             <circle cx="0" cy="0" r="44" fill="none" stroke="url(#biolumCyanGrad)" strokeWidth="2.2" />
 
-            {/* 14 Hub mounting bolt rivets */}
+            {/* Hub mounting bolt rivets */}
             {spokes.map(({ index, angleDeg }) => (
               <g key={`bolt-${index}`} transform={`rotate(${angleDeg})`}>
                 <circle cx="0" cy="-44" r="1.8" fill="url(#biolumCyanGrad)" />

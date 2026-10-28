@@ -149,3 +149,5 @@ export const OceanAtmosphere: React.FC = () => {
     </div>
   );
 };
+
+export default OceanAtmosphere;

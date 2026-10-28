@@ -11,6 +11,8 @@ build/
 # Cache and temporary build info
 *.tsbuildinfo
 .eslintcache
+vite.config.js
+vite.config.d.ts
 
 # Logs
 logs

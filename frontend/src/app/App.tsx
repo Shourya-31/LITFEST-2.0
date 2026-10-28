@@ -401,7 +401,7 @@ export const App: React.FC = () => {
                 aria-label="Close FAQs"
               >
                 <X size={20} />
-                <span>RETURN TO HELM</span>
+                <span>BACK</span>
               </button>
             </div>
 

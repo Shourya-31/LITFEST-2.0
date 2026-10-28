@@ -10,5 +10,5 @@
     "rootDir": ".",
     "outDir": ".test-build"
   },
-  "include": ["tests/**/*.ts", "src/features/game/**/*.ts", "src/features/atlantis/**/*.ts", "src/services/**/*.ts", "src/types/game.ts"]
+  "include": ["tests/**/*.ts", "src/features/game/**/*.ts", "src/features/atlantis/**/*.ts", "src/services/game-service.ts", "src/services/auth.ts", "src/types/game.ts"]
 }

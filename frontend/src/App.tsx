@@ -1,5 +1,8 @@
-import React, { Suspense, lazy, useCallback, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import React, { Suspense, lazy, useCallback, useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import 'lenis/dist/lenis.css';
 import { AuthProvider } from './state/AuthContext';
 import { LitfestUnderwaterHome } from './features/home';
 import type { AbyssalNavigationTarget } from './components/underwater/abyssal-explorer';
@@ -21,9 +24,11 @@ const LazyAbyssalExplorer = lazy(() =>
 
 const destinationTargets = new Set<string>([
   'home',
-  'timeline',
-  'about',
   'arcade',
+  '3d',
+  'about',
+  'timeline',
+  'schedule',
   'sponsors',
   'faq',
   'contact',
@@ -40,51 +45,16 @@ function readDestinationFromUrl(): AbyssalNavigationTarget | null {
   return isAbyssalDestination(destination) ? destination : null;
 }
 
-const LazyPirateWheelTimeline = lazy(() =>
-  import('./features/schedule/PirateWheelTimeline').then(({ PirateWheelTimeline }) => ({
-    default: PirateWheelTimeline,
-  }))
-);
-
-const HomeView: React.FC = () => {
-  const [requestedDestination] = useState(readDestinationFromUrl);
-  const [activeDestination, setActiveDestination] = useState<'timeline' | null>(() =>
-    requestedDestination === 'timeline' ? requestedDestination : null
+const HomeView: React.FC<{ initialTarget?: AbyssalNavigationTarget }> = ({ initialTarget }) => {
+  const [requestedDestination] = useState<AbyssalNavigationTarget | null>(
+    () => initialTarget || readDestinationFromUrl()
   );
-
-  const handleAbyssalNavigate = useCallback((target: AbyssalNavigationTarget) => {
-    if (target === 'timeline') {
-      setActiveDestination(target);
-    }
-  }, []);
 
   return (
     <div className="app-container">
       <LitfestUnderwaterHome
-        onAbyssalNavigate={handleAbyssalNavigate}
         initialDestination={requestedDestination}
-        isDestinationOpen={activeDestination !== null}
       />
-      {activeDestination === 'timeline' && (
-        <div
-          className="abyssal-destination-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Festival timeline"
-        >
-          <button
-            type="button"
-            className="abyssal-destination-exit"
-            onClick={() => setActiveDestination(null)}
-            aria-label="Return to the ocean"
-          >
-            Return to the ocean
-          </button>
-          <Suspense fallback={<div className="abyssal-loading" role="status">Opening festival destination…</div>}>
-            <LazyPirateWheelTimeline onNavigateHome={() => setActiveDestination(null)} />
-          </Suspense>
-        </div>
-      )}
     </div>
   );
 };
@@ -94,17 +64,69 @@ const AbyssalRouteView: React.FC = () => {
   return <LazyAbyssalExplorer autoplay onExit={() => navigate('/')} />;
 };
 
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
+
+  return null;
+};
+
 export const App: React.FC = () => {
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return undefined;
+
+    // Initialize Lenis Smooth Scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      touchMultiplier: 1.5,
+      autoRaf: false, // Explicitly synced with GSAP ticker
+    });
+
+    // Synchronize Lenis with GSAP Ticker for 60/120fps buttery smooth scrolling
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(0);
+
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
+    return () => {
+      gsap.ticker.remove(updateTicker);
+      lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
+    };
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <Suspense fallback={<div className="route-loading" role="status">Loading page…</div>}>
           <Routes>
             {/* Main Underwater Home View */}
             <Route path="/" element={<HomeView />} />
+            <Route path="/timeline" element={<HomeView initialTarget="timeline" />} />
+            <Route path="/schedule" element={<HomeView initialTarget="timeline" />} />
+            <Route path="/events" element={<HomeView initialTarget="events" />} />
+            <Route path="/faq" element={<HomeView initialTarget="faq" />} />
+            <Route path="/contact" element={<HomeView initialTarget="contact" />} />
 
             {/* Standalone / Deep Pages */}
-            <Route path="/contact" element={<LazyContactUs />} />
             <Route path="/contactus.html" element={<LazyContactUs />} />
             <Route path="/sponsors" element={<LazySponsorPage />} />
             <Route path="/sponsors.html" element={<LazySponsorPage />} />

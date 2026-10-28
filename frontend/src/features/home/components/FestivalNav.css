@@ -4,18 +4,19 @@
   left: 0;
   width: 100%;
   z-index: 50;
-  padding: 16px 48px;
+  padding: max(16px, env(safe-area-inset-top, 16px)) max(24px, env(safe-area-inset-right, 24px)) 16px max(24px, env(safe-area-inset-left, 24px));
   pointer-events: none; /* Let empty space pass through */
   transition: background-color 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease, padding 0.3s ease, box-shadow 0.3s ease;
 }
 
 .festival-nav-header.nav-scrolled {
-  background: rgba(1, 6, 16, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(56, 189, 248, 0.16);
-  padding: 8px 48px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  background: #010610;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 10px 48px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.85);
+  pointer-events: auto; /* Solid bar intercepts clicks */
 }
 
 .nav-inner-container {
@@ -109,12 +110,14 @@
   transform: translateX(-50%);
 }
 
-.nav-item:hover {
+.nav-item:hover,
+.nav-item.active {
   color: #ffffff;
   text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
 }
 
-.nav-item:hover::after {
+.nav-item:hover::after,
+.nav-item.active::after {
   width: 100%;
 }
 
@@ -199,6 +202,10 @@
 @media (max-width: 860px) {
   .festival-nav-header {
     padding: 12px 20px;
+  }
+
+  .festival-nav-header.nav-scrolled {
+    padding: 8px 20px;
   }
 
   .nav-brand-img {
