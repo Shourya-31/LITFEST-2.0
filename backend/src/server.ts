@@ -19,12 +19,19 @@ app.use(cors({
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
-app.get("/health", async (_req, res) => {
+app.get("/health", (_req, res) => {
+  res.json({ success: true, status: "ok" });
+});
+
+app.get("/health/ready", async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     res.json({ success: true, message: "LitFest API is healthy", database: "connected" });
-    } catch (error) {
-    console.error("Database health check failed:", error);
+  } catch (error) {
+    const code = typeof error === "object" && error !== null && "code" in error
+      ? String(error.code)
+      : "unknown";
+    console.error(`Database readiness check failed (code: ${code})`);
     res.status(503).json({
       success: false,
       message: "Database unavailable",

@@ -2,14 +2,17 @@ FROM node:22-bookworm-slim
 
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 RUN npm ci
 
 COPY . .
 
-# Generate Prisma Client during image build.
-# This is a placeholder URL; Compose supplies the real URL at runtime.
-RUN DATABASE_URL="postgresql://litfest_user:build_only@localhost:5432/litfest?schema=public" npx prisma generate --config prisma7.config.ts
+# Prisma requires a datasource URL for generation, but does not connect to it.
+RUN DATABASE_URL="postgresql://build:build@db.invalid:5432/build?schema=public" npx prisma generate --config prisma7.config.ts
 
 RUN npm run build
 
