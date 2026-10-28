@@ -78,7 +78,7 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             onClick={(e) => handleLink('arcade', e)}
           >
             <span className="nav-3d-badge">3D</span>
-            Arcade &amp; Voyage
+            Arcade &amp; Games
           </a>
           <a
             href="#about"
@@ -94,7 +94,7 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
             id="nav-link-timeline"
             onClick={(e) => handleLink('timeline', e)}
           >
-            Timeline
+            Timeline &amp; Events
           </a>
           <a
             href="#sponsors"
