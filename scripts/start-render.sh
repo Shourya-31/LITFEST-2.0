@@ -5,6 +5,7 @@ cd /app/backend
 
 echo "Running Litfest database migrations..."
 npx prisma migrate deploy --config prisma7.config.ts
+echo "Migrations completed; runtime PrismaPg connectivity is checked separately by /health/ready."
 
 echo "Starting Litfest API..."
 node dist/server.js &
