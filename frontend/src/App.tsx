@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useCallback, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
@@ -16,6 +16,7 @@ const LazySignupPage = lazy(() => import('./features/auth/SignupPage'));
 const LazyForgotPasswordPage = lazy(() => import('./features/auth/ForgotPasswordPage'));
 const LazyResetPasswordPage = lazy(() => import('./features/auth/ResetPasswordPage'));
 const LazyParticipantDashboard = lazy(() => import('./features/participant/ParticipantDashboard'));
+const LazyAdminDashboard = lazy(() => import('./features/admin/AdminDashboard'));
 const LazyAbyssalExplorer = lazy(() =>
   import('./components/underwater/abyssal-explorer').then(({ AbyssalExplorer }) => ({
     default: AbyssalExplorer,
@@ -133,6 +134,7 @@ export const App: React.FC = () => {
             <Route path="/abyssal" element={<AbyssalRouteView />} />
             <Route path="/explorer" element={<AbyssalRouteView />} />
             <Route path="/dashboard" element={<LazyParticipantDashboard />} />
+            <Route path="/admin/dashboard" element={<LazyAdminDashboard />} />
 
             {/* Auth Feature Screens */}
             <Route path="/login" element={<LazyLoginPage />} />

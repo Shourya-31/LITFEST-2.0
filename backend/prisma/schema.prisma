@@ -27,35 +27,37 @@ enum RegistrationStatus {
 }
 
 model User {
-  id                BigInt               @id @default(autoincrement())
-  name              String
-  email             String               @unique
-  passwordHash      String
-  role              UserRole             @default(USER)
-  phone             String?
-  college           String?
-  bio               String?
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
-  registrations     EventRegistration[]
-  teamMemberships   TeamMember[]
+  id                  BigInt               @id @default(autoincrement())
+  name                String
+  email               String               @unique
+  passwordHash        String
+  role                UserRole             @default(USER)
+  phone               String?
+  college             String?
+  bio                 String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  registrations       EventRegistration[]
+  teamMemberships     TeamMember[]
   passwordResetTokens PasswordResetToken[]
+  pointTransactions   PointTransaction[]   @relation("PointParticipant")
+  pointAdjustments    PointTransaction[]   @relation("PointAdministrator")
 
   @@index([name])
 }
 
 model Event {
-  id            BigInt               @id @default(autoincrement())
+  id            BigInt              @id @default(autoincrement())
   title         String
-  slug          String               @unique
+  slug          String              @unique
   description   String?
   venue         String?
   startsAt      DateTime?
   endsAt        DateTime?
   capacity      Int?
-  status        EventStatus          @default(DRAFT)
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
+  status        EventStatus         @default(DRAFT)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
   registrations EventRegistration[]
   teams         Team[]
 
@@ -99,14 +101,30 @@ model TeamMember {
 }
 
 model PasswordResetToken {
-  id        BigInt   @id @default(autoincrement())
+  id        BigInt    @id @default(autoincrement())
   userId    BigInt
-  tokenHash String   @unique
+  tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+model PointTransaction {
+  id              BigInt   @id @default(autoincrement())
+  userId          BigInt
+  administratorId BigInt
+  eventName       String
+  delta           Int
+  reason          String
+  idempotencyKey  String   @unique
+  createdAt       DateTime @default(now())
+  user            User     @relation("PointParticipant", fields: [userId], references: [id], onDelete: Restrict)
+  administrator   User     @relation("PointAdministrator", fields: [administratorId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt, id])
+  @@index([administratorId])
 }

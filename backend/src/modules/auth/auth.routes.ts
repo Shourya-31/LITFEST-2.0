@@ -2,7 +2,11 @@ import { Router, type Request, type Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { prisma } from "../../config/database.js";
+import {
+  isTransientDatabaseError,
+  logDatabaseError,
+  prisma,
+} from "../../config/database.js";
 
 const router = Router();
 
@@ -129,7 +133,16 @@ router.post("/register", async (req: Request, res: Response) => {
       return;
     }
 
-    console.error("Registration failed:", error);
+    if (isTransientDatabaseError(error)) {
+      logDatabaseError("registration", error);
+      res.status(503).json({
+        success: false,
+        message: "Account service temporarily unavailable. Please try again.",
+      });
+      return;
+    }
+
+    logDatabaseError("registration", error);
     res.status(500).json({
       success: false,
       message: "Unable to create account",
@@ -173,8 +186,17 @@ router.post("/login", async (req: Request, res: Response) => {
         user: publicUser(user),
       },
     });
-  } catch (error) {
-    console.error("Login failed:", error);
+  } catch (error: unknown) {
+    if (isTransientDatabaseError(error)) {
+      logDatabaseError("login", error);
+      res.status(503).json({
+        success: false,
+        message: "Login service temporarily unavailable. Please try again.",
+      });
+      return;
+    }
+
+    logDatabaseError("login", error);
     res.status(500).json({
       success: false,
       message: "Unable to log in",
@@ -255,7 +277,16 @@ router.get("/me", async (req: Request, res: Response) => {
       success: true,
       data: { user: publicUser(user) },
     });
-  } catch {
+  } catch (error: unknown) {
+    if (isTransientDatabaseError(error)) {
+      logDatabaseError("session_lookup", error);
+      res.status(503).json({
+        success: false,
+        message: "Authentication service temporarily unavailable. Please try again.",
+      });
+      return;
+    }
+
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

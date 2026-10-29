@@ -1,7 +1,7 @@
 export * from './timeline';
 export * from './faq';
 
-export type UserRole = 'PARTICIPANT' | 'ADMIN';
+export type UserRole = 'USER' | 'PARTICIPANT' | 'ADMIN';
 
 export type EventCategory =
   | 'Debate'
@@ -77,12 +77,12 @@ export interface TeamMember {
   };
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: {
     message: string;
     code?: string;
-    details?: any;
+    details?: unknown;
   };
 }

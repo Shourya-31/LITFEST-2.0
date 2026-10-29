@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../state/AuthContext';
 import { AuthNavWidget } from '../../../components/navigation/AuthNavWidget';
 import litfestLogo from '../../../assets/media/litfest-logo-transparent.png';
@@ -19,7 +20,9 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [internalScrolled, setInternalScrolled] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const { pathname } = useLocation();
+  const isAdmin = isAuthenticated && user?.role === 'ADMIN';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -123,13 +126,25 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
               Register
             </button>
           ) : (
-            <a
-              href="/dashboard"
+            <Link
+              to="/dashboard"
               className="nav-item"
               id="nav-link-dashboard"
+              onClick={() => setMobileMenuOpen(false)}
             >
               Dashboard
-            </a>
+            </Link>
+          )}
+          {isAdmin && (
+            <Link
+              to="/admin/dashboard"
+              className={`nav-item ${pathname.startsWith('/admin/dashboard') ? 'active' : ''}`}
+              id="nav-link-admin-dashboard"
+              aria-current={pathname.startsWith('/admin/dashboard') ? 'page' : undefined}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Admin Dashboard
+            </Link>
           )}
         </nav>
 
