@@ -333,6 +333,97 @@
   line-height: 1.55;
 }
 
+/* Team Box in Milestone Checkpoint Card */
+.card-team-box {
+  background: rgba(34, 211, 238, 0.04);
+  border: 1px solid rgba(34, 211, 238, 0.14);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.8rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.card-team-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.card-team-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sea-cyan);
+}
+
+.card-team-names {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.card-team-names.leads {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Footer Row */
+.card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.card-bounty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--pirate-gold-light);
+}
+
+.card-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(212, 175, 55, 0.15) 100%);
+  border: 1px solid var(--sea-cyan);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.45rem 1.05rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(34, 211, 238, 0.25);
+}
+
+.card-explore-btn:hover {
+  background: linear-gradient(135deg, var(--sea-cyan) 0%, var(--pirate-gold) 100%);
+  color: #030b14;
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.55);
+  transform: translateY(-2px);
+}
+
+.card-explore-btn .explore-arrow {
+  transition: transform 0.2s ease;
+}
+
+.card-explore-btn:hover .explore-arrow {
+  transform: translateX(3px);
+}
+
 /* ==========================================================================
    HEADS-UP DISPLAY (HUD) OVERLAY
    ========================================================================= */

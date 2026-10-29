@@ -34,6 +34,8 @@ export interface FestEvent {
   quest: QuestTier;
   image: string;
   link?: string;
+  leads?: string[];
+  team?: string[];
 }
 
 export const QUEST_CONFIG: Record<
@@ -81,6 +83,15 @@ export const events: FestEvent[] = [
     quest: "Main Quest",
     status: "upcoming",
     image: marathonImg,
+    leads: ["Harsh", "Amandeep"],
+    team: [
+      "Varun",
+      "Abhinav",
+      "Anupurbha",
+      "Sahiti",
+      "Dhruv",
+      "Sulankita",
+    ],
   },
   {
     id: "tube-trolls",
@@ -88,6 +99,14 @@ export const events: FestEvent[] = [
     quest: "Main Quest",
     status: "upcoming",
     image: tubeTrollsImg,
+    team: [
+      "Sahiti",
+      "Sia",
+      "Mohana",
+      "Shrawani",
+      "Hasini",
+      "Nandadulla",
+    ],
   },
 
   // Side Quests: Storyforge Championships, Poetry Slam, Abyssal Tribunal
@@ -97,6 +116,7 @@ export const events: FestEvent[] = [
     quest: "Side Quest",
     status: "upcoming",
     image: storyforgeImg,
+    team: ["Sarvjeet", "Sulankita", "Kavya", "Prisha"],
   },
   {
     id: "poetry-slam",
@@ -104,6 +124,8 @@ export const events: FestEvent[] = [
     quest: "Side Quest",
     status: "upcoming",
     image: poetrySlamImg,
+    leads: ["Vaibhavi"],
+    team: ["Shubham", "Samriddhi", "Shailesh", "Prince", "Sahiti"],
   },
   {
     id: "abyssal-tribunal",
@@ -111,6 +133,14 @@ export const events: FestEvent[] = [
     quest: "Side Quest",
     status: "upcoming",
     image: abyssalTribunalImg,
+    team: [
+      "Ashish",
+      "Anupurba",
+      "Navin",
+      "Dhruv tej",
+      "Varun",
+      "Abhinav verma",
+    ],
   },
 
   // Fun Quests: Jenga, Snakes and Ladders, Other Fun Games

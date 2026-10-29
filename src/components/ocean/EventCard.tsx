@@ -4,6 +4,8 @@ import { Pearl } from "./OceanDecor";
 
 export function EventCard({ event }: { event: FestEvent }) {
   const [imgError, setImgError] = useState(false);
+  const hasLeads = Boolean(event.leads && event.leads.length > 0);
+  const hasTeam = Boolean(event.team && event.team.length > 0);
 
   return (
     <article className="glass group relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-aqua/60 hover:shadow-glow">
@@ -22,10 +24,35 @@ export function EventCard({ event }: { event: FestEvent }) {
           </div>
         )}
       </div>
-      <div className="p-3 text-center sm:p-4">
-        <h3 className="font-display text-lg font-semibold text-pearl transition-colors group-hover:text-aqua sm:text-xl">
+      <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 text-left">
+        <h3 className="font-display text-lg font-semibold text-pearl transition-colors group-hover:text-aqua sm:text-xl text-center">
           {event.title}
         </h3>
+
+        {(hasLeads || hasTeam) && (
+          <div className="mt-3.5 space-y-2 border-t border-border/40 pt-3 text-xs">
+            {hasLeads && (
+              <div className="flex flex-col gap-0.5">
+                <span className="font-mono text-[10.5px] font-semibold uppercase tracking-wider text-aqua">
+                  Team {event.leads!.length > 1 ? "Leads" : "Lead"}:
+                </span>
+                <span className="font-medium text-pearl">
+                  {event.leads!.join(", ")}
+                </span>
+              </div>
+            )}
+            {hasTeam && (
+              <div className="flex flex-col gap-0.5">
+                <span className="font-mono text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Team:
+                </span>
+                <span className="text-muted-foreground/90 leading-relaxed">
+                  {event.team!.join(", ")}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );

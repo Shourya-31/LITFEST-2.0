@@ -17,6 +17,8 @@ export interface TimelineMilestone {
   bountyOrPrize: string;
   coordinates: string;
   status: string;
+  leads?: string[];
+  team?: string[];
 }
 
 export interface PirateWheelTimelineProps {

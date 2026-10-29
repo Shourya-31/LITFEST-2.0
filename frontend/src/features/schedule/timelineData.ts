@@ -27,7 +27,7 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     crewRoles: 'Open to All Festival Voyagers & Faculty',
     bountyOrPrize: 'Inaugural Honors & Fest Badges',
     coordinates: '21.2480° N, 81.6040° E',
-    status: 'Navigating',
+    status: 'Navigating'
   },
   {
     id: 1,
@@ -45,7 +45,7 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     crewRoles: 'Teams of 2–3 Navigators',
     bountyOrPrize: 'Bounty Pool: ₹13,000 + Merit Scroll',
     coordinates: '21.2482° N, 81.6042° E',
-    status: 'Charted',
+    status: 'Charted'
   },
   {
     id: 2,
@@ -64,6 +64,15 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Exclusive Litfest Bookmarks & Literary Goodies',
     coordinates: '21.2484° N, 81.6044° E',
     status: 'Charted',
+    team: [
+      'Manogna',
+      'Anshika',
+      'Tejal',
+      'Arnav',
+      'Sahiti',
+      'Shravani',
+      'Prakhar'
+    ]
   },
   {
     id: 3,
@@ -82,6 +91,12 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Bounty Pool: ₹14,000 + Golden Quill Trophy',
     coordinates: '21.2486° N, 81.6046° E',
     status: 'Charted',
+    team: [
+      'Sarvjeet',
+      'Sulankita',
+      'Kavya',
+      'Prisha'
+    ]
   },
   {
     id: 4,
@@ -100,6 +115,12 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Bounty Pool: ₹12,500 + Silver Compass',
     coordinates: '21.2488° N, 81.6048° E',
     status: 'Charted',
+    team: [
+      'Sarvjeet',
+      'Sulankita',
+      'Kavya',
+      'Prisha'
+    ]
   },
   {
     id: 5,
@@ -118,6 +139,14 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Bounty Pool: ₹15,000 + Orator’s Trident',
     coordinates: '21.2490° N, 81.6050° E',
     status: 'Charted',
+    team: [
+      'Sahiti',
+      'Sia',
+      'Mohana',
+      'Shrawani',
+      'Hasini',
+      'Nandadulla'
+    ]
   },
   {
     id: 6,
@@ -136,6 +165,14 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Bounty Pool: ₹14,000 + Laureate Laurels',
     coordinates: '21.2492° N, 81.6052° E',
     status: 'Charted',
+    leads: ['Vaibhavi'],
+    team: [
+      'Shubham',
+      'Samriddhi',
+      'Shailesh',
+      'Prince',
+      'Sahiti'
+    ]
   },
   {
     id: 7,
@@ -154,6 +191,11 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Best Delegate & High Commendation Awards',
     coordinates: '21.2494° N, 81.6054° E',
     status: 'Charted',
+    team: [
+      'Apeksha',
+      'Aditi',
+      'Sulankita'
+    ]
   },
   {
     id: 8,
@@ -172,6 +214,15 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Bounty Pool: ₹13,000 + Swift Quill Medal',
     coordinates: '21.2496° N, 81.6056° E',
     status: 'Charted',
+    leads: ['Harsh', 'Amandeep'],
+    team: [
+      'Varun',
+      'Abhinav',
+      'Anupurbha',
+      'Sahiti',
+      'Dhruv',
+      'Sulankita'
+    ]
   },
   {
     id: 9,
@@ -190,5 +241,13 @@ export const PIRATE_WHEEL_MILESTONES: TimelineMilestone[] = [
     bountyOrPrize: 'Grand Championship Trophy + ₹17,000 Bounty',
     coordinates: '21.2498° N, 81.6058° E',
     status: 'Charted',
-  },
+    team: [
+      'Ashish',
+      'Anupurba',
+      'Navin',
+      'Dhruv tej',
+      'Varun',
+      'Abhinav verma'
+    ]
+  }
 ];

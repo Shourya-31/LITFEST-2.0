@@ -10,7 +10,8 @@ import {
   Anchor,
   ChevronLeft,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Award
 } from 'lucide-react';
 import { PIRATE_WHEEL_MILESTONES } from './timelineData';
 import { PirateWheelSvg } from './PirateWheelSvg';
@@ -567,6 +568,50 @@ export const PirateWheelTimeline: React.FC<PirateWheelTimelineProps> = ({
                       <span>Highlights:</span>
                     </div>
                     <p className="highlights-desc">{milestone.highlights}</p>
+                  </div>
+
+                  {(milestone.leads?.length || milestone.team?.length) ? (
+                    <div className="card-team-box">
+                      {milestone.leads && milestone.leads.length > 0 && (
+                        <div className="card-team-row">
+                          <span className="card-team-label">
+                            Team {milestone.leads.length > 1 ? 'Leads' : 'Lead'}:
+                          </span>
+                          <span className="card-team-names leads">
+                            {milestone.leads.join(', ')}
+                          </span>
+                        </div>
+                      )}
+                      {milestone.team && milestone.team.length > 0 && (
+                        <div className="card-team-row">
+                          <span className="card-team-label">Team:</span>
+                          <span className="card-team-names">
+                            {milestone.team.join(', ')}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
+
+                  <div className="card-footer-row">
+                    <div className="card-bounty-badge">
+                      <Award size={15} />
+                      <span>{milestone.bountyOrPrize}</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="card-explore-btn interactive"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        zoomToMilestone(idx);
+                        if (onMilestoneSelect) onMilestoneSelect(milestone);
+                      }}
+                      title={`Inspect details for ${milestone.title}`}
+                      aria-label={`Explore details for Event ${milestone.eventNumber || idx + 1}: ${milestone.title}`}
+                    >
+                      <span>Explore Event</span>
+                      <ChevronRight size={14} className="explore-arrow" />
+                    </button>
                   </div>
                 </article>
               </div>
