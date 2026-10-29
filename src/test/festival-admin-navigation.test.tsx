@@ -42,7 +42,7 @@ afterEach(() => {
 describe("homepage festival navigation", () => {
   it("only exposes the admin link to an authenticated admin", () => {
     const { rerender } = renderNavigation();
-    expect(screen.queryByRole("link", { name: "Admin Dashboard" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Administration" })).toBeNull();
     expect(screen.getByRole("button", { name: "Login" })).toBeTruthy();
 
     authState.isAuthenticated = true;
@@ -58,7 +58,7 @@ describe("homepage festival navigation", () => {
         <CurrentPath />
       </MemoryRouter>,
     );
-    expect(screen.queryByRole("link", { name: "Admin Dashboard" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Administration" })).toBeNull();
     expect(screen.getByRole("link", { name: "Dashboard" })).toBeTruthy();
 
     authState.user = {
@@ -73,7 +73,7 @@ describe("homepage festival navigation", () => {
         <CurrentPath />
       </MemoryRouter>,
     );
-    expect(screen.getByRole("link", { name: "Admin Dashboard" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Administration" })).toBeTruthy();
   });
 
   it("navigates to the admin route, marks it active, and closes the mobile menu", () => {
@@ -91,9 +91,9 @@ describe("homepage festival navigation", () => {
       "mobile-active",
     );
 
-    fireEvent.click(screen.getByRole("link", { name: "Admin Dashboard" }));
+    fireEvent.click(screen.getByRole("link", { name: "Administration" }));
     expect(screen.getByTestId("current-path")).toHaveTextContent("/admin/dashboard");
-    expect(screen.getByRole("link", { name: "Admin Dashboard" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Administration" })).toHaveAttribute(
       "aria-current",
       "page",
     );

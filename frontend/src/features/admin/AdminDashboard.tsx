@@ -372,8 +372,10 @@ export const AdminDashboard: React.FC = () => {
                       setReason(event.target.value);
                     }}
                   />
-                  {submitError && <p className="admin-error" role="alert">{submitError}</p>}
-                  {feedback && <p className="admin-success" role="status">{feedback}</p>}
+                  <div className="admin-feedback" aria-live="polite">
+                    {submitError && <p className="admin-error" role="alert">{submitError}</p>}
+                    {feedback && <p className="admin-success" role="status">{feedback}</p>}
+                  </div>
                   <button type="submit" className="admin-button admin-submit-button" disabled={submitting || historyLoading}>
                     {submitting ? 'Saving adjustment…' : action === 'ADD' ? 'Confirm add points' : 'Confirm deduction'}
                   </button>

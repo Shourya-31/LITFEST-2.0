@@ -143,7 +143,7 @@ export const FestivalNav: React.FC<FestivalNavProps> = ({
               aria-current={pathname.startsWith('/admin/dashboard') ? 'page' : undefined}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Admin Dashboard
+              Administration
             </Link>
           )}
         </nav>
