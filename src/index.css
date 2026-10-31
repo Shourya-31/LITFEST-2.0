@@ -1,0 +1,90 @@
+@import './styles/theme.css';
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-abyss: #010610;
+  --color-ocean-deep: #020b18;
+  --color-ocean-mid: #05162a;
+  --color-ocean-teal: #082845;
+  --color-biolum-cyan: #38bdf8;
+  --color-biolum-glow: #22d3ee;
+  --color-surface-beam: #a5f3fc;
+  --color-text-bright: #f0f9ff;
+  --color-text-dim: #94a3b8;
+  --font-display: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--color-abyss);
+  color: var(--color-text-bright);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   HIDE SCROLLBARS GLOBALLY ACROSS ALL BROWSERS (CHROME, SAFARI, FIREFOX, EDGE)
+   ========================================================================== */
+html,
+body,
+#root,
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE & Edge */
+}
+
+::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ultra-wide & 4K display optimizations */
+@media (min-width: 2560px) {
+  :root {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 3840px) {
+  :root {
+    font-size: 21px;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Accessible reduced-motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

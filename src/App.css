@@ -1,0 +1,62 @@
+/* App root container styles */
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.route-loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  background: #010610;
+  color: #f0f9ff;
+}
+
+.abyssal-explorer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+  background: #062a3c;
+}
+
+.abyssal-explorer-overlay > .abyssal-explorer {
+  position: absolute;
+  border-radius: 0;
+}
+
+.abyssal-destination-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  overflow: auto;
+  background: #062a3c;
+}
+
+.abyssal-destination-overlay > #timeline-stage {
+  position: absolute;
+  inset: 0;
+  min-height: 100%;
+}
+
+.abyssal-destination-exit {
+  position: fixed;
+  z-index: 240;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.7rem 1rem;
+  color: #e9f8f7;
+  background: rgba(5, 25, 37, 0.82);
+  border: 1px solid rgba(142, 209, 213, 0.45);
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.abyssal-destination-exit:hover,
+.abyssal-destination-exit:focus-visible {
+  background: rgba(22, 82, 103, 0.95);
+}

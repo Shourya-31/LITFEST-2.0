@@ -1,0 +1,82 @@
+/* ==========================================================================
+   LitFest 2.0 - Mediterranean Sunset Design System Tokens
+   Source: LitFest_Frontend_Guide.pdf (Sections 2 & 5)
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. Mediterranean Sunset Palette (Agreed Tokens)
+     ------------------------------------------------------------------------ */
+  --color-midnight: #082567;
+  --color-midnight-dark: #061d52;
+  --color-midnight-light: #0d368d;
+  --color-ivory: #FAF6F1;
+  --color-coral: #F23850;
+  --color-peach: #F9CBB8;
+  --color-rose: #D98A9E;
+  --color-violet: #805080;
+  --color-ink: #20243A;
+  --color-slate: #626579;
+  --color-white: #ffffff;
+  --color-sun-glow: #ffdfd3;
+
+  /* ------------------------------------------------------------------------
+     2. Semantic Tokens
+     ------------------------------------------------------------------------ */
+  --color-bg: var(--color-ivory);
+  --color-text: var(--color-ink);
+  --color-primary: var(--color-midnight);
+  --color-accent: var(--color-coral);
+  --color-error: var(--color-coral);
+  --color-success: #15803d;
+
+  /* Form & Interactive Tokens */
+  --color-input-bg: rgba(255, 255, 255, 0.92);
+  --color-border: rgba(32, 36, 58, 0.18);
+  --color-border-hover: rgba(8, 37, 103, 0.4);
+  --color-border-focus: var(--color-midnight);
+  --color-ring-focus: rgba(8, 37, 103, 0.16);
+
+  /* ------------------------------------------------------------------------
+     3. Typography Tokens (Section 4)
+     ------------------------------------------------------------------------ */
+  --font-auth-display: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-accent: 'Marcellus', 'Cormorant Garamond', serif;
+
+  /* ------------------------------------------------------------------------
+     4. Strict 8-Step Spacing Scale (Section 5)
+     Only 4, 8, 12, 16, 24, 32, 48, 64 px allowed. No random values.
+     ------------------------------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ------------------------------------------------------------------------
+     5. Shape Tokens (Section 5)
+     ------------------------------------------------------------------------ */
+  --radius-sm: 6px;
+  --radius-input: 9px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* ------------------------------------------------------------------------
+     6. Shadows & Depth
+     ------------------------------------------------------------------------ */
+  --shadow-soft: 0 4px 20px -2px rgba(8, 37, 103, 0.08);
+  --shadow-card: 0 24px 50px -12px rgba(8, 37, 103, 0.16), 0 2px 10px rgba(8, 37, 103, 0.04);
+  --shadow-button: 0 4px 14px rgba(8, 37, 103, 0.22);
+  --shadow-focus: 0 0 0 3px var(--color-ring-focus);
+
+  /* ------------------------------------------------------------------------
+     7. Layout Breakpoints & Containers (Section 5)
+     ------------------------------------------------------------------------ */
+  --content-max-width: 1120px;
+  --form-column-max-width: 400px;
+}

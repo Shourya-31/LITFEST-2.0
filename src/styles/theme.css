@@ -1,0 +1,193 @@
+/* ==========================================================================
+   LITFEST 2.0 DESIGN SYSTEM & THEME TOKENS
+   Theme: Official Underwater Deep-Sea Oceanic Odyssey
+   Palette exact match to feat/underwater-homepage
+   ========================================================================== */
+
+:root {
+  /* Core Deep-Sea Oceanic Palette from feat/underwater-homepage */
+  --color-abyss: #010610;
+  --color-ocean-deep: #020b18;
+  --color-ocean-mid: #05162a;
+  --color-ocean-teal: #082845;
+  --color-biolum-cyan: #38bdf8;
+  --color-biolum-glow: #22d3ee;
+  --color-surface-beam: #a5f3fc;
+  --color-text-bright: #f0f9ff;
+  --color-text-dim: #94a3b8;
+
+  /* Typography */
+  --font-display: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-pirate: 'Pirata One', 'Cinzel', cursive;
+  --font-mono: 'Space Grotesk', monospace;
+
+  /* Theme System Mappings */
+  --sea-abyss: #010610;
+  --sea-deep: #020b18;
+  --sea-mid: #05162a;
+  --sea-surface: #082845;
+  --sea-cyan: #38bdf8;
+  --sea-glow: #22d3ee;
+  --sea-beam: #a5f3fc;
+  --sea-foam: #7dd3fc;
+  --sea-mist: rgba(56, 189, 248, 0.16);
+
+  /* Accents & Inlays */
+  --pirate-gold: #38bdf8;
+  --pirate-gold-glow: #22d3ee;
+  --pirate-gold-light: #a5f3fc;
+  --pirate-bronze: #0284c7;
+  --pirate-wood: #05162a;
+  --pirate-wood-dark: #020b18;
+
+  /* Beach-legacy variable aliases redirected to underwater cyan palette */
+  --beach-ocean-deep: #010610;
+  --beach-ocean-azure: #020b18;
+  --beach-lagoon-teal: #082845;
+  --beach-lagoon-mid: #05162a;
+  --beach-turquoise: #22d3ee;
+  --beach-seafoam: #38bdf8;
+  --beach-water-shallow: #a5f3fc;
+  --beach-cyan: #22d3ee;
+  --beach-sky: #38bdf8;
+  --beach-sand-light: #f0f9ff;
+  --beach-sand: #e0f2fe;
+  --beach-sand-gold: #38bdf8;
+  --beach-sun-gold: #22d3ee;
+  --beach-sun-amber: #0284c7;
+
+  /* Typography Colors */
+  --text-primary: #f0f9ff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-gold: #a5f3fc;
+  --text-cyan: #38bdf8;
+  --text-sand: #e0f2fe;
+
+  /* Glassmorphism & Submerged Borders */
+  --bg-glass-ocean: rgba(1, 6, 16, 0.88);
+  --bg-glass-card: rgba(2, 14, 30, 0.94);
+  --bg-glass-highlight: rgba(56, 189, 248, 0.12);
+  --border-ocean-subtle: rgba(56, 189, 248, 0.28);
+  --border-ocean-glow: rgba(56, 189, 248, 0.6);
+  --border-gold-subtle: rgba(56, 189, 248, 0.35);
+  --border-gold-strong: rgba(34, 211, 238, 0.75);
+
+  /* Shadows & Deep Bioluminescent Glows */
+  --shadow-ocean-sm: 0 4px 14px rgba(0, 4, 10, 0.6);
+  --shadow-ocean-lg: 0 25px 60px rgba(0, 2, 6, 0.9);
+  --glow-cyan-sm: 0 0 16px rgba(56, 189, 248, 0.45);
+  --glow-cyan-lg: 0 0 38px rgba(34, 211, 238, 0.65);
+  --glow-gold-sm: 0 0 16px rgba(56, 189, 248, 0.4);
+  --glow-gold-lg: 0 0 38px rgba(165, 243, 252, 0.55);
+
+  /* Layout */
+  --max-width: 1360px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-abyss);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 50% 0%, #082845 0%, #05162a 35%, #020b18 70%, #010610 100%);
+  background-attachment: fixed;
+}
+
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Scrollbar hidden */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-abyss);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-abyss);
+}
+
+::-webkit-scrollbar-thumb:hover {
+/* disabled */
+}
+
+/* Interactive helper */
+.interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Wave Background Animation Effect */
+.ocean-ambient-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ocean-wave-glow {
+  position: absolute;
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  will-change: transform;
+  animation: floatOceanGlow 22s ease-in-out infinite alternate;
+}
+
+.glow-1 {
+  top: -100px;
+  left: 10%;
+  background: radial-gradient(circle, var(--color-biolum-cyan) 0%, transparent 70%);
+}
+
+.glow-2 {
+  bottom: -150px;
+  right: 5%;
+  background: radial-gradient(circle, var(--color-surface-beam) 0%, transparent 70%);
+  animation-duration: 28s;
+  animation-delay: -7s;
+}
+
+@keyframes floatOceanGlow {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 40px) scale(1.15); }
+  100% { transform: translate(-40px, -50px) scale(0.95); }
+}

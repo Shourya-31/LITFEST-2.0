@@ -1,0 +1,221 @@
+/* Container anchored in the lower-right region of the About section */
+.lanternfish-container {
+  position: absolute;
+  right: clamp(15px, 5vw, 60px);
+  bottom: clamp(60px, 12vh, 160px);
+  width: clamp(170px, 18vw, 240px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  z-index: 12;
+  animation: lanternfishHover 9s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.lanternfish-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgba(2, 13, 28, 0.95));
+}
+
+/* Ambient water illumination halo cast onto surrounding water */
+.esca-water-halo {
+  position: absolute;
+  top: 15%;
+  left: 2%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.28) 0%,
+    rgba(14, 165, 233, 0.12) 40%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  pointer-events: none;
+  animation: escaHaloBreathe 5.5s ease-in-out infinite alternate;
+}
+
+/* ----------------------------------------------------
+   1. Fish Body & Hover Motions
+   ---------------------------------------------------- */
+@keyframes lanternfishHover {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(1deg);
+  }
+  35% {
+    transform: translate3d(-12px, -18px, 0) rotate(-1.5deg);
+  }
+  70% {
+    transform: translate3d(-6px, 10px, 0) rotate(2deg);
+  }
+  100% {
+    transform: translate3d(10px, -8px, 0) rotate(-0.5deg);
+  }
+}
+
+/* ----------------------------------------------------
+   2. Searching Motion of the Lure (Curious deep-sea searching)
+   ---------------------------------------------------- */
+.lantern-lure-group {
+  transform-origin: 66px 66px;
+  animation: lureSearchMotion 6.5s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes lureSearchMotion {
+  0% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+  25% {
+    transform: rotate(-3deg) skewX(-2deg);
+  }
+  60% {
+    transform: rotate(4.5deg) skewX(3deg);
+  }
+  100% {
+    transform: rotate(-1.5deg) skewX(-1deg);
+  }
+}
+
+/* ----------------------------------------------------
+   3. Glowing Esca Bulb & Soft Light Fluctuation
+   ---------------------------------------------------- */
+.esca-glowing-bulb {
+  animation: escaBulbPulse 4.5s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 20px #0284c7);
+}
+
+.esca-soft-aura {
+  animation: escaAuraPulse 4.5s ease-in-out infinite alternate;
+}
+
+.esca-core-spark {
+  animation: escaSparkTwinkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes escaBulbPulse {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 8px #38bdf8) drop-shadow(0 0 16px #0284c7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 14px #7dd3fc) drop-shadow(0 0 28px #38bdf8);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(0.98);
+    filter: drop-shadow(0 0 10px #0ea5e9) drop-shadow(0 0 18px #0369a1);
+  }
+}
+
+@keyframes escaAuraPulse {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes escaHaloBreathe {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.55;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes escaSparkTwinkle {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 3px #ffffff);
+  }
+}
+
+/* ----------------------------------------------------
+   4. Tail Wag & Fin Motion (Organic and subtle)
+   ---------------------------------------------------- */
+.lantern-tail-group {
+  transform-origin: 188px 104px;
+  animation: lanternTailWag 3.4s ease-in-out infinite alternate;
+}
+
+@keyframes lanternTailWag {
+  0% {
+    transform: rotate(-3deg) scaleY(0.96);
+  }
+  50% {
+    transform: rotate(3.5deg) scaleY(1.04);
+  }
+  100% {
+    transform: rotate(-2deg) scaleY(0.98);
+  }
+}
+
+.lantern-pectoral-fin {
+  transform-origin: 92px 104px;
+  animation: pectoralFlutter 4.8s ease-in-out infinite alternate;
+}
+
+@keyframes pectoralFlutter {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+  100% {
+    transform: rotate(-1deg);
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 900px) {
+  .lanternfish-container {
+    right: 12px;
+    bottom: 40px;
+    width: 140px;
+    opacity: 0.85;
+  }
+
+  .esca-water-halo {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lanternfish-container,
+  .lantern-lure-group,
+  .esca-glowing-bulb,
+  .esca-soft-aura,
+  .esca-water-halo,
+  .esca-core-spark,
+  .lantern-tail-group,
+  .lantern-pectoral-fin {
+    animation: none !important;
+  }
+}

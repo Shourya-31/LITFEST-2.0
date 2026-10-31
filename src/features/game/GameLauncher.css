@@ -1,0 +1,639 @@
+.ocean-game-entry {
+  position: relative;
+  min-height: 100vh;
+  box-sizing: border-box;
+  z-index: 20;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(165px, 19vh, 190px) max(6vw, 24px) 60px;
+  border-block: none;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, 0.22) 0%, rgba(2, 12, 28, 0.98) 45%, #010610 100%);
+  color: var(--color-text-bright, #f0f9ff);
+  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  scroll-margin-top: 70px;
+}
+
+/* =========================================
+   ARCADE & 3D HEADER
+   ========================================= */
+.ocean-arcade-header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.arcade-eyebrow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #38bdf8;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 4px 14px;
+  border-radius: 9999px;
+  margin-bottom: 14px;
+}
+
+.ocean-arcade-title {
+  font-family: var(--font-serif, "Cinzel", Georgia, serif);
+  font-size: clamp(26px, 3.2vw, 42px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0 0 12px;
+  text-shadow: 0 0 30px rgba(56, 189, 248, 0.45), 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.ocean-arcade-desc {
+  font-size: clamp(14px, 1.15vw, 16px);
+  color: #94a3b8;
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* =========================================
+   3D ABYSSAL VOYAGE SPOTLIGHT BANNER
+   ========================================= */
+.abyss-showcase-container {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 40px;
+}
+
+.abyss-showcase-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: clamp(26px, 3.5vw, 38px) clamp(24px, 4vw, 44px);
+  border-radius: 24px;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background:
+    radial-gradient(ellipse at 15% 40%, rgba(14, 165, 233, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 60%, rgba(6, 182, 212, 0.16) 0%, transparent 55%),
+    linear-gradient(135deg, rgba(3, 28, 54, 0.94) 0%, rgba(2, 16, 36, 0.98) 100%);
+  box-shadow:
+    0 16px 48px rgba(1, 10, 26, 0.75),
+    0 0 35px rgba(14, 165, 233, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.abyss-showcase-card:hover {
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow:
+    0 20px 60px rgba(1, 10, 26, 0.85),
+    0 0 45px rgba(56, 189, 248, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.abyss-showcase-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.abyss-showcase-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.abyss-showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #38bdf8;
+  background: rgba(14, 165, 233, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 3px 12px;
+  border-radius: 9999px;
+}
+
+.beacon-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: beaconPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes beaconPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.4); }
+}
+
+.abyss-hardware-tag {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+}
+
+.abyss-showcase-title {
+  font-family: var(--font-serif, 'Cinzel', Georgia, serif);
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+.abyss-showcase-desc {
+  font-size: clamp(0.9rem, 1.05vw, 1.05rem);
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  max-width: 720px;
+}
+
+.abyss-showcase-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.showcase-feat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #93c5fd;
+  background: rgba(30, 58, 138, 0.35);
+  border: 1px solid rgba(147, 197, 253, 0.2);
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+.abyss-showcase-action {
+  flex-shrink: 0;
+}
+
+.abyss-showcase-launch-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 30px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(56, 189, 248, 0.85);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.6) 0%, rgba(2, 132, 199, 0.9) 100%);
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 8px 30px rgba(14, 165, 233, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.abyss-showcase-launch-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: #a5f3fc;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.75) 0%, rgba(14, 165, 233, 0.98) 100%);
+  box-shadow: 0 14px 44px rgba(14, 165, 233, 0.6), 0 0 28px rgba(56, 189, 248, 0.5);
+}
+
+.launch-btn-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.launch-btn-sub {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #e0f2fe;
+  opacity: 0.9;
+}
+
+.launch-btn-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.launch-btn-arrow {
+  font-size: 1.15rem;
+  transition: transform 0.25s ease;
+}
+
+.abyss-showcase-launch-btn:hover .launch-btn-arrow {
+  transform: translate(3px, -3px);
+}
+
+.arcade-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+
+.arcade-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(14, 165, 233, 0.1);
+  color: #e0f2fe;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.arcade-nav-btn:hover {
+  background: rgba(14, 165, 233, 0.25);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   CARDS GRID & CARDS
+   ========================================= */
+.ocean-game-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 4px;
+}
+
+.ocean-game-heading {
+  min-width: 0;
+  margin: 0;
+  font: inherit;
+  display: flex;
+}
+
+.ocean-game-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+  min-height: 220px;
+  box-sizing: border-box;
+  padding: 26px 26px 20px;
+  border-radius: 20px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  touch-action: manipulation;
+  color: #f0f9ff;
+  font: inherit;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              box-shadow 0.35s ease,
+              background 0.35s ease;
+}
+
+/* --- Thematic Card Styles --- */
+
+/* 1. Ocean Rush (Cyan) */
+.ocean-game-card-rush {
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  background: linear-gradient(165deg, rgba(14, 165, 233, 0.14) 0%, rgba(3, 22, 46, 0.92) 50%, rgba(1, 10, 24, 0.98) 100%);
+  box-shadow: 0 8px 30px rgba(2, 132, 199, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.ocean-game-card-rush:hover,
+.ocean-game-card-rush:focus-visible {
+  border-color: #38bdf8;
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(2, 132, 199, 0.42), 0 0 32px rgba(56, 189, 248, 0.32);
+}
+
+.rush-status {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.rush-play-btn {
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  color: #ffffff;
+  box-shadow: 0 2px 14px rgba(14, 165, 233, 0.45);
+}
+
+/* 2. Atlantis (Amber / Gold) */
+.ocean-game-card-atlantis {
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  background: linear-gradient(165deg, rgba(245, 158, 11, 0.14) 0%, rgba(30, 20, 8, 0.92) 50%, rgba(15, 10, 4, 0.98) 100%);
+  box-shadow: 0 8px 30px rgba(217, 119, 6, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.ocean-game-card-atlantis:hover,
+.ocean-game-card-atlantis:focus-visible {
+  border-color: #fbbf24;
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(217, 119, 6, 0.42), 0 0 32px rgba(251, 191, 36, 0.32);
+}
+
+.atlantis-status {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.atlantis-play-btn {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: #ffffff;
+  box-shadow: 0 2px 14px rgba(245, 158, 11, 0.45);
+}
+
+/* 3. Aqua Splash (Emerald / Aqua) */
+.ocean-game-card-aqua {
+  border: 1.5px solid rgba(16, 185, 129, 0.45);
+  background: linear-gradient(165deg, rgba(16, 185, 129, 0.14) 0%, rgba(6, 30, 24, 0.92) 50%, rgba(2, 14, 12, 0.98) 100%);
+  box-shadow: 0 8px 30px rgba(5, 150, 105, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.ocean-game-card-aqua:hover,
+.ocean-game-card-aqua:focus-visible {
+  border-color: #34d399;
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(5, 150, 105, 0.42), 0 0 32px rgba(52, 211, 153, 0.32);
+}
+
+.aqua-status {
+  background: #059669;
+  color: #ffffff;
+}
+
+.aqua-play-btn {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #ffffff;
+  box-shadow: 0 2px 14px rgba(16, 185, 129, 0.45);
+}
+
+/* Card Typography & Layout */
+.ocean-game-eyebrow {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.ocean-game-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--font-serif, "Cinzel", Georgia, serif);
+  font-size: clamp(21px, 2vw, 25px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0;
+}
+
+.game-status-badge {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.ocean-game-tagline {
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ocean-game-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+}
+
+.ocean-game-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+.play-triangle {
+  font-size: 9px;
+  transition: transform 0.25s ease;
+}
+
+.ocean-game-card:hover .play-triangle {
+  transform: translateX(3px);
+}
+
+.ocean-game-card:hover .ocean-game-play-btn {
+  filter: brightness(1.15);
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25);
+}
+
+.ocean-game-meta {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.ocean-game-card:focus-visible {
+  outline: 3px solid #38bdf8;
+  outline-offset: 4px;
+}
+
+.ocean-game-card:active {
+  transform: translateY(-2px);
+}
+
+/* Background Waves & Bubbles */
+.ocean-game-ambience {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ocean-game-waves {
+  position: absolute;
+  right: -5%;
+  bottom: -20px;
+  width: 120%;
+  height: 95%;
+}
+
+.ocean-game-wave {
+  transform-origin: center bottom;
+  animation: oceanGameSwell 9s ease-in-out infinite alternate;
+}
+
+.ocean-game-wave-back {
+  fill: #38bdf80a;
+}
+
+.ocean-game-wave-front {
+  fill: #38bdf80f;
+  animation-duration: 7s;
+  animation-delay: -3s;
+  animation-direction: alternate-reverse;
+}
+
+.ocean-game-bubble {
+  position: absolute;
+  bottom: -24px;
+  left: 72%;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #a5f3fc80;
+  border-radius: 50%;
+  box-shadow: inset 0 0 5px #a5f3fc33, 0 0 8px #22d3ee26;
+  opacity: 0;
+  animation: oceanGameBubble 10s linear infinite;
+}
+
+.ocean-game-bubble:nth-of-type(2) { left: 85%; width: 14px; height: 14px; animation-duration: 13s; animation-delay: -5s; }
+.ocean-game-bubble:nth-of-type(3) { left: 55%; width: 6px; height: 6px; animation-delay: -3s; }
+.ocean-game-bubble:nth-of-type(4) { left: 94%; animation-duration: 11s; animation-delay: -8s; }
+.ocean-game-bubble:nth-of-type(5) { left: 36%; width: 7px; height: 7px; animation-duration: 12s; animation-delay: -6s; }
+.ocean-game-bubble:nth-of-type(6) { left: 65%; width: 12px; height: 12px; animation-delay: -1s; }
+
+@keyframes oceanGameSwell {
+  from { transform: translate(-2%, 8px); }
+  to { transform: translate(3%, -12px); }
+}
+
+@keyframes oceanGameBubble {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15%, 75% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(22px, -340px); }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+@media (max-width: 900px) {
+  .ocean-game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .abyss-showcase-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+  .abyss-showcase-action {
+    width: 100%;
+  }
+  .abyss-showcase-launch-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .ocean-game-entry {
+    padding: 40px 16px 54px;
+  }
+
+  .ocean-arcade-header {
+    margin-bottom: 24px;
+  }
+
+  .ocean-arcade-title {
+    font-size: 24px;
+  }
+
+  .ocean-game-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .ocean-game-card {
+    min-height: auto;
+    padding: 20px 20px 18px;
+  }
+
+  .abyss-showcase-card {
+    padding: 20px;
+  }
+
+  .abyss-showcase-title {
+    font-size: 1.25rem;
+  }
+
+  .abyss-showcase-desc {
+    font-size: 0.88rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ocean-game-wave,
+  .ocean-game-bubble,
+  .beacon-dot {
+    animation: none;
+  }
+  .ocean-game-card,
+  .ocean-game-play-btn,
+  .play-triangle,
+  .abyss-showcase-card,
+  .abyss-showcase-launch-btn {
+    transition: none;
+  }
+  .ocean-game-card:hover,
+  .ocean-game-card:focus-visible,
+  .abyss-showcase-card:hover,
+  .abyss-showcase-launch-btn:hover {
+    transform: none;
+  }
+}

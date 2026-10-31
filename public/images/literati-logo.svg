@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 165" width="100%" height="100%" fill="none">
+  <!-- Left Pages Layer 3 (Bottom Pale Mint) -->
+  <path d="M38 112 L38 118 C38 121 40 123 44 124 L94 136 L94 131 L43 114 Z" fill="#9fe3d5" />
+
+  <!-- Left Pages Layer 2 (Middle Seafoam) -->
+  <path d="M35 96 L35 104 C35 107 38 109 42 111 L94 128 L94 123 L41 99 C38 97 35 96 35 96 Z" fill="#58b5a4" />
+
+  <!-- Left Main Cover / Page Layer 1 (Rich Deep Teal) -->
+  <path d="M93 70 L43 42 C38 40 33 43 33 48 L33 87 C33 91 36 94 40 96 L93 121 Z" fill="#35786c" />
+
+  <!-- Right Pages Layer 3 (Bottom Pale Mint) -->
+  <path d="M162 112 L162 118 C162 121 160 123 156 124 L106 136 L106 131 L157 114 Z" fill="#9fe3d5" />
+
+  <!-- Right Pages Layer 2 (Middle Seafoam) -->
+  <path d="M165 96 L165 104 C165 107 162 109 158 111 L106 128 L106 123 L159 99 C162 97 165 96 165 96 Z" fill="#58b5a4" />
+
+  <!-- Right Main Cover / Page Layer 1 (Rich Deep Teal) -->
+  <path d="M107 70 L157 42 C162 40 167 43 167 48 L167 87 C167 91 164 94 160 96 L107 121 Z" fill="#35786c" />
+
+  <!-- Central Fountain Pen Nib Outline & Fill -->
+  <path
+    d="M100 8 L87 49 C85 55 86 63 89 71 L94 136 L106 136 L111 71 C114 63 115 55 113 49 Z"
+    fill="#ffffff"
+    stroke="#2c675c"
+    stroke-width="3.2"
+    stroke-linejoin="round"
+  />
+
+  <!-- Nib Slit Line -->
+  <line x1="100" y1="9" x2="100" y2="58" stroke="#2c675c" stroke-width="3" stroke-linecap="round" />
+
+  <!-- Nib Breather Hole -->
+  <circle cx="100" cy="64" r="5" fill="#ffffff" stroke="#2c675c" stroke-width="3" />
+
+  <!-- L I T E R A T I Typography -->
+  <text
+    x="100"
+    y="157"
+    text-anchor="middle"
+    font-family="'Outfit', 'Segoe UI', -apple-system, sans-serif"
+    font-size="12"
+    font-weight="600"
+    letter-spacing="5"
+    fill="#2dd4bf"
+  >
+    L I T E R A T I
+  </text>
+</svg>

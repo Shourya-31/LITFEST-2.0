@@ -1,0 +1,405 @@
+.underwater-title-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none; /* Let empty space pass through to background */
+  padding: 20px;
+}
+
+.title-content-flow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  pointer-events: auto; /* Buttons and interactive links */
+}
+
+/* Luminous water tendril filigree overlay behind/around the title */
+.title-tendrils-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  width: 100%;
+  max-width: 760px;
+  height: 200px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.85;
+}
+
+.tendrils-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.tendril-curve {
+  animation: tendrilFlow 8s ease-in-out infinite alternate;
+}
+
+.curve-1 {
+  animation-duration: 9s;
+}
+
+.curve-2 {
+  animation-duration: 11s;
+  animation-delay: -3s;
+}
+
+.curve-3 {
+  animation-duration: 7s;
+  animation-delay: -1.5s;
+}
+
+@keyframes tendrilFlow {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.97) rotate(-0.5deg);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.03) rotate(0.8deg);
+  }
+  100% {
+    opacity: 0.65;
+    transform: scale(0.99) rotate(-0.3deg);
+  }
+}
+
+.water-orb {
+  animation: orbPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes orbPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.8);
+    filter: drop-shadow(0 0 4px #7dd3fc);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.3);
+    filter: drop-shadow(0 0 12px #38bdf8);
+  }
+}
+
+/* =========================================
+   PRIMARY TITLE: LITFEST (Unboxed, Dominant Serif)
+   ========================================= */
+.ocean-litfest-title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: clamp(62px, 13vw, 136px);
+  font-weight: 900;
+  letter-spacing: clamp(8px, 2vw, 22px);
+  text-transform: uppercase;
+  line-height: 0.95;
+  user-select: none;
+  position: relative;
+  /* Luminous water-caustic gradient text fill */
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #e0f2fe 30%,
+    #a5f3fc 55%,
+    #38bdf8 80%,
+    #0284c7 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Multi-layered ocean glow */
+  filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.5))
+    drop-shadow(0 0 60px rgba(14, 165, 233, 0.35));
+  animation: titleSubtleShimmer 6s ease-in-out infinite alternate;
+}
+
+@keyframes titleSubtleShimmer {
+  0% {
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.45))
+      drop-shadow(0 0 50px rgba(14, 165, 233, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 32px rgba(125, 211, 252, 0.7))
+      drop-shadow(0 0 75px rgba(56, 189, 248, 0.5));
+  }
+  100% {
+    filter: drop-shadow(0 0 22px rgba(56, 189, 248, 0.5))
+      drop-shadow(0 0 55px rgba(14, 165, 233, 0.35));
+  }
+}
+
+/* =========================================
+   2.0 EDITION DIVIDER
+   ========================================= */
+.edition-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 18px;
+}
+
+.accent-bar {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(56, 189, 248, 0.6) 50%,
+    rgba(186, 230, 253, 0.9) 100%
+  );
+}
+
+.accent-bar.left-bar {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(56, 189, 248, 0.5) 40%,
+    rgba(186, 230, 253, 0.9) 100%
+  );
+}
+
+.accent-bar.right-bar {
+  background: linear-gradient(
+    270deg,
+    transparent 0%,
+    rgba(56, 189, 248, 0.5) 40%,
+    rgba(186, 230, 253, 0.9) 100%
+  );
+}
+
+.edition-text-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.edition-number {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3.6vw, 38px);
+  font-weight: 700;
+  letter-spacing: 8px;
+  color: #bae6fd;
+  text-shadow: 0 0 18px rgba(56, 189, 248, 0.65);
+}
+
+/* =========================================
+   PRIMARY HERO CALL TO ACTION (Single prominent Explore Events)
+   ========================================= */
+.hero-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 38px;
+}
+
+.ocean-cta.explore-btn {
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  min-width: 260px;
+  padding: 16px 44px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(14, 165, 233, 0.28) 0%,
+    rgba(3, 22, 48, 0.75) 100%
+  );
+  color: #f0f9ff;
+  border: 1.5px solid rgba(56, 189, 248, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 4px 28px rgba(2, 132, 199, 0.45),
+    inset 0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+.ocean-cta.explore-btn:hover {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(14, 165, 233, 0.45) 0%,
+    rgba(4, 28, 58, 0.85) 100%
+  );
+  border-color: #7dd3fc;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 38px rgba(56, 189, 248, 0.65),
+    inset 0 0 26px rgba(56, 189, 248, 0.4);
+}
+
+.cta-chevron {
+  transition: transform 0.25s ease;
+}
+
+.ocean-cta.explore-btn:hover .cta-chevron {
+  transform: translateX(5px);
+}
+
+/* =========================================
+   SCROLL INVITATION (Anchored to very bottom of homepage)
+   ========================================= */
+.scroll-invitation {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.75;
+  user-select: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: scrollFloat 2.6s ease-in-out infinite;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  padding: 8px 16px;
+  z-index: 25;
+}
+
+.scroll-invitation:hover {
+  opacity: 1;
+}
+
+.scroll-invitation:hover .scroll-arrow {
+  color: #7dd3fc;
+  filter: drop-shadow(0 0 8px #38bdf8);
+}
+
+.scroll-caption {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #94a3b8;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.scroll-invitation:hover .scroll-caption {
+  color: #e0f2fe;
+}
+
+.scroll-arrow {
+  color: #38bdf8;
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+@keyframes scrollFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .ocean-litfest-title {
+    letter-spacing: 5px;
+    font-size: clamp(46px, 14vw, 72px);
+  }
+
+  .edition-line {
+    max-width: 320px;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .edition-number {
+    font-size: 22px;
+    letter-spacing: 5px;
+  }
+
+  .hero-action-buttons {
+    margin-top: 28px;
+    width: 100%;
+  }
+
+  .ocean-cta.explore-btn {
+    min-width: 220px;
+    padding: 14px 32px;
+    font-size: 15px;
+  }
+
+  .scroll-invitation {
+    bottom: 18px;
+  }
+}
+
+/* Height-constrained displays (laptops, short screens) */
+@media (max-height: 720px) {
+  .ocean-litfest-title {
+    font-size: clamp(38px, 8vh, 68px);
+  }
+
+  .edition-line {
+    margin-top: 10px;
+    gap: 12px;
+  }
+
+  .hero-action-buttons {
+    margin-top: 18px;
+  }
+
+  .ocean-cta.explore-btn {
+    padding: 12px 32px;
+  }
+
+  .scroll-invitation {
+    bottom: 10px;
+    padding: 4px 12px;
+    gap: 4px;
+  }
+}
+
+/* Ultra-wide 4K displays */
+@media (min-width: 2560px) {
+  .title-content-flow {
+    max-width: 1200px;
+  }
+
+  .ocean-litfest-title {
+    font-size: clamp(84px, 7vw, 130px);
+  }
+
+  .edition-number {
+    font-size: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ocean-litfest-title,
+  .tendril-curve,
+  .water-orb,
+  .scroll-invitation {
+    animation: none !important;
+  }
+}

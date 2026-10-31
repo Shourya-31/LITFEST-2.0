@@ -1,0 +1,63 @@
+import {
+  createElement,
+  Pause,
+  Play,
+  Trophy,
+  BookOpen,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  Minimize2,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  RotateCw,
+  RotateCcw,
+  ArrowDown,
+  ArrowDownToLine,
+  Layers,
+  Coins,
+  Zap,
+  Eye,
+  Gamepad2,
+  Smartphone,
+  Compass,
+  type IconNode,
+  type SVGProps,
+} from "lucide";
+
+export function renderLucideIcon(iconNode: IconNode, attrs: SVGProps = {}): string {
+  const defaultAttrs: SVGProps = {
+    width: 18,
+    height: 18,
+    strokeWidth: 2,
+    class: "aq-icon",
+    ...attrs,
+  };
+  return createElement(iconNode, defaultAttrs).outerHTML;
+}
+
+export {
+  Pause,
+  Play,
+  Trophy,
+  BookOpen,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  Minimize2,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  RotateCw,
+  RotateCcw,
+  ArrowDown,
+  ArrowDownToLine,
+  Layers,
+  Coins,
+  Zap,
+  Eye,
+  Gamepad2,
+  Smartphone,
+  Compass,
+};
